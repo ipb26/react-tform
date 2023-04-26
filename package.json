@@ -1,0 +1,19 @@
+{
+    "name": "react-tform",
+    "version": "0.0.1",
+    "type": "module",
+    "sideEffects": false,
+    "scripts": {
+        "build": "rollup -c --configPlugin @rollup/plugin-typescript",
+        "watch": "yarn build -w"
+    },
+    "main": "./dist/index.cjs",
+    "module": "./dist/index.mjs",
+    "types": "./dist/index.d.ts",
+    "dependencies": {},
+    "devDependencies": {
+        "@rollup/plugin-typescript": "latest",
+        "rollup": "latest",
+        "typescript": "latest"
+    }
+}
