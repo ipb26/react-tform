@@ -15,6 +15,7 @@
         "useUnknownInCatchVariables": true,
         "exactOptionalPropertyTypes": true,
         "target": "esnext",
+        "jsx": "react-jsx",
         "declaration": true,
         "declarationDir": "dist",
         "emitDeclarationOnly": true,

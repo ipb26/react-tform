@@ -1,6 +1,7 @@
 {
     "name": "react-tform",
     "version": "0.0.1",
+    "license": "MIT",
     "type": "module",
     "sideEffects": false,
     "scripts": {
@@ -10,10 +11,19 @@
     "main": "./dist/index.cjs",
     "module": "./dist/index.mjs",
     "types": "./dist/index.d.ts",
-    "dependencies": {},
+    "peerDependencies": {
+        "react": "^18.2.0"
+    },
     "devDependencies": {
-        "@rollup/plugin-typescript": "latest",
-        "rollup": "latest",
-        "typescript": "latest"
+        "@rollup/plugin-typescript": "^11.1.0",
+        "@types/ramda": "^0.29.0",
+        "@types/react": "^18.2.0",
+        "rollup": "^3.21.0",
+        "tslib": "^2.5.0",
+        "typedoc": "^0.24.6",
+        "typescript": "^5.0.4"
+    },
+    "dependencies": {
+        "ramda": "^0.29.0"
     }
 }
