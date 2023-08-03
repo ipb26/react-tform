@@ -2,10 +2,9 @@ import { Lens, equals, identity, lens, lensProp, set, view } from "ramda"
 import { FormEvent, useCallback, useEffect, useMemo, useReducer, useRef, useState } from "react"
 import { defaultCompare } from "./util"
 
-function buildSegment<T, V>(parent: FormField<T, T>, lens: Lens<T, V>, path: (string | number)[]): FormGroup<V> {
-    const subLens = <N,>(lens: Lens<V, N>, path: (string | number)[]) => buildSegment(data, lens, path ?? [])
+function descend<T, V>(parent: FormField<T, T>, lens: Lens<T, V>, path: (string | number)[]): FormGroup<V> {
+    const sub = <N,>(lens: Lens<V, N>, path: (string | number)[]) => descend(data, lens, path ?? [])
     const data = {
-        state: parent.state,
         value: view(lens, parent.value),
         setValue: (value: V) => parent.setValue(set(lens, value, parent.value)),
         blur: parent.blur,
@@ -14,8 +13,8 @@ function buildSegment<T, V>(parent: FormField<T, T>, lens: Lens<T, V>, path: (st
     }
     return {
         ...data,
-        lens: subLens,
-        prop: prop => subLens(lensProp(prop), [prop]),
+        lens: sub,
+        prop: prop => sub(lensProp(prop), [prop]),
     }
 }
 
@@ -72,7 +71,7 @@ export interface FormField<R, W = R> {
      * Set this field or form's value.
      * @param value The value.
      */
-    setValue(value: W): void
+    setValue: (value: W) => void //TODO this works, but it doesnt type check properly when it's setValue(value:W):void
     /**
      * Mark this field or form as blurred. Call in the onBlur attribute of input elements.
      */
@@ -85,30 +84,28 @@ export interface FormField<R, W = R> {
      * A list of errors associated with this field or form.
      */
     errors: FormError[]
-    /**
-     * The state of the form associated with this field or form.
-     */
-    state: FormState
 }
 
 /**
  * A form field with accessor methods to generate subfield objects. Note that you can create subfields off of the root form, or off of another field using the same methods.
  * @typeParam T The value type.
  */
-export interface FormGroup<T> extends FormField<T> {
+export interface FormGroup<T> extends FormField<T, T> {
 
     /**
      * Create a new field using a property of this field as it's value.
+     * @typeParam K The subfield's key.
      * @param key Key
      */
-    prop<Key extends string & (keyof T)>(key: Key): FormGroup<T[Key]>
+    prop<K extends string & (keyof T)>(key: K): FormGroup<T[K]>
 
     /**
      * Create a new field using a custom lens.
+     * @typeParam N The subfield's type.
      * @param key Key
      * @param path The path used for errors.
      */
-    lens<New>(key: Lens<T, New>, path?: (string | number)[]): FormGroup<New>
+    lens<N>(key: Lens<T, N>, path?: (string | number)[]): FormGroup<N>
 
 }
 
@@ -204,7 +201,7 @@ export interface FormContext<T> extends FormState, FormGroup<T> {
      */
     revert(): void
     /**
-     * Revert this form's data back to the last submitted data.
+     * Revert this form's data back to the last submitted data (or the initialization data, if never submitted).
      */
     revertToSubmitted(): void
 }
@@ -223,6 +220,10 @@ export type FormError = {
     path: (string | number)[]
 }
 
+export type FormValidationResult = Promise<FormError[] | void> | FormError[] | void
+export type FormSubmitter<T> = (value: T) => FormValidationResult
+export type FormValidator<T> = (value: T) => FormValidationResult
+
 /**
  * Form setup options.
  * @typeParam T The value type.
@@ -238,37 +239,37 @@ export type FormOptions<T> = {
      */
     autoReinitialize?: boolean
     /**
-     * Submission function for the form.
+     * Submission function for the form. If this throws an exception, it will be thrown within React. If you want to handle errors, make sure to return a FormError[].
      */
-    submit(value: T): Promise<FormError[] | void> | FormError[] | void
+    submit: FormSubmitter<T>
     /**
-     * Validation function for the form. Should return an array of errors (empty if validation is successful).
+     * Validation function for the form. Should return an array of errors (empty if validation is successful). If this throws an exception, it will be thrown within React. If you want to handle errors, make sure to return a FormError[].
      */
-    validate?(value: T): Promise<FormError[] | void> | FormError[] | void
+    validate?: FormValidator<T>
     /**
-     * Whether or not to run a validation on init.
+     * Whether or not to run a validation on init. Default `false`. You can also pass a custom validation function.
      * @defaultValue `false`
      */
-    validateOnInit?: boolean
+    validateOnInit?: boolean | FormValidator<T>
     /**
-     * Whether or not to run a validation on any change.
+     * Whether or not to run a validation on any change. Default `true`. You can also pass a custom validation function.
      * @defaultValue `true`
      */
-    validateOnChange?: boolean
+    validateOnChange?: boolean | FormValidator<T>
     /**
-     * Whether or not to run a validation when a field is blurred.
+     * Whether or not to run a validation when a field is blurred. Default `false`. You can also pass a custom validation function.
      * @defaultValue `false`
      */
-    validateOnBlur?: boolean
+    validateOnBlur?: boolean | FormValidator<T>
+    /**
+     * Whether or not to run a validation before submission. Default `true`. You can also pass a custom validation function.
+     * @defaultValue `true`
+     */
+    validateOnSubmit?: boolean | FormValidator<T>
     /**
      * A custom comparison function for determining whether or not the data has changed (used for re-initialization as isDirty flag). The default strips out all nulls, undefined, empty arrays, empty objects, zeros, and blank strings before comparing.
      */
     customCompare?(values1: T, values2: T): boolean
-    /**
-     * What to do with uncaught exceptions inside validate and submit functions.
-     * @param e Error object.
-     */
-    onReject(e: unknown): void
 }
 
 type FormInternalState<T> = {
@@ -283,6 +284,7 @@ type FormInternalState<T> = {
     lastSubmitted?: Date | undefined
     initialValue: T
     submittedValue?: T | undefined
+    exception?: unknown
 }
 
 /**
@@ -296,6 +298,7 @@ export function useForm<T>(options: FormOptions<T>): FormContext<T> {
     const validateOnInit = options.validateOnInit ?? false
     const validateOnChange = options.validateOnChange ?? true
     const validateOnBlur = options.validateOnBlur ?? false
+    const validateOnSubmit = options.validateOnSubmit ?? true
     const validateFunc = options.validate ?? (() => [])
     const compare = options.customCompare ?? defaultCompare
 
@@ -316,7 +319,7 @@ export function useForm<T>(options: FormOptions<T>): FormContext<T> {
         lastInitialized: new Date(),
     })
 
-    const { initialValue, value, valueSource, errors, isValid, lastInitialized, lastFocused, lastBlurred, lastChanged, lastSubmitted, submittedValue } = internal
+    const { initialValue, value, valueSource, errors, isValid, lastInitialized, lastFocused, lastBlurred, lastChanged, lastSubmitted, submittedValue, exception } = internal
 
     const isDirty = useMemo(() => (lastChanged?.getTime() ?? 0) > lastInitialized.getTime() && !compare(value, initialValue), [value, initialValue, compare])
     const isDirtySinceSubmitted = useMemo(() => (lastChanged?.getTime() ?? 0) > (lastSubmitted?.getTime() ?? 0) && !compare(value, submittedValue ?? initialValue), [value, submittedValue ?? initialValue, compare])
@@ -363,22 +366,25 @@ export function useForm<T>(options: FormOptions<T>): FormContext<T> {
 
     const [isValidating, setIsValidating] = useState(false)
 
-    const validate = useCallback(async () => {
+    const validate = async (func: FormValidator<T> = validateFunc) => {
         setIsValidating(true)
         try {
-            const errors = await validateFunc(value) ?? []
+            console.log(value)
+            const errors = await func(value) ?? []
             updateInternal({
                 errors,
                 isValid: errors.length === 0
             })
         }
         catch (e) {
-            options.onReject(e)
+            updateInternal({
+                exception: e
+            })
         }
         finally {
             setIsValidating(false)
         }
-    }, [validateFunc, options.onReject])
+    }
 
     const [isSubmitting, setIsSubmitting] = useState(false)
 
@@ -386,11 +392,12 @@ export function useForm<T>(options: FormOptions<T>): FormContext<T> {
         event?.preventDefault()
         console.log("Submitting form...")
         try {
-            if (isValid !== true) {
+            if (validateOnSubmit || typeof options.validateOnSubmit === "function") {
+                const func = typeof options.validateOnSubmit === "function" ? options.validateOnSubmit : validateFunc
                 const errors = await (async () => {
                     setIsValidating(true)
                     try {
-                        return await validateFunc(value) ?? []
+                        return await func(value) ?? []
                     }
                     finally {
                         setIsValidating(false)
@@ -426,7 +433,9 @@ export function useForm<T>(options: FormOptions<T>): FormContext<T> {
             }
         }
         catch (e) {
-            options.onReject(e)
+            updateInternal({
+                exception: e
+            })
             return false
         }
     }
@@ -444,26 +453,33 @@ export function useForm<T>(options: FormOptions<T>): FormContext<T> {
     // Call validate on field change if validateOnChange is true.
 
     useEffect(() => {
+        const func = typeof options.validateOnChange === "function" ? options.validateOnChange : validateFunc
         if (validateOnChange && valueSource === "change") {
-            validate()
+            validate(func)
         }
     }, [value])
 
     // Call validate on field change if validateOnInit is true.
 
     useEffect(() => {
+        const func = typeof options.validateOnInit === "function" ? options.validateOnInit : validateFunc
         if (validateOnInit && valueSource === "init") {
-            validate()
+            validate(func)
         }
     }, [value])
 
     // Call validate on field blur if validateOnBlur is true.
 
     useEffect(() => {
+        const func = typeof options.validateOnBlur === "function" ? options.validateOnBlur : validateFunc
         if (validateOnBlur && lastBlurred !== undefined) {
-            validate()
+            validate(func)
         }
     }, [lastBlurred])
+
+    if (exception !== undefined) {
+        throw exception
+    }
 
     const state = {
         lastInitialized,
@@ -483,15 +499,14 @@ export function useForm<T>(options: FormOptions<T>): FormContext<T> {
         isValid,
         isCurrentlyFocused,
     }
-    const segmentData = {
-        state,
+    const group = {
         value,
         setValue: (value: T) => updateInternal({ value, valueSource: "change", lastChanged: new Date() }),
         errors: errors ?? [],
         blur: () => updateInternal({ lastBlurred: new Date() }),
         focus: () => updateInternal({ lastFocused: new Date() }),
     }
-    const segment = buildSegment(segmentData, lens(identity, identity), [])
+    const segment = descend(group, lens(identity, identity), [])
     return {
         ...state,
         ...segment,
