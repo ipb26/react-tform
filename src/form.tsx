@@ -6,10 +6,11 @@ function descend<T, V>(parent: FormField<T, T>, lens: Lens<T, V>, path: (string 
     const sub = <N,>(lens: Lens<V, N>, path: (string | number)[]) => descend(data, lens, path ?? [])
     const data = {
         value: view(lens, parent.value),
-        setValue: (value: V) => parent.setValue(set(lens, value, parent.value)),
+        setValue: (value: V, action?: FormAction) => parent.setValue(set(lens, value, parent.value), action),
         blur: parent.blur,
         focus: parent.focus,
         errors: parent.errors?.filter(_ => equals(_.path.slice(0, path.length), path)),
+        setErrors: (errors: FormError[]) => parent.setErrors(errors.map(error => ({ ...error, path: [...path, ...error.path] }))),
     }
     return {
         ...data,
@@ -71,19 +72,23 @@ export interface FormField<R, W = R> {
      * Set this field or form's value.
      * @param value The value.
      */
-    setValue: (value: W) => void //TODO this works, but it doesnt type check properly when it's setValue(value:W):void
+    setValue: (value: W, action?: FormAction) => void
     /**
      * Mark this field or form as blurred. Call in the onBlur attribute of input elements.
      */
-    blur(): void
+    blur(action?: FormAction): void
     /**
      * Mark this field or form as focused. Call in the onFocus attribute of input elements.
      */
-    focus(): void
+    focus(action?: FormAction): void
     /**
      * A list of errors associated with this field or form.
      */
     errors: FormError[]
+    /**
+     * A list of errors associated with this field or form.
+     */
+    setErrors: (errors: FormError[]) => void
 }
 
 /**
@@ -179,11 +184,7 @@ export interface FormState {
     isCurrentlyFocused: boolean
 }
 
-/**
- * A full form object, including state and mutation methods.
- * @typeParam T The value type.
- */
-export interface FormContext<T> extends FormState, FormGroup<T> {
+export interface FormActions {
     /**
      * Validate this form.
      */
@@ -192,6 +193,13 @@ export interface FormContext<T> extends FormState, FormGroup<T> {
      * Submit this form. Returns a boolean for success or failure.
      */
     submit(event?: FormEvent<unknown>): Promise<boolean>
+}
+
+/**
+ * A full form object, including state and mutation methods.
+ * @typeParam T The value type.
+ */
+export interface FormContext<T> extends FormActions, FormState, FormGroup<T> {
     /**
      * Reinitialize this form. Clears all state, including errors and submission history.
      */
@@ -199,11 +207,11 @@ export interface FormContext<T> extends FormState, FormGroup<T> {
     /**
      * Revert this form's data back to the last initialization data.
      */
-    revert(): void
+    // revert(): void
     /**
      * Revert this form's data back to the last submitted data (or the initialization data, if never submitted).
      */
-    revertToSubmitted(): void
+    // revertToSubmitted(): void
 }
 
 /**
@@ -225,10 +233,35 @@ export type FormSubmitter<T> = (value: T) => FormValidationResult
 export type FormValidator<T> = (value: T) => FormValidationResult
 
 /**
+ * An event type for the form.
+ */
+export type FormHook = "init" | "change" | "blur" | "focus"
+
+/**
+ * A map of event types to actions.
+ */
+export type FormHooks = {
+    [K in FormHook as `on${Capitalize<K>}`]?: FormAction
+}
+
+/**
  * Form setup options.
  * @typeParam T The value type.
  */
-export type FormOptions<T> = {
+export interface FormOptions<T> extends FormHooks {
+    /**
+     * Submission function for the form. If this throws an exception, it will be thrown within React. If you want to handle errors, make sure to return a FormError[].
+     */
+    submit: FormSubmitter<T>
+    /**
+     * Validation function for the form. Should return an array of errors (empty if validation is successful). If this throws an exception, it will be thrown within React. If you want to handle errors, make sure to return a FormError[].
+     */
+    validate?: FormValidator<T>
+    /**
+     * Whether or not to run a validation before submission. Default `true`. You can also pass a custom validation function.
+     * @defaultValue `true`
+     */
+    submitValidate?: boolean | FormValidator<T>
     /**
      * The initial data for the form. Memoize this for performance benefits.
      */
@@ -239,38 +272,12 @@ export type FormOptions<T> = {
      */
     autoReinitialize?: boolean
     /**
-     * Submission function for the form. If this throws an exception, it will be thrown within React. If you want to handle errors, make sure to return a FormError[].
-     */
-    submit: FormSubmitter<T>
-    /**
-     * Validation function for the form. Should return an array of errors (empty if validation is successful). If this throws an exception, it will be thrown within React. If you want to handle errors, make sure to return a FormError[].
-     */
-    validate?: FormValidator<T>
-    /**
-     * Whether or not to run a validation on init. Default `false`. You can also pass a custom validation function.
-     * @defaultValue `false`
-     */
-    validateOnInit?: boolean | FormValidator<T>
-    /**
-     * Whether or not to run a validation on any change. Default `true`. You can also pass a custom validation function.
-     * @defaultValue `true`
-     */
-    validateOnChange?: boolean | FormValidator<T>
-    /**
-     * Whether or not to run a validation when a field is blurred. Default `false`. You can also pass a custom validation function.
-     * @defaultValue `false`
-     */
-    validateOnBlur?: boolean | FormValidator<T>
-    /**
-     * Whether or not to run a validation before submission. Default `true`. You can also pass a custom validation function.
-     * @defaultValue `true`
-     */
-    validateOnSubmit?: boolean | FormValidator<T>
-    /**
      * A custom comparison function for determining whether or not the data has changed (used for re-initialization as isDirty flag). The default strips out all nulls, undefined, empty arrays, empty objects, zeros, and blank strings before comparing.
      */
     customCompare?(values1: T, values2: T): boolean
 }
+
+type FormAction = "submit" | "validate" | ((actions: FormActions) => void)
 
 type FormInternalState<T> = {
     value: T
@@ -278,13 +285,16 @@ type FormInternalState<T> = {
     errors?: FormError[]
     isValid?: boolean | undefined
     lastInitialized: Date
-    lastFocused?: Date | undefined
     lastBlurred?: Date | undefined
+    lastFocused?: Date | undefined
     lastChanged?: Date | undefined
     lastSubmitted?: Date | undefined
     initialValue: T
     submittedValue?: T | undefined
     exception?: unknown
+    valueAction?: FormAction | undefined
+    blurAction?: FormAction | undefined
+    focusAction?: FormAction | undefined
 }
 
 /**
@@ -294,13 +304,6 @@ type FormInternalState<T> = {
  * @returns A form context.
  */
 export function useForm<T>(options: FormOptions<T>): FormContext<T> {
-
-    const validateOnInit = options.validateOnInit ?? false
-    const validateOnChange = options.validateOnChange ?? true
-    const validateOnBlur = options.validateOnBlur ?? false
-    const validateOnSubmit = options.validateOnSubmit ?? true
-    const validateFunc = options.validate ?? (() => [])
-    const compare = options.customCompare ?? defaultCompare
 
     const [internal, updateInternal] = useReducer((state: FormInternalState<T>, newState: Partial<FormInternalState<T>> | ((state: FormInternalState<T>) => FormInternalState<T>)) => {
         if (typeof newState === "function") {
@@ -318,6 +321,13 @@ export function useForm<T>(options: FormOptions<T>): FormContext<T> {
         initialValue: options.initialValue,
         lastInitialized: new Date(),
     })
+
+    //const validateOnInit = behaviors.validateOnInit ?? false
+    // const validateOnChange = behaviors.validateOnChange ?? true
+    // const validateOnBlur = behaviors.validateOnBlur ?? false
+
+    //  const validateOnSubmit = behaviors.submitValidate ?? true
+    const compare = options.customCompare ?? defaultCompare
 
     const { initialValue, value, valueSource, errors, isValid, lastInitialized, lastFocused, lastBlurred, lastChanged, lastSubmitted, submittedValue, exception } = internal
 
@@ -338,9 +348,10 @@ export function useForm<T>(options: FormOptions<T>): FormContext<T> {
         updateInternal(() => {
             return {
                 initialValue: value,
+                lastInitialized: new Date(),
                 value,
                 valueSource: "init",
-                lastInitialized: new Date(),
+                lastChanged: undefined,
             }
         })
     }, [])
@@ -358,7 +369,9 @@ export function useForm<T>(options: FormOptions<T>): FormContext<T> {
         if (!isFirst.current && options.autoReinitialize && !compare(options.initialValue, value)) {
             initialize(options.initialValue)
         }
-    }, [compareTo.current])
+    }, [
+        compareTo.current
+    ])
 
     if (isFirst.current) {
         isFirst.current = false
@@ -366,11 +379,10 @@ export function useForm<T>(options: FormOptions<T>): FormContext<T> {
 
     const [isValidating, setIsValidating] = useState(false)
 
-    const validate = async (func: FormValidator<T> = validateFunc) => {
+    const validate = async () => {
         setIsValidating(true)
         try {
-            console.log(value)
-            const errors = await func(value) ?? []
+            const errors = await options.validate?.(value) ?? []
             updateInternal({
                 errors,
                 isValid: errors.length === 0
@@ -392,12 +404,12 @@ export function useForm<T>(options: FormOptions<T>): FormContext<T> {
         event?.preventDefault()
         console.log("Submitting form...")
         try {
-            if (validateOnSubmit || typeof options.validateOnSubmit === "function") {
-                const func = typeof options.validateOnSubmit === "function" ? options.validateOnSubmit : validateFunc
+            if (options.submitValidate !== false || typeof options.submitValidate === "function") {
+                const func = typeof options.submitValidate === "function" ? options.submitValidate : options.validate
                 const errors = await (async () => {
                     setIsValidating(true)
                     try {
-                        return await func(value) ?? []
+                        return await func?.(value) ?? []
                     }
                     finally {
                         setIsValidating(false)
@@ -450,32 +462,56 @@ export function useForm<T>(options: FormOptions<T>): FormContext<T> {
         }
     }, [value])
 
-    // Call validate on field change if validateOnChange is true.
+    // Form actions object.
 
-    useEffect(() => {
-        const func = typeof options.validateOnChange === "function" ? options.validateOnChange : validateFunc
-        if (validateOnChange && valueSource === "change") {
-            validate(func)
+    const actions = {
+        submit,
+        validate
+    }
+    const execute = (action: FormAction | undefined) => {
+        if (action === undefined) {
+            return
         }
-    }, [value])
+        else if (action === "submit") {
+            actions.submit()
+        }
+        else if (action === "validate") {
+            actions.validate()
+        }
+        else {
+            action(actions)
+        }
+    }
 
     // Call validate on field change if validateOnInit is true.
 
     useEffect(() => {
-        const func = typeof options.validateOnInit === "function" ? options.validateOnInit : validateFunc
-        if (validateOnInit && valueSource === "init") {
-            validate(func)
+        if (internal.valueAction !== undefined) {
+            execute(internal.valueAction)
+        }
+        else if (valueSource === "init") {
+            execute(options.onInit)
+        }
+        else if (valueSource === "change") {
+            execute(options.onChange ?? "validate")
         }
     }, [value])
 
     // Call validate on field blur if validateOnBlur is true.
 
     useEffect(() => {
-        const func = typeof options.validateOnBlur === "function" ? options.validateOnBlur : validateFunc
-        if (validateOnBlur && lastBlurred !== undefined) {
-            validate(func)
+        if (lastBlurred !== undefined) {
+            execute(internal.blurAction ?? options.onBlur)
         }
     }, [lastBlurred])
+
+    // Call validate on field focus if validateOnFocus is true.
+
+    useEffect(() => {
+        if (lastFocused !== undefined) {
+            execute(internal.focusAction ?? options.onFocus)
+        }
+    }, [lastFocused])
 
     if (exception !== undefined) {
         throw exception
@@ -499,21 +535,39 @@ export function useForm<T>(options: FormOptions<T>): FormContext<T> {
         isValid,
         isCurrentlyFocused,
     }
+
     const group = {
         value,
-        setValue: (value: T) => updateInternal({ value, valueSource: "change", lastChanged: new Date() }),
+        setValue: (value: T, valueAction?: FormAction) => {
+            updateInternal({
+                value,
+                valueSource: "change",
+                valueAction,
+                lastChanged: new Date()
+            })
+        },
         errors: errors ?? [],
-        blur: () => updateInternal({ lastBlurred: new Date() }),
-        focus: () => updateInternal({ lastFocused: new Date() }),
+        setErrors: (errors: FormError[]) => updateInternal({ errors }),
+        blur: (blurAction?: FormAction) => {
+            updateInternal({
+                lastBlurred: new Date(),
+                blurAction
+            })
+        },
+        focus: (focusAction?: FormAction) => {
+            updateInternal({
+                lastFocused: new Date(),
+                focusAction
+            })
+        },
     }
     const segment = descend(group, lens(identity, identity), [])
     return {
         ...state,
         ...segment,
+        ...actions,
         initialize,
-        submit,
-        validate,
-        revert: () => updateInternal({ value: initialValue }),
-        revertToSubmitted: () => updateInternal({ value: submittedValue ?? initialValue }),
+        //revert: () => updateInternal({ value: initialValue, valueSource: "change", lastChanged: undefined }),
+        //  revertToSubmitted: () => updateInternal({ value: submittedValue ?? initialValue, valueSource: "change", lastChanged: undefined }),
     }
 }
