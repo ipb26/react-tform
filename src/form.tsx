@@ -1,5 +1,5 @@
 import { Lens, equals, identity, lens, lensProp, set, view } from "ramda"
-import { FormEvent, useCallback, useEffect, useMemo, useState } from "react"
+import { FormEvent, useEffect, useMemo, useState } from "react"
 import { defaultCompare, useCustomCompareEffect, useIsFirstMount } from "./util"
 
 function descend<T, V>(parent: FormField<T, T>, lens: Lens<T, V>, path: (string | number)[]): FormGroup<V> {
@@ -46,7 +46,7 @@ export interface FormField<R, W = R> {
     /**
      * A list of errors associated with this field or form.
      */
-    errors: FormError[]
+    errors: readonly FormError[]
     /**
      * A list of errors associated with this field or form.
      */
@@ -76,76 +76,6 @@ export interface FormGroup<T> extends FormField<T, T> {
 
 }
 
-/**
- * The state of a form.
- */
-export interface FormState {
-    /**
-     * The last reinitialization timestamp.
-     */
-    lastInitialized?: Date | undefined
-    /**
-     * The last time any field in this form was focused.
-     */
-    lastFocused?: Date | undefined
-    /**
-     * The last time any field in this form was blurred.
-     */
-    lastBlurred?: Date | undefined
-    /**
-     * The last time any value in this form was changed. Note that this does not make an equality check. If data was set, even if it was the same, this timestamp is updated. For a flag that takes equality into account, use isDirty.
-     */
-    lastChanged?: Date | undefined
-    /**
-     * The last time this form was successfully submitted.
-     */
-    lastSubmitted?: Date | undefined
-    /**
-     * Has this form's data changed since last initialization. Performs a deep equality check by default. See customCompare option to override.
-     */
-    isDirty: boolean
-    /**
-     * Has this form's data changed since last submission. Performs a deep equality check by default. See customCompare option to override.
-     */
-    isDirtySinceSubmitted: boolean
-    /**
-     * Has this form ever been submitted.
-     */
-    hasBeenSubmitted: boolean
-    /**
-     * Has any field on this form been focused since last initialization.
-     */
-    hasBeenFocused: boolean
-    /**
-     * Has any field on this form been focused since last submission.
-     */
-    hasBeenFocusedSinceSubmitted: boolean
-    /**
-     * Has any field on this form been blurred since last initialization.
-     */
-    hasBeenBlurred: boolean
-    /**
-     * Has any field on this form been blurred since last submission.
-     */
-    hasBeenBlurredSinceSubmitted: boolean
-    /**
-     * Form is currently validating.
-     */
-    isValidating: boolean
-    /**
-     * Form is currently submitting.
-     */
-    isSubmitting: boolean
-    /**
-     * Does this form's data pass validation. Will be undefined if data was changed and not validated (ie if validateOnChange option is set to false).
-     */
-    isValid?: boolean | undefined
-    /**
-     * Are any of this form's fields currently focused. Determined by comparing lastBlurred to lastFocused timestamp.
-     */
-    isCurrentlyFocused: boolean
-}
-
 export interface FormActions {
     /**
      * Validate this form.
@@ -155,29 +85,34 @@ export interface FormActions {
      * Submit this form. Returns a boolean for success or failure.
      */
     submit(event?: FormEvent<unknown>): Promise<boolean>
+    /**
+     * Revert this form's data back to the last initialization data.
+     */
+    revert(): void
 }
+
+type FormState = ReturnType<typeof useFormState>[0]
 
 /**
  * A full form object, including state and mutation methods.
  * @typeParam T The value type.
  */
 export interface FormContext<T> extends FormActions, FormState, FormGroup<T> {
-    /**
-     * Reinitialize this form. Clears all state, including errors and submission history.
-     */
-    //dispatch(...actions: FormAction<T>[]): void
+
+    //TODO why do i need to specify these here?
+    value: T
+    errors: readonly FormError[]
+
     /**
      * Reinitialize this form. Clears all state, including errors and submission history.
      */
     initialize(value: T): void
-    /**
-     * Revert this form's data back to the last initialization data.
-     */
-    revert(): void
+
     /**
      * Revert this form's data back to the last submitted data (or the initialization data, if never submitted).
      */
     // revertToSubmitted(): void
+
 }
 
 /**
@@ -247,7 +182,8 @@ type FormAction<T> = (keyof FormActions) | ((actions: FormContext<T>) => void)
 
 type FormInternalState<T> = {
     value: T
-    errors?: FormError[]
+    initialValue: T
+    errors: readonly FormError[]
     isValid?: boolean | undefined
     lastInitialized: Date
     lastBlurred?: Date | undefined
@@ -255,11 +191,45 @@ type FormInternalState<T> = {
     lastValidated?: Date | undefined
     lastChanged?: Date | undefined
     lastSubmitted?: Date | undefined
-    initialValue: T
     submittedValue?: T | undefined
-    exception?: unknown
-    // blurAction?: FormAction | undefined
-    // focusAction?: FormAction | undefined
+    isValidating: boolean
+    isSubmitting: boolean
+}
+
+function useFormState<T>(options: FormOptions<T>) {
+    const [state, setState] = useState<FormInternalState<T>>({
+        initialValue: options.initialValue,
+        lastInitialized: new Date(),
+        value: options.initialValue,
+        isValidating: false,
+        isSubmitting: false,
+        errors: []
+    })
+    const compare = options.customCompare ?? defaultCompare
+    const isDirty = useMemo(() => (state.lastChanged?.getTime() ?? 0) > state.lastInitialized.getTime() && !compare(state.value, state.initialValue), [state.value, state.initialValue, compare])
+    const isDirtySinceSubmitted = useMemo(() => (state.lastChanged?.getTime() ?? 0) > (state.lastSubmitted?.getTime() ?? 0) && !compare(state.value, state.submittedValue ?? state.initialValue), [state.value, state.submittedValue ?? state.initialValue, compare])
+    const hasBeenSubmitted = state.lastSubmitted !== undefined
+    const hasBeenFocused = state.lastFocused !== undefined
+    const hasBeenBlurred = state.lastBlurred !== undefined
+    const hasBeenBlurredSinceSubmitted = (state.lastBlurred?.getTime() ?? 0) > (state.lastSubmitted?.getTime() ?? 0)
+    const hasBeenFocusedSinceSubmitted = (state.lastFocused?.getTime() ?? 0) > (state.lastSubmitted?.getTime() ?? 0)
+    const isCurrentlyFocused = (state.lastFocused?.getTime() ?? 0) > (state.lastBlurred?.getTime() ?? 0)
+    const isCurrentlyBlurred = !isCurrentlyFocused
+    return [
+        {
+            ...state,
+            isDirty,
+            isDirtySinceSubmitted,
+            hasBeenSubmitted,
+            hasBeenFocused,
+            hasBeenBlurred,
+            hasBeenBlurredSinceSubmitted,
+            hasBeenFocusedSinceSubmitted,
+            isCurrentlyFocused,
+            isCurrentlyBlurred,
+        },
+        setState
+    ] as const
 }
 
 /**
@@ -270,48 +240,33 @@ type FormInternalState<T> = {
  */
 export function useForm<T>(options: FormOptions<T>): FormContext<T> {
 
-    const [state, setState] = useState<FormInternalState<T>>({
-        initialValue: options.initialValue,
-        lastInitialized: new Date(),
-        value: options.initialValue,
-        lastChanged: undefined,
-    })
-    //const [actions, setActions] = useState<FormAction<T>[]>([options.onInit].filter(isNotNil))
+    const [state, setState] = useFormState<T>(options)
+    const [exception, setException] = useState<unknown>()
 
     const compare = options.customCompare ?? defaultCompare
 
-    const { initialValue, value, errors, isValid, lastInitialized, lastFocused, lastBlurred, lastChanged, lastSubmitted, submittedValue, exception } = state
-
-    const isDirty = useMemo(() => (lastChanged?.getTime() ?? 0) > lastInitialized.getTime() && !compare(value, initialValue), [value, initialValue, compare])
-    const isDirtySinceSubmitted = useMemo(() => (lastChanged?.getTime() ?? 0) > (lastSubmitted?.getTime() ?? 0) && !compare(value, submittedValue ?? initialValue), [value, submittedValue ?? initialValue, compare])
-
-    const isCurrentlyFocused = (lastFocused?.getTime() ?? 0) > (lastBlurred?.getTime() ?? 0)
-    const hasBeenSubmitted = lastSubmitted !== undefined
-    const hasBeenFocused = lastFocused !== undefined
-    const hasBeenBlurred = lastBlurred !== undefined
-    const hasBeenBlurredSinceSubmitted = (lastBlurred?.getTime() ?? 0) > (lastSubmitted?.getTime() ?? 0)
-    const hasBeenFocusedSinceSubmitted = (lastFocused?.getTime() ?? 0) > (lastSubmitted?.getTime() ?? 0)
-
     // Initialization function. Can be called manually but generally won't be.
 
-    const initialize = useCallback((value: T) => {
+    const initialize = (value: T) => {
         setState(state => {
             return {
                 ...state,
                 initialValue: value,
                 lastInitialized: new Date(),
                 value,
-                lastChanged: undefined,
+                lastChanged: new Date(),
             }
         })
-        //dispatch(options.onInit)
-    }, [])
+    }
 
     // Automatic reinitalization if initialValue prop changes.
 
     const firstMount = useIsFirstMount()
     useCustomCompareEffect(() => {
         if (firstMount) {
+            return
+        }
+        if (options.autoReinitialize !== true) {
             return
         }
         initialize(options.initialValue)
@@ -321,12 +276,15 @@ export function useForm<T>(options: FormOptions<T>): FormContext<T> {
         return compare(a[0], b[0])
     })
 
-    const [isValidating, setIsValidating] = useState(false)
-
     const validateWith = async (func: FormValidator<T>) => {
-        setIsValidating(true)
+        setState(state => {
+            return {
+                ...state,
+                isValidating: true
+            }
+        })
         try {
-            const errors = await func(value) ?? []
+            const errors = await func(state.value) ?? []
             const date = new Date()
             setState(state => {
                 return {
@@ -338,15 +296,15 @@ export function useForm<T>(options: FormOptions<T>): FormContext<T> {
             })
         }
         catch (e) {
+            setException(e)
+        }
+        finally {
             setState(state => {
                 return {
                     ...state,
-                    exception: e
+                    isValidating: false
                 }
             })
-        }
-        finally {
-            setIsValidating(false)
         }
     }
 
@@ -355,8 +313,6 @@ export function useForm<T>(options: FormOptions<T>): FormContext<T> {
             validateWith(options.validate)
         }
     }
-
-    const [isSubmitting, setIsSubmitting] = useState(false)
 
     /**
      * TODO
@@ -376,9 +332,14 @@ export function useForm<T>(options: FormOptions<T>): FormContext<T> {
                     await validateWith(func)
                 }
             }
-            setIsSubmitting(true)
+            setState(state => {
+                return {
+                    ...state,
+                    isSubmitting: true
+                }
+            })
             try {
-                const submitErrors = await options.submit(value)
+                const submitErrors = await options.submit(state.value)
                 if (submitErrors !== undefined && submitErrors.length > 0) {
                     setState(state => {
                         return {
@@ -394,42 +355,30 @@ export function useForm<T>(options: FormOptions<T>): FormContext<T> {
                         return {
                             ...state,
                             lastSubmitted: date,
-                            submittedValue: value,
+                            submittedValue: state.value,
                         }
                     })
                     return true
                 }
             }
             finally {
-                setIsSubmitting(false)
+                setState(state => {
+                    return {
+                        ...state,
+                        isSubmitting: false
+                    }
+                })
             }
         }
         catch (e) {
-            setState(state => {
-                return {
-                    ...state,
-                    lastSubmitted: undefined,
-                    submittedValue: undefined,
-                    exception: e
-                }
-            })
+            setException(e)
             return false
         }
     }
 
     // Revert to the initial data.
 
-    const revert = () => {
-        initialize(options.initialValue)
-    }
-
-    // Form actions object.
-
-    const dispatch = (...actions: (FormAction<T> | undefined)[]) => {
-        /* setActions(oldActions => {
-             return [...oldActions, ...actions.filter(isNotNil)]
-         })*/
-    }
+    const revert = () => initialize(options.initialValue)
 
     // Clear valid flag on data change.
 
@@ -441,11 +390,11 @@ export function useForm<T>(options: FormOptions<T>): FormContext<T> {
             }
         })
     }, [
-        value
+        state.value
     ])
 
     const group = {
-        value,
+        value: state.value,
         setValue: (value: T) => {
             const date = new Date()
             setState(state => {
@@ -455,11 +404,8 @@ export function useForm<T>(options: FormOptions<T>): FormContext<T> {
                     lastChanged: date
                 }
             })
-            /*dispatch(options.onChange ?? (form => {
-                form.validate()
-            }))*/
         },
-        errors: errors ?? [],
+        errors: state.errors ?? [],
         setErrors: (errors: FormError[]) => {
             setState(state => {
                 return {
@@ -476,7 +422,6 @@ export function useForm<T>(options: FormOptions<T>): FormContext<T> {
                     lastBlurred: date
                 }
             })
-            //dispatch(options.onBlur)
         },
         focus: () => {
             const date = new Date()
@@ -486,30 +431,11 @@ export function useForm<T>(options: FormOptions<T>): FormContext<T> {
                     lastFocused: date
                 }
             })
-            //dispatch(options.onFocus)
         }
     }
 
     const segment = descend(group, lens(identity, identity), [])
 
-    const states = {
-        lastInitialized,
-        lastFocused,
-        lastBlurred,
-        lastChanged,
-        lastSubmitted,
-        isDirty,
-        isDirtySinceSubmitted,
-        hasBeenSubmitted,
-        hasBeenFocused,
-        hasBeenBlurred,
-        hasBeenBlurredSinceSubmitted,
-        hasBeenFocusedSinceSubmitted,
-        isValidating,
-        isSubmitting,
-        isValid,
-        isCurrentlyFocused,
-    }
 
     const context = {
         initialize,
@@ -517,7 +443,7 @@ export function useForm<T>(options: FormOptions<T>): FormContext<T> {
         submit,
         validate,
         revert,
-        ...states,
+        ...state,
         ...segment,
     }
 
@@ -556,10 +482,105 @@ export function useForm<T>(options: FormOptions<T>): FormContext<T> {
         ])
     })
 
-    if (state.exception !== undefined) {
-        throw state.exception
+    if (exception !== undefined) {
+        throw exception
     }
 
     return context
 
 }
+
+
+
+/**
+ * The state of a form.
+ */
+export interface OldTODOFormState {
+    /**
+     * The last reinitialization timestamp.
+     */
+    lastInitialized?: Date | undefined
+    /**
+     * The last time any field in this form was focused.
+     */
+    lastFocused?: Date | undefined
+    /**
+     * The last time any field in this form was blurred.
+     */
+    lastBlurred?: Date | undefined
+    /**
+     * The last time any value in this form was changed. Note that this does not make an equality check. If data was set, even if it was the same, this timestamp is updated. For a flag that takes equality into account, use isDirty.
+     */
+    lastChanged?: Date | undefined
+    /**
+     * The last time this form was successfully submitted.
+     */
+    lastSubmitted?: Date | undefined
+    /**
+     * Has this form's data changed since last initialization. Performs a deep equality check by default. See customCompare option to override.
+     */
+    isDirty: boolean
+    /**
+     * Has this form's data changed since last submission. Performs a deep equality check by default. See customCompare option to override.
+     */
+    isDirtySinceSubmitted: boolean
+    /**
+     * Has this form ever been submitted.
+     */
+    hasBeenSubmitted: boolean
+    /**
+     * Has any field on this form been focused since last initialization.
+     */
+    hasBeenFocused: boolean
+    /**
+     * Has any field on this form been focused since last submission.
+     */
+    hasBeenFocusedSinceSubmitted: boolean
+    /**
+     * Has any field on this form been blurred since last initialization.
+     */
+    hasBeenBlurred: boolean
+    /**
+     * Has any field on this form been blurred since last submission.
+     */
+    hasBeenBlurredSinceSubmitted: boolean
+    /**
+     * Form is currently validating.
+     */
+    isValidating: boolean
+    /**
+     * Form is currently submitting.
+     */
+    isSubmitting: boolean
+    /**
+     * Does this form's data pass validation. Will be undefined if data was changed and not validated (ie if validateOnChange option is set to false).
+     */
+    isValid?: boolean | undefined
+    /**
+     * Are any of this form's fields currently focused. Determined by comparing lastBlurred to lastFocused timestamp.
+     */
+    isCurrentlyFocused: boolean
+}
+
+
+/*
+const states = {
+    lastInitialized: state.lastInitialized,
+    lastFocused: state.lastFocused,
+    lastBlurred: state.lastBlurred,
+    lastChanged: state.lastChanged,
+    lastSubmitted: state.lastSubmitted,
+    isDirty: state.isDirty,
+    isDirtySinceSubmitted: state.isDirtySinceSubmitted,
+    hasBeenSubmitted: state.hasBeenSubmitted,
+    hasBeenFocused: state.hasBeenFocused,
+    hasBeenBlurred: state.hasBeenBlurred,
+    hasBeenBlurredSinceSubmitted: state.hasBeenBlurredSinceSubmitted,
+    hasBeenFocusedSinceSubmitted: state.hasBeenFocusedSinceSubmitted,
+    isValidating: state.isValidating,
+    isSubmitting: state.isSubmitting,
+    isValid: state.isValid,
+    isCurrentlyFocused: state.isCurrentlyFocused,
+    isCurrentlyBlurred: state.isCurrentlyBlurred,
+}
+*/
