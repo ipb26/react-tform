@@ -1,0 +1,209 @@
+import { Dispatch, SetStateAction, useMemo, useState } from "react"
+import { ValueOrFactory, callOrGet } from "value-or-factory"
+import { FormError, FormOptions } from "./options"
+import { compare } from "./util"
+
+export interface FormInternalState<T> {
+
+    readonly value: T
+    readonly initialValue: T
+    readonly exception?: unknown
+    readonly errors: readonly FormError[]
+    readonly isValid?: boolean | undefined
+    readonly submittedValue?: T | undefined
+    readonly submitCount: number
+    readonly lastInitialized: Date
+    readonly lastBlurred?: Date | undefined
+    readonly lastChanged?: Date | undefined
+    readonly lastCommitted?: Date | undefined
+    readonly lastFocused?: Date | undefined
+    readonly lastSubmitRequested?: Date | undefined
+    readonly lastSubmitted?: Date | undefined
+    readonly lastSubmitAttempted?: Date | undefined//TODO rm
+    readonly lastSubmitStarted?: Date | undefined
+    readonly lastSubmitCompleted?: Date | undefined
+    readonly lastValidateRequested?: Date | undefined
+    readonly lastValidated?: Date | undefined
+    readonly lastValidateStarted?: Date | undefined
+    readonly lastValidateCompleted?: Date | undefined
+
+}
+
+export type FormInternalAction<T> = Dispatch<SetStateAction<FormInternalState<T>>>
+
+export function initialFormState<T>(initialValue: T) {
+    return {
+        lastInitialized: new Date(),
+        initialValue: initialValue,
+        value: initialValue,
+        errors: [],
+        submitCount: 0,
+    }
+}
+
+export function useFormState<T>(options: FormOptions<T>) {
+
+    const [state, setState] = useState<FormInternalState<T>>(initialFormState(options.initialValue))
+
+    const canSubmit = state.isValid !== false
+
+    const isDirty = useMemo(() => (state.lastChanged?.getTime() ?? 0) > state.lastInitialized.getTime() && !compare(state.value, state.initialValue, options.comparer), [state.value, state.initialValue, options.comparer])
+    const isDirtySinceSubmitted = useMemo(() => (state.lastChanged?.getTime() ?? 0) > (state.lastSubmitted?.getTime() ?? 0) && !compare(state.value, state.submittedValue ?? state.initialValue, options.comparer), [state.value, state.submittedValue ?? state.initialValue, options.comparer])
+
+    const hasBeenSubmitted = state.lastSubmitted !== undefined
+    const hasBeenValidated = state.lastValidated !== undefined
+
+    const hasBeenBlurred = state.lastBlurred !== undefined
+    const hasBeenChanged = state.lastChanged !== undefined
+    const hasBeenCommitted = state.lastCommitted !== undefined
+    const hasBeenFocused = state.lastFocused !== undefined
+
+    const hasBeenBlurredSinceSubmitted = (state.lastBlurred?.getTime() ?? 0) > (state.lastSubmitted?.getTime() ?? 0)
+    const hasBeenChangedSinceSubmitted = (state.lastChanged?.getTime() ?? 0) > (state.lastSubmitted?.getTime() ?? 0)
+    const hasBeenCommittedSinceSubmitted = (state.lastCommitted?.getTime() ?? 0) > (state.lastSubmitted?.getTime() ?? 0)
+    const hasBeenFocusedSinceSubmitted = (state.lastFocused?.getTime() ?? 0) > (state.lastSubmitted?.getTime() ?? 0)
+
+    const hasBeenBlurredSinceValidated = (state.lastBlurred?.getTime() ?? 0) > (state.lastValidated?.getTime() ?? 0)
+    const hasBeenChangedSinceValidated = (state.lastChanged?.getTime() ?? 0) > (state.lastValidated?.getTime() ?? 0)
+    const hasBeenCommittedSinceValidated = (state.lastCommitted?.getTime() ?? 0) > (state.lastValidated?.getTime() ?? 0)
+    const hasBeenFocusedSinceValidated = (state.lastFocused?.getTime() ?? 0) > (state.lastValidated?.getTime() ?? 0)
+
+    const isCurrentlyFocused = (state.lastFocused?.getTime() ?? 0) > (state.lastBlurred?.getTime() ?? 0)
+    const isCurrentlyBlurred = (state.lastBlurred?.getTime() ?? 0) > (state.lastFocused?.getTime() ?? 0)
+    const isValidating = (state.lastValidateStarted?.getTime() ?? 0) > (state.lastValidateCompleted?.getTime() ?? 0)
+    const isSubmitting = (state.lastSubmitStarted?.getTime() ?? 0) > (state.lastSubmitCompleted?.getTime() ?? 0)
+
+    const fullState = {
+        ...state,
+        canSubmit,
+        isDirty,
+        isDirtySinceSubmitted,
+        hasBeenSubmitted,
+        hasBeenValidated,
+        hasBeenBlurred,
+        hasBeenChanged,
+        hasBeenCommitted,
+        hasBeenFocused,
+        hasBeenBlurredSinceSubmitted,
+        hasBeenChangedSinceSubmitted,
+        hasBeenCommittedSinceSubmitted,
+        hasBeenFocusedSinceSubmitted,
+        hasBeenBlurredSinceValidated,
+        hasBeenChangedSinceValidated,
+        hasBeenCommittedSinceValidated,
+        hasBeenFocusedSinceValidated,
+        isCurrentlyFocused,
+        isCurrentlyBlurred,
+        isValidating,
+        isSubmitting,
+    }
+
+    return {
+        value: fullState,
+        set: setState,
+        patch: (partial: ValueOrFactory<Partial<FormInternalState<T>>, [FormInternalState<T>]>) => {
+            setState(state => {
+                return {
+                    ...state,
+                    ...callOrGet(partial, state),
+                }
+            })
+        },
+    }
+
+}
+
+export interface FormState<T> extends FormInternalState<T> {
+
+    /**
+     * Whether or not the form is ready for submission. Either it has been validated, or there is no validator required.
+     */
+    readonly canSubmit: boolean
+
+    /**
+     * Has the form been changed from its initial value?
+     */
+    readonly isDirty: boolean
+    /**
+     * Has the form been changed from its last submitted value?
+     */
+    readonly isDirtySinceSubmitted: boolean
+
+    /**
+     * True if the form is focused.
+     */
+    readonly isCurrentlyFocused: boolean
+    /**
+     * True if the form is blurred.
+     */
+    readonly isCurrentlyBlurred: boolean
+
+    /**
+     * True if the form is currently validating.
+     */
+    readonly isValidating: boolean
+    /**
+     * True if the form is currently submitting.
+     */
+    readonly isSubmitting: boolean
+
+    /**
+     * Has the form been blurred?
+     */
+    readonly hasBeenBlurred: boolean
+    /**
+     * Has the form been changed?
+     */
+    readonly hasBeenChanged: boolean
+    /**
+     * Has the form been committed?
+     */
+    readonly hasBeenCommitted: boolean
+    /**
+     * Has the form been focused?
+     */
+    readonly hasBeenFocused: boolean
+    /**
+     * Has the form been submitted?
+     */
+    readonly hasBeenSubmitted: boolean
+    /**
+     * Has the form been validated?
+     */
+    readonly hasBeenValidated: boolean
+
+    /**
+     * Has the form been blurred since submitted?
+     */
+    readonly hasBeenBlurredSinceSubmitted: boolean
+    /**
+     * Has the form been changed since submitted?
+     */
+    readonly hasBeenChangedSinceSubmitted: boolean
+    /**
+     * Has the form been committed since submitted?
+     */
+    readonly hasBeenCommittedSinceSubmitted: boolean
+    /**
+     * Has the form been focused since submitted?
+     */
+    readonly hasBeenFocusedSinceSubmitted: boolean
+
+    /**
+     * Has the form been blurred since validated?
+     */
+    readonly hasBeenBlurredSinceValidated: boolean
+    /**
+     * Has the form been changed since validated?
+     */
+    readonly hasBeenChangedSinceValidated: boolean
+    /**
+     * Has the form been committed since validated?
+     */
+    readonly hasBeenCommittedSinceValidated: boolean
+    /**
+     * Has the form been focused since validated?
+     */
+    readonly hasBeenFocusedSinceValidated: boolean
+
+}

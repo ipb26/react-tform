@@ -28,13 +28,12 @@
 <section class="tsd-panel tsd-hierarchy">
 <h4>Hierarchy</h4>
 <ul class="tsd-hierarchy">
-<li><a href="FormActions.html" class="tsd-signature-type tsd-kind-interface">FormActions</a></li>
-<li><a href="FormState.html" class="tsd-signature-type tsd-kind-interface">FormState</a></li>
+<li><a href="FormState.html" class="tsd-signature-type tsd-kind-interface">FormState</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">T</span><span class="tsd-signature-symbol">&gt;</span></li>
 <li><a href="FormGroup.html" class="tsd-signature-type tsd-kind-interface">FormGroup</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">T</span><span class="tsd-signature-symbol">&gt;</span>
 <ul class="tsd-hierarchy">
 <li><span class="target">FormContext</span></li></ul></li></ul></section><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/sampbarrow/react-tform/blob/82c6713/src/form.tsx#L168">form.tsx:168</a></li></ul></aside>
+<li>Defined in <a href="https://github.com/sampbarrow/react-tform/blob/cd8de99/src/form.tsx#L12">form.tsx:12</a></li></ul></aside>
 <section class="tsd-panel-group tsd-index-group">
 <section class="tsd-panel tsd-index-panel">
 <details class="tsd-index-content tsd-index-accordion" open><summary class="tsd-accordion-summary tsd-index-summary">
@@ -42,206 +41,367 @@
 <div class="tsd-accordion-details">
 <section class="tsd-index-section">
 <h3 class="tsd-index-heading">Properties</h3>
-<div class="tsd-index-list"><a href="FormContext.html#errors" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="#FF984D" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="12" id="icon-1024-path"></rect><path d="M9.354 16V7.24H12.174C12.99 7.24 13.638 7.476 14.118 7.948C14.606 8.412 14.85 9.036 14.85 9.82C14.85 10.604 14.606 11.232 14.118 11.704C13.638 12.168 12.99 12.4 12.174 12.4H10.434V16H9.354ZM10.434 11.428H12.174C12.646 11.428 13.022 11.284 13.302 10.996C13.59 10.7 13.734 10.308 13.734 9.82C13.734 9.324 13.59 8.932 13.302 8.644C13.022 8.356 12.646 8.212 12.174 8.212H10.434V11.428Z" fill="var(--color-text)" id="icon-1024-text"></path></svg><span>errors</span></a>
+<div class="tsd-index-list"><a href="FormContext.html#canSubmit" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="#FF984D" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="12" id="icon-1024-path"></rect><path d="M9.354 16V7.24H12.174C12.99 7.24 13.638 7.476 14.118 7.948C14.606 8.412 14.85 9.036 14.85 9.82C14.85 10.604 14.606 11.232 14.118 11.704C13.638 12.168 12.99 12.4 12.174 12.4H10.434V16H9.354ZM10.434 11.428H12.174C12.646 11.428 13.022 11.284 13.302 10.996C13.59 10.7 13.734 10.308 13.734 9.82C13.734 9.324 13.59 8.932 13.302 8.644C13.022 8.356 12.646 8.212 12.174 8.212H10.434V11.428Z" fill="var(--color-text)" id="icon-1024-text"></path></svg><span>can<wbr/>Submit</span></a>
+<a href="FormContext.html#errors" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>errors</span></a>
+<a href="FormContext.html#exception" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>exception?</span></a>
 <a href="FormContext.html#hasBeenBlurred" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>has<wbr/>Been<wbr/>Blurred</span></a>
 <a href="FormContext.html#hasBeenBlurredSinceSubmitted" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>has<wbr/>Been<wbr/>Blurred<wbr/>Since<wbr/>Submitted</span></a>
+<a href="FormContext.html#hasBeenBlurredSinceValidated" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>has<wbr/>Been<wbr/>Blurred<wbr/>Since<wbr/>Validated</span></a>
+<a href="FormContext.html#hasBeenChanged" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>has<wbr/>Been<wbr/>Changed</span></a>
+<a href="FormContext.html#hasBeenChangedSinceSubmitted" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>has<wbr/>Been<wbr/>Changed<wbr/>Since<wbr/>Submitted</span></a>
+<a href="FormContext.html#hasBeenChangedSinceValidated" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>has<wbr/>Been<wbr/>Changed<wbr/>Since<wbr/>Validated</span></a>
+<a href="FormContext.html#hasBeenCommitted" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>has<wbr/>Been<wbr/>Committed</span></a>
+<a href="FormContext.html#hasBeenCommittedSinceSubmitted" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>has<wbr/>Been<wbr/>Committed<wbr/>Since<wbr/>Submitted</span></a>
+<a href="FormContext.html#hasBeenCommittedSinceValidated" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>has<wbr/>Been<wbr/>Committed<wbr/>Since<wbr/>Validated</span></a>
 <a href="FormContext.html#hasBeenFocused" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>has<wbr/>Been<wbr/>Focused</span></a>
 <a href="FormContext.html#hasBeenFocusedSinceSubmitted" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>has<wbr/>Been<wbr/>Focused<wbr/>Since<wbr/>Submitted</span></a>
+<a href="FormContext.html#hasBeenFocusedSinceValidated" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>has<wbr/>Been<wbr/>Focused<wbr/>Since<wbr/>Validated</span></a>
 <a href="FormContext.html#hasBeenSubmitted" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>has<wbr/>Been<wbr/>Submitted</span></a>
+<a href="FormContext.html#hasBeenValidated" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>has<wbr/>Been<wbr/>Validated</span></a>
+<a href="FormContext.html#hasErrors" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>has<wbr/>Errors</span></a>
+<a href="FormContext.html#hasSelfErrors" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>has<wbr/>Self<wbr/>Errors</span></a>
+<a href="FormContext.html#initialValue" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>initial<wbr/>Value</span></a>
+<a href="FormContext.html#isCurrentlyBlurred" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>is<wbr/>Currently<wbr/>Blurred</span></a>
 <a href="FormContext.html#isCurrentlyFocused" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>is<wbr/>Currently<wbr/>Focused</span></a>
 <a href="FormContext.html#isDirty" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>is<wbr/>Dirty</span></a>
 <a href="FormContext.html#isDirtySinceSubmitted" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>is<wbr/>Dirty<wbr/>Since<wbr/>Submitted</span></a>
 <a href="FormContext.html#isSubmitting" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>is<wbr/>Submitting</span></a>
 <a href="FormContext.html#isValid" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>is<wbr/>Valid?</span></a>
 <a href="FormContext.html#isValidating" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>is<wbr/>Validating</span></a>
-<a href="FormContext.html#lastBlurred" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>last<wbr/>Blurred?</span></a>
-<a href="FormContext.html#lastChanged" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>last<wbr/>Changed?</span></a>
-<a href="FormContext.html#lastFocused" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>last<wbr/>Focused?</span></a>
-<a href="FormContext.html#lastInitialized" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>last<wbr/>Initialized?</span></a>
-<a href="FormContext.html#lastSubmitted" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>last<wbr/>Submitted?</span></a>
-<a href="FormContext.html#setErrors" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>set<wbr/>Errors</span></a>
+<a href="FormContext.html#lastBlur" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>last<wbr/>Blur?</span></a>
+<a href="FormContext.html#lastChange" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>last<wbr/>Change?</span></a>
+<a href="FormContext.html#lastCommit" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>last<wbr/>Commit?</span></a>
+<a href="FormContext.html#lastFocus" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>last<wbr/>Focus?</span></a>
+<a href="FormContext.html#lastInit" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>last<wbr/>Init</span></a>
+<a href="FormContext.html#lastSubmit" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>last<wbr/>Submit?</span></a>
+<a href="FormContext.html#lastSubmitAttempt" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>last<wbr/>Submit<wbr/>Attempt?</span></a>
+<a href="FormContext.html#lastSubmitCompleted" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>last<wbr/>Submit<wbr/>Completed?</span></a>
+<a href="FormContext.html#lastSubmitStarted" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>last<wbr/>Submit<wbr/>Started?</span></a>
+<a href="FormContext.html#lastValidate" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>last<wbr/>Validate?</span></a>
+<a href="FormContext.html#lastValidateCompleted" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>last<wbr/>Validate<wbr/>Completed?</span></a>
+<a href="FormContext.html#lastValidateStarted" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>last<wbr/>Validate<wbr/>Started?</span></a>
+<a href="FormContext.html#selfErrors" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>self<wbr/>Errors</span></a>
 <a href="FormContext.html#setValue" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>set<wbr/>Value</span></a>
+<a href="FormContext.html#submitAttemptCount" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>submit<wbr/>Attempt<wbr/>Count</span></a>
+<a href="FormContext.html#submitCount" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>submit<wbr/>Count</span></a>
+<a href="FormContext.html#submittedValue" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>submitted<wbr/>Value?</span></a>
+<a href="FormContext.html#submittingCount" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>submitting<wbr/>Count</span></a>
 <a href="FormContext.html#value" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>value</span></a>
 </div></section>
 <section class="tsd-index-section">
 <h3 class="tsd-index-heading">Methods</h3>
-<div class="tsd-index-list"><a href="FormContext.html#alert" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="#FF4DB8" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="12" id="icon-2048-path"></rect><path d="M9.162 16V7.24H10.578L11.514 10.072C11.602 10.328 11.674 10.584 11.73 10.84C11.794 11.088 11.842 11.28 11.874 11.416C11.906 11.28 11.954 11.088 12.018 10.84C12.082 10.584 12.154 10.324 12.234 10.06L13.122 7.24H14.538V16H13.482V12.82C13.482 12.468 13.49 12.068 13.506 11.62C13.53 11.172 13.558 10.716 13.59 10.252C13.622 9.78 13.654 9.332 13.686 8.908C13.726 8.476 13.762 8.1 13.794 7.78L12.366 12.16H11.334L9.894 7.78C9.934 8.092 9.97 8.456 10.002 8.872C10.042 9.28 10.078 9.716 10.11 10.18C10.142 10.636 10.166 11.092 10.182 11.548C10.206 12.004 10.218 12.428 10.218 12.82V16H9.162Z" fill="var(--color-text)" id="icon-2048-text"></path></svg><span>alert</span></a>
-<a href="FormContext.html#blur" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>blur</span></a>
+<div class="tsd-index-list"><a href="FormContext.html#blur" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="#FF4DB8" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="12" id="icon-2048-path"></rect><path d="M9.162 16V7.24H10.578L11.514 10.072C11.602 10.328 11.674 10.584 11.73 10.84C11.794 11.088 11.842 11.28 11.874 11.416C11.906 11.28 11.954 11.088 12.018 10.84C12.082 10.584 12.154 10.324 12.234 10.06L13.122 7.24H14.538V16H13.482V12.82C13.482 12.468 13.49 12.068 13.506 11.62C13.53 11.172 13.558 10.716 13.59 10.252C13.622 9.78 13.654 9.332 13.686 8.908C13.726 8.476 13.762 8.1 13.794 7.78L12.366 12.16H11.334L9.894 7.78C9.934 8.092 9.97 8.456 10.002 8.872C10.042 9.28 10.078 9.716 10.11 10.18C10.142 10.636 10.166 11.092 10.182 11.548C10.206 12.004 10.218 12.428 10.218 12.82V16H9.162Z" fill="var(--color-text)" id="icon-2048-text"></path></svg><span>blur</span></a>
+<a href="FormContext.html#commit" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>commit</span></a>
 <a href="FormContext.html#focus" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>focus</span></a>
 <a href="FormContext.html#initialize" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>initialize</span></a>
 <a href="FormContext.html#lens" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>lens</span></a>
 <a href="FormContext.html#prop" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>prop</span></a>
-<a href="FormContext.html#submit" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>submit</span></a>
-<a href="FormContext.html#validate" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>validate</span></a>
+<a href="FormContext.html#revert" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>revert</span></a>
+<a href="FormContext.html#revertToSubmitted" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>revert<wbr/>To<wbr/>Submitted</span></a>
+<a href="FormContext.html#submit" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>submit</span></a>
+<a href="FormContext.html#validate" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>validate</span></a>
 </div></section></div></details></section></section>
 <section class="tsd-panel-group tsd-member-group">
 <h2>Properties</h2>
+<section class="tsd-panel tsd-member tsd-is-inherited"><a id="canSubmit" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagReadonly">Readonly</code> <span>can<wbr/>Submit</span><a href="#canSubmit" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" id="icon-anchor-a"></path><path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" id="icon-anchor-b"></path><path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" id="icon-anchor-c"></path></svg></a></h3>
+<div class="tsd-signature"><span class="tsd-kind-property">can<wbr/>Submit</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+<div class="tsd-comment tsd-typography"><p>Whether or not the form is ready for submission. Either it has been validated, or there is no validator required.</p>
+</div><aside class="tsd-sources">
+<p>Inherited from <a href="FormState.html">FormState</a>.<a href="FormState.html#canSubmit">canSubmit</a></p>
+<ul>
+<li>Defined in state.ts:123</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited"><a id="errors" class="tsd-anchor"></a>
-<h3 class="tsd-anchor-link"><span>errors</span><a href="#errors" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" id="icon-anchor-a"></path><path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" id="icon-anchor-b"></path><path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" id="icon-anchor-c"></path></svg></a></h3>
-<div class="tsd-signature"><span class="tsd-kind-property">errors</span><span class="tsd-signature-symbol">:</span> <a href="../types/FormError.html" class="tsd-signature-type tsd-kind-type-alias">FormError</a><span class="tsd-signature-symbol">[]</span></div>
-<div class="tsd-comment tsd-typography"><p>A list of errors associated with this field or form.</p>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagReadonly">Readonly</code> <span>errors</span><a href="#errors" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<div class="tsd-signature"><span class="tsd-kind-property">errors</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">readonly </span><a href="../types/FormError.html" class="tsd-signature-type tsd-kind-type-alias">FormError</a><span class="tsd-signature-symbol">[]</span></div>
+<div class="tsd-comment tsd-typography"><p>A list of errors associated with this field or form and its children.</p>
 </div><aside class="tsd-sources">
 <p>Inherited from <a href="FormGroup.html">FormGroup</a>.<a href="FormGroup.html#errors">errors</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/sampbarrow/react-tform/blob/82c6713/src/form.tsx#L49">form.tsx:49</a></li></ul></aside></section>
+<li>Defined in state.ts:11</li></ul></aside></section>
+<section class="tsd-panel tsd-member tsd-is-inherited"><a id="exception" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagOptional">Optional</code> <code class="tsd-tag ts-flagReadonly">Readonly</code> <span>exception</span><a href="#exception" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<div class="tsd-signature"><span class="tsd-kind-property">exception</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">unknown</span></div><aside class="tsd-sources">
+<p>Inherited from <a href="FormState.html">FormState</a>.<a href="FormState.html#exception">exception</a></p>
+<ul>
+<li>Defined in state.ts:10</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited"><a id="hasBeenBlurred" class="tsd-anchor"></a>
-<h3 class="tsd-anchor-link"><span>has<wbr/>Been<wbr/>Blurred</span><a href="#hasBeenBlurred" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagReadonly">Readonly</code> <span>has<wbr/>Been<wbr/>Blurred</span><a href="#hasBeenBlurred" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">has<wbr/>Been<wbr/>Blurred</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
-<div class="tsd-comment tsd-typography"><p>Has any field on this form been blurred since last initialization.</p>
+<div class="tsd-comment tsd-typography"><p>Has the form been blurred?</p>
 </div><aside class="tsd-sources">
 <p>Inherited from <a href="FormState.html">FormState</a>.<a href="FormState.html#hasBeenBlurred">hasBeenBlurred</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/sampbarrow/react-tform/blob/82c6713/src/form.tsx#L126">form.tsx:126</a></li></ul></aside></section>
+<li>Defined in state.ts:155</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited"><a id="hasBeenBlurredSinceSubmitted" class="tsd-anchor"></a>
-<h3 class="tsd-anchor-link"><span>has<wbr/>Been<wbr/>Blurred<wbr/>Since<wbr/>Submitted</span><a href="#hasBeenBlurredSinceSubmitted" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagReadonly">Readonly</code> <span>has<wbr/>Been<wbr/>Blurred<wbr/>Since<wbr/>Submitted</span><a href="#hasBeenBlurredSinceSubmitted" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">has<wbr/>Been<wbr/>Blurred<wbr/>Since<wbr/>Submitted</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
-<div class="tsd-comment tsd-typography"><p>Has any field on this form been blurred since last submission.</p>
+<div class="tsd-comment tsd-typography"><p>Has the form been blurred since submitted?</p>
 </div><aside class="tsd-sources">
 <p>Inherited from <a href="FormState.html">FormState</a>.<a href="FormState.html#hasBeenBlurredSinceSubmitted">hasBeenBlurredSinceSubmitted</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/sampbarrow/react-tform/blob/82c6713/src/form.tsx#L130">form.tsx:130</a></li></ul></aside></section>
+<li>Defined in state.ts:180</li></ul></aside></section>
+<section class="tsd-panel tsd-member tsd-is-inherited"><a id="hasBeenBlurredSinceValidated" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagReadonly">Readonly</code> <span>has<wbr/>Been<wbr/>Blurred<wbr/>Since<wbr/>Validated</span><a href="#hasBeenBlurredSinceValidated" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<div class="tsd-signature"><span class="tsd-kind-property">has<wbr/>Been<wbr/>Blurred<wbr/>Since<wbr/>Validated</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+<div class="tsd-comment tsd-typography"><p>Has the form been blurred since validated?</p>
+</div><aside class="tsd-sources">
+<p>Inherited from <a href="FormState.html">FormState</a>.<a href="FormState.html#hasBeenBlurredSinceValidated">hasBeenBlurredSinceValidated</a></p>
+<ul>
+<li>Defined in state.ts:197</li></ul></aside></section>
+<section class="tsd-panel tsd-member tsd-is-inherited"><a id="hasBeenChanged" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagReadonly">Readonly</code> <span>has<wbr/>Been<wbr/>Changed</span><a href="#hasBeenChanged" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<div class="tsd-signature"><span class="tsd-kind-property">has<wbr/>Been<wbr/>Changed</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+<div class="tsd-comment tsd-typography"><p>Has the form been changed?</p>
+</div><aside class="tsd-sources">
+<p>Inherited from <a href="FormState.html">FormState</a>.<a href="FormState.html#hasBeenChanged">hasBeenChanged</a></p>
+<ul>
+<li>Defined in state.ts:159</li></ul></aside></section>
+<section class="tsd-panel tsd-member tsd-is-inherited"><a id="hasBeenChangedSinceSubmitted" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagReadonly">Readonly</code> <span>has<wbr/>Been<wbr/>Changed<wbr/>Since<wbr/>Submitted</span><a href="#hasBeenChangedSinceSubmitted" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<div class="tsd-signature"><span class="tsd-kind-property">has<wbr/>Been<wbr/>Changed<wbr/>Since<wbr/>Submitted</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+<div class="tsd-comment tsd-typography"><p>Has the form been changed since submitted?</p>
+</div><aside class="tsd-sources">
+<p>Inherited from <a href="FormState.html">FormState</a>.<a href="FormState.html#hasBeenChangedSinceSubmitted">hasBeenChangedSinceSubmitted</a></p>
+<ul>
+<li>Defined in state.ts:184</li></ul></aside></section>
+<section class="tsd-panel tsd-member tsd-is-inherited"><a id="hasBeenChangedSinceValidated" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagReadonly">Readonly</code> <span>has<wbr/>Been<wbr/>Changed<wbr/>Since<wbr/>Validated</span><a href="#hasBeenChangedSinceValidated" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<div class="tsd-signature"><span class="tsd-kind-property">has<wbr/>Been<wbr/>Changed<wbr/>Since<wbr/>Validated</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+<div class="tsd-comment tsd-typography"><p>Has the form been changed since validated?</p>
+</div><aside class="tsd-sources">
+<p>Inherited from <a href="FormState.html">FormState</a>.<a href="FormState.html#hasBeenChangedSinceValidated">hasBeenChangedSinceValidated</a></p>
+<ul>
+<li>Defined in state.ts:201</li></ul></aside></section>
+<section class="tsd-panel tsd-member tsd-is-inherited"><a id="hasBeenCommitted" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagReadonly">Readonly</code> <span>has<wbr/>Been<wbr/>Committed</span><a href="#hasBeenCommitted" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<div class="tsd-signature"><span class="tsd-kind-property">has<wbr/>Been<wbr/>Committed</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+<div class="tsd-comment tsd-typography"><p>Has the form been committed?</p>
+</div><aside class="tsd-sources">
+<p>Inherited from <a href="FormState.html">FormState</a>.<a href="FormState.html#hasBeenCommitted">hasBeenCommitted</a></p>
+<ul>
+<li>Defined in state.ts:163</li></ul></aside></section>
+<section class="tsd-panel tsd-member tsd-is-inherited"><a id="hasBeenCommittedSinceSubmitted" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagReadonly">Readonly</code> <span>has<wbr/>Been<wbr/>Committed<wbr/>Since<wbr/>Submitted</span><a href="#hasBeenCommittedSinceSubmitted" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<div class="tsd-signature"><span class="tsd-kind-property">has<wbr/>Been<wbr/>Committed<wbr/>Since<wbr/>Submitted</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+<div class="tsd-comment tsd-typography"><p>Has the form been committed since submitted?</p>
+</div><aside class="tsd-sources">
+<p>Inherited from <a href="FormState.html">FormState</a>.<a href="FormState.html#hasBeenCommittedSinceSubmitted">hasBeenCommittedSinceSubmitted</a></p>
+<ul>
+<li>Defined in state.ts:188</li></ul></aside></section>
+<section class="tsd-panel tsd-member tsd-is-inherited"><a id="hasBeenCommittedSinceValidated" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagReadonly">Readonly</code> <span>has<wbr/>Been<wbr/>Committed<wbr/>Since<wbr/>Validated</span><a href="#hasBeenCommittedSinceValidated" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<div class="tsd-signature"><span class="tsd-kind-property">has<wbr/>Been<wbr/>Committed<wbr/>Since<wbr/>Validated</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+<div class="tsd-comment tsd-typography"><p>Has the form been committed since validated?</p>
+</div><aside class="tsd-sources">
+<p>Inherited from <a href="FormState.html">FormState</a>.<a href="FormState.html#hasBeenCommittedSinceValidated">hasBeenCommittedSinceValidated</a></p>
+<ul>
+<li>Defined in state.ts:205</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited"><a id="hasBeenFocused" class="tsd-anchor"></a>
-<h3 class="tsd-anchor-link"><span>has<wbr/>Been<wbr/>Focused</span><a href="#hasBeenFocused" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagReadonly">Readonly</code> <span>has<wbr/>Been<wbr/>Focused</span><a href="#hasBeenFocused" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">has<wbr/>Been<wbr/>Focused</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
-<div class="tsd-comment tsd-typography"><p>Has any field on this form been focused since last initialization.</p>
+<div class="tsd-comment tsd-typography"><p>Has the form been focused?</p>
 </div><aside class="tsd-sources">
 <p>Inherited from <a href="FormState.html">FormState</a>.<a href="FormState.html#hasBeenFocused">hasBeenFocused</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/sampbarrow/react-tform/blob/82c6713/src/form.tsx#L118">form.tsx:118</a></li></ul></aside></section>
+<li>Defined in state.ts:167</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited"><a id="hasBeenFocusedSinceSubmitted" class="tsd-anchor"></a>
-<h3 class="tsd-anchor-link"><span>has<wbr/>Been<wbr/>Focused<wbr/>Since<wbr/>Submitted</span><a href="#hasBeenFocusedSinceSubmitted" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagReadonly">Readonly</code> <span>has<wbr/>Been<wbr/>Focused<wbr/>Since<wbr/>Submitted</span><a href="#hasBeenFocusedSinceSubmitted" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">has<wbr/>Been<wbr/>Focused<wbr/>Since<wbr/>Submitted</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
-<div class="tsd-comment tsd-typography"><p>Has any field on this form been focused since last submission.</p>
+<div class="tsd-comment tsd-typography"><p>Has the form been focused since submitted?</p>
 </div><aside class="tsd-sources">
 <p>Inherited from <a href="FormState.html">FormState</a>.<a href="FormState.html#hasBeenFocusedSinceSubmitted">hasBeenFocusedSinceSubmitted</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/sampbarrow/react-tform/blob/82c6713/src/form.tsx#L122">form.tsx:122</a></li></ul></aside></section>
+<li>Defined in state.ts:192</li></ul></aside></section>
+<section class="tsd-panel tsd-member tsd-is-inherited"><a id="hasBeenFocusedSinceValidated" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagReadonly">Readonly</code> <span>has<wbr/>Been<wbr/>Focused<wbr/>Since<wbr/>Validated</span><a href="#hasBeenFocusedSinceValidated" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<div class="tsd-signature"><span class="tsd-kind-property">has<wbr/>Been<wbr/>Focused<wbr/>Since<wbr/>Validated</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+<div class="tsd-comment tsd-typography"><p>Has the form been focused since validated?</p>
+</div><aside class="tsd-sources">
+<p>Inherited from <a href="FormState.html">FormState</a>.<a href="FormState.html#hasBeenFocusedSinceValidated">hasBeenFocusedSinceValidated</a></p>
+<ul>
+<li>Defined in state.ts:209</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited"><a id="hasBeenSubmitted" class="tsd-anchor"></a>
-<h3 class="tsd-anchor-link"><span>has<wbr/>Been<wbr/>Submitted</span><a href="#hasBeenSubmitted" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagReadonly">Readonly</code> <span>has<wbr/>Been<wbr/>Submitted</span><a href="#hasBeenSubmitted" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">has<wbr/>Been<wbr/>Submitted</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
-<div class="tsd-comment tsd-typography"><p>Has this form ever been submitted.</p>
+<div class="tsd-comment tsd-typography"><p>Has the form been submitted?</p>
 </div><aside class="tsd-sources">
 <p>Inherited from <a href="FormState.html">FormState</a>.<a href="FormState.html#hasBeenSubmitted">hasBeenSubmitted</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/sampbarrow/react-tform/blob/82c6713/src/form.tsx#L114">form.tsx:114</a></li></ul></aside></section>
+<li>Defined in state.ts:171</li></ul></aside></section>
+<section class="tsd-panel tsd-member tsd-is-inherited"><a id="hasBeenValidated" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagReadonly">Readonly</code> <span>has<wbr/>Been<wbr/>Validated</span><a href="#hasBeenValidated" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<div class="tsd-signature"><span class="tsd-kind-property">has<wbr/>Been<wbr/>Validated</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+<div class="tsd-comment tsd-typography"><p>Has the form been validated?</p>
+</div><aside class="tsd-sources">
+<p>Inherited from <a href="FormState.html">FormState</a>.<a href="FormState.html#hasBeenValidated">hasBeenValidated</a></p>
+<ul>
+<li>Defined in state.ts:175</li></ul></aside></section>
+<section class="tsd-panel tsd-member tsd-is-inherited"><a id="hasErrors" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagReadonly">Readonly</code> <span>has<wbr/>Errors</span><a href="#hasErrors" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<div class="tsd-signature"><span class="tsd-kind-property">has<wbr/>Errors</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+<div class="tsd-comment tsd-typography"><p>Does this field or form have errors?</p>
+</div><aside class="tsd-sources">
+<p>Inherited from <a href="FormGroup.html">FormGroup</a>.<a href="FormGroup.html#hasErrors">hasErrors</a></p>
+<ul>
+<li>Defined in field.tsx:52</li></ul></aside></section>
+<section class="tsd-panel tsd-member tsd-is-inherited"><a id="hasSelfErrors" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagReadonly">Readonly</code> <span>has<wbr/>Self<wbr/>Errors</span><a href="#hasSelfErrors" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<div class="tsd-signature"><span class="tsd-kind-property">has<wbr/>Self<wbr/>Errors</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+<div class="tsd-comment tsd-typography"><p>Does this field or form have errors?</p>
+</div><aside class="tsd-sources">
+<p>Inherited from <a href="FormGroup.html">FormGroup</a>.<a href="FormGroup.html#hasSelfErrors">hasSelfErrors</a></p>
+<ul>
+<li>Defined in field.tsx:57</li></ul></aside></section>
+<section class="tsd-panel tsd-member tsd-is-inherited"><a id="initialValue" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagReadonly">Readonly</code> <span>initial<wbr/>Value</span><a href="#initialValue" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<div class="tsd-signature"><span class="tsd-kind-property">initial<wbr/>Value</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type tsd-kind-type-parameter">T</span></div><aside class="tsd-sources">
+<p>Inherited from <a href="FormState.html">FormState</a>.<a href="FormState.html#initialValue">initialValue</a></p>
+<ul>
+<li>Defined in state.ts:9</li></ul></aside></section>
+<section class="tsd-panel tsd-member tsd-is-inherited"><a id="isCurrentlyBlurred" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagReadonly">Readonly</code> <span>is<wbr/>Currently<wbr/>Blurred</span><a href="#isCurrentlyBlurred" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<div class="tsd-signature"><span class="tsd-kind-property">is<wbr/>Currently<wbr/>Blurred</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+<div class="tsd-comment tsd-typography"><p>True if the form is blurred.</p>
+</div><aside class="tsd-sources">
+<p>Inherited from <a href="FormState.html">FormState</a>.<a href="FormState.html#isCurrentlyBlurred">isCurrentlyBlurred</a></p>
+<ul>
+<li>Defined in state.ts:141</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited"><a id="isCurrentlyFocused" class="tsd-anchor"></a>
-<h3 class="tsd-anchor-link"><span>is<wbr/>Currently<wbr/>Focused</span><a href="#isCurrentlyFocused" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagReadonly">Readonly</code> <span>is<wbr/>Currently<wbr/>Focused</span><a href="#isCurrentlyFocused" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">is<wbr/>Currently<wbr/>Focused</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
-<div class="tsd-comment tsd-typography"><p>Are any of this form&#39;s fields currently focused. Determined by comparing lastBlurred to lastFocused timestamp.</p>
+<div class="tsd-comment tsd-typography"><p>True if the form is focused.</p>
 </div><aside class="tsd-sources">
 <p>Inherited from <a href="FormState.html">FormState</a>.<a href="FormState.html#isCurrentlyFocused">isCurrentlyFocused</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/sampbarrow/react-tform/blob/82c6713/src/form.tsx#L146">form.tsx:146</a></li></ul></aside></section>
+<li>Defined in state.ts:137</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited"><a id="isDirty" class="tsd-anchor"></a>
-<h3 class="tsd-anchor-link"><span>is<wbr/>Dirty</span><a href="#isDirty" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagReadonly">Readonly</code> <span>is<wbr/>Dirty</span><a href="#isDirty" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">is<wbr/>Dirty</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
-<div class="tsd-comment tsd-typography"><p>Has this form&#39;s data changed since last initialization. Performs a deep equality check by default. See customCompare option to override.</p>
+<div class="tsd-comment tsd-typography"><p>Has the form been changed from its initial value?</p>
 </div><aside class="tsd-sources">
 <p>Inherited from <a href="FormState.html">FormState</a>.<a href="FormState.html#isDirty">isDirty</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/sampbarrow/react-tform/blob/82c6713/src/form.tsx#L106">form.tsx:106</a></li></ul></aside></section>
+<li>Defined in state.ts:128</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited"><a id="isDirtySinceSubmitted" class="tsd-anchor"></a>
-<h3 class="tsd-anchor-link"><span>is<wbr/>Dirty<wbr/>Since<wbr/>Submitted</span><a href="#isDirtySinceSubmitted" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagReadonly">Readonly</code> <span>is<wbr/>Dirty<wbr/>Since<wbr/>Submitted</span><a href="#isDirtySinceSubmitted" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">is<wbr/>Dirty<wbr/>Since<wbr/>Submitted</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
-<div class="tsd-comment tsd-typography"><p>Has this form&#39;s data changed since last submission. Performs a deep equality check by default. See customCompare option to override.</p>
+<div class="tsd-comment tsd-typography"><p>Has the form been changed from its last submitted value?</p>
 </div><aside class="tsd-sources">
 <p>Inherited from <a href="FormState.html">FormState</a>.<a href="FormState.html#isDirtySinceSubmitted">isDirtySinceSubmitted</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/sampbarrow/react-tform/blob/82c6713/src/form.tsx#L110">form.tsx:110</a></li></ul></aside></section>
+<li>Defined in state.ts:132</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited"><a id="isSubmitting" class="tsd-anchor"></a>
-<h3 class="tsd-anchor-link"><span>is<wbr/>Submitting</span><a href="#isSubmitting" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagReadonly">Readonly</code> <span>is<wbr/>Submitting</span><a href="#isSubmitting" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">is<wbr/>Submitting</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
-<div class="tsd-comment tsd-typography"><p>Form is currently submitting.</p>
+<div class="tsd-comment tsd-typography"><p>True if the form is currently submitting.</p>
 </div><aside class="tsd-sources">
 <p>Inherited from <a href="FormState.html">FormState</a>.<a href="FormState.html#isSubmitting">isSubmitting</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/sampbarrow/react-tform/blob/82c6713/src/form.tsx#L138">form.tsx:138</a></li></ul></aside></section>
+<li>Defined in state.ts:150</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited"><a id="isValid" class="tsd-anchor"></a>
-<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagOptional">Optional</code> <span>is<wbr/>Valid</span><a href="#isValid" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
-<div class="tsd-signature"><span class="tsd-kind-property">is<wbr/>Valid</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span></div>
-<div class="tsd-comment tsd-typography"><p>Does this form&#39;s data pass validation. Will be undefined if data was changed and not validated (ie if validateOnChange option is set to false).</p>
-</div><aside class="tsd-sources">
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagOptional">Optional</code> <code class="tsd-tag ts-flagReadonly">Readonly</code> <span>is<wbr/>Valid</span><a href="#isValid" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<div class="tsd-signature"><span class="tsd-kind-property">is<wbr/>Valid</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span></div><aside class="tsd-sources">
 <p>Inherited from <a href="FormState.html">FormState</a>.<a href="FormState.html#isValid">isValid</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/sampbarrow/react-tform/blob/82c6713/src/form.tsx#L142">form.tsx:142</a></li></ul></aside></section>
+<li>Defined in state.ts:12</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited"><a id="isValidating" class="tsd-anchor"></a>
-<h3 class="tsd-anchor-link"><span>is<wbr/>Validating</span><a href="#isValidating" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagReadonly">Readonly</code> <span>is<wbr/>Validating</span><a href="#isValidating" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">is<wbr/>Validating</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
-<div class="tsd-comment tsd-typography"><p>Form is currently validating.</p>
+<div class="tsd-comment tsd-typography"><p>True if the form is currently validating.</p>
 </div><aside class="tsd-sources">
 <p>Inherited from <a href="FormState.html">FormState</a>.<a href="FormState.html#isValidating">isValidating</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/sampbarrow/react-tform/blob/82c6713/src/form.tsx#L134">form.tsx:134</a></li></ul></aside></section>
-<section class="tsd-panel tsd-member tsd-is-inherited"><a id="lastBlurred" class="tsd-anchor"></a>
-<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagOptional">Optional</code> <span>last<wbr/>Blurred</span><a href="#lastBlurred" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
-<div class="tsd-signature"><span class="tsd-kind-property">last<wbr/>Blurred</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type ">Date</span></div>
-<div class="tsd-comment tsd-typography"><p>The last time any field in this form was blurred.</p>
-</div><aside class="tsd-sources">
-<p>Inherited from <a href="FormState.html">FormState</a>.<a href="FormState.html#lastBlurred">lastBlurred</a></p>
+<li>Defined in state.ts:146</li></ul></aside></section>
+<section class="tsd-panel tsd-member tsd-is-inherited"><a id="lastBlur" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagOptional">Optional</code> <code class="tsd-tag ts-flagReadonly">Readonly</code> <span>last<wbr/>Blur</span><a href="#lastBlur" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<div class="tsd-signature"><span class="tsd-kind-property">last<wbr/>Blur</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type ">Date</span></div><aside class="tsd-sources">
+<p>Inherited from <a href="FormState.html">FormState</a>.<a href="FormState.html#lastBlur">lastBlur</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/sampbarrow/react-tform/blob/82c6713/src/form.tsx#L94">form.tsx:94</a></li></ul></aside></section>
-<section class="tsd-panel tsd-member tsd-is-inherited"><a id="lastChanged" class="tsd-anchor"></a>
-<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagOptional">Optional</code> <span>last<wbr/>Changed</span><a href="#lastChanged" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
-<div class="tsd-signature"><span class="tsd-kind-property">last<wbr/>Changed</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type ">Date</span></div>
-<div class="tsd-comment tsd-typography"><p>The last time any value in this form was changed. Note that this does not make an equality check. If data was set, even if it was the same, this timestamp is updated. For a flag that takes equality into account, use isDirty.</p>
-</div><aside class="tsd-sources">
-<p>Inherited from <a href="FormState.html">FormState</a>.<a href="FormState.html#lastChanged">lastChanged</a></p>
+<li>Defined in state.ts:18</li></ul></aside></section>
+<section class="tsd-panel tsd-member tsd-is-inherited"><a id="lastChange" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagOptional">Optional</code> <code class="tsd-tag ts-flagReadonly">Readonly</code> <span>last<wbr/>Change</span><a href="#lastChange" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<div class="tsd-signature"><span class="tsd-kind-property">last<wbr/>Change</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type ">Date</span></div><aside class="tsd-sources">
+<p>Inherited from <a href="FormState.html">FormState</a>.<a href="FormState.html#lastChange">lastChange</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/sampbarrow/react-tform/blob/82c6713/src/form.tsx#L98">form.tsx:98</a></li></ul></aside></section>
-<section class="tsd-panel tsd-member tsd-is-inherited"><a id="lastFocused" class="tsd-anchor"></a>
-<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagOptional">Optional</code> <span>last<wbr/>Focused</span><a href="#lastFocused" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
-<div class="tsd-signature"><span class="tsd-kind-property">last<wbr/>Focused</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type ">Date</span></div>
-<div class="tsd-comment tsd-typography"><p>The last time any field in this form was focused.</p>
-</div><aside class="tsd-sources">
-<p>Inherited from <a href="FormState.html">FormState</a>.<a href="FormState.html#lastFocused">lastFocused</a></p>
+<li>Defined in state.ts:19</li></ul></aside></section>
+<section class="tsd-panel tsd-member tsd-is-inherited"><a id="lastCommit" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagOptional">Optional</code> <code class="tsd-tag ts-flagReadonly">Readonly</code> <span>last<wbr/>Commit</span><a href="#lastCommit" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<div class="tsd-signature"><span class="tsd-kind-property">last<wbr/>Commit</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type ">Date</span></div><aside class="tsd-sources">
+<p>Inherited from <a href="FormState.html">FormState</a>.<a href="FormState.html#lastCommit">lastCommit</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/sampbarrow/react-tform/blob/82c6713/src/form.tsx#L90">form.tsx:90</a></li></ul></aside></section>
-<section class="tsd-panel tsd-member tsd-is-inherited"><a id="lastInitialized" class="tsd-anchor"></a>
-<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagOptional">Optional</code> <span>last<wbr/>Initialized</span><a href="#lastInitialized" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
-<div class="tsd-signature"><span class="tsd-kind-property">last<wbr/>Initialized</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type ">Date</span></div>
-<div class="tsd-comment tsd-typography"><p>The last reinitialization timestamp.</p>
-</div><aside class="tsd-sources">
-<p>Inherited from <a href="FormState.html">FormState</a>.<a href="FormState.html#lastInitialized">lastInitialized</a></p>
+<li>Defined in state.ts:20</li></ul></aside></section>
+<section class="tsd-panel tsd-member tsd-is-inherited"><a id="lastFocus" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagOptional">Optional</code> <code class="tsd-tag ts-flagReadonly">Readonly</code> <span>last<wbr/>Focus</span><a href="#lastFocus" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<div class="tsd-signature"><span class="tsd-kind-property">last<wbr/>Focus</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type ">Date</span></div><aside class="tsd-sources">
+<p>Inherited from <a href="FormState.html">FormState</a>.<a href="FormState.html#lastFocus">lastFocus</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/sampbarrow/react-tform/blob/82c6713/src/form.tsx#L86">form.tsx:86</a></li></ul></aside></section>
-<section class="tsd-panel tsd-member tsd-is-inherited"><a id="lastSubmitted" class="tsd-anchor"></a>
-<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagOptional">Optional</code> <span>last<wbr/>Submitted</span><a href="#lastSubmitted" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
-<div class="tsd-signature"><span class="tsd-kind-property">last<wbr/>Submitted</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type ">Date</span></div>
-<div class="tsd-comment tsd-typography"><p>The last time this form was successfully submitted.</p>
-</div><aside class="tsd-sources">
-<p>Inherited from <a href="FormState.html">FormState</a>.<a href="FormState.html#lastSubmitted">lastSubmitted</a></p>
+<li>Defined in state.ts:21</li></ul></aside></section>
+<section class="tsd-panel tsd-member tsd-is-inherited"><a id="lastInit" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagReadonly">Readonly</code> <span>last<wbr/>Init</span><a href="#lastInit" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<div class="tsd-signature"><span class="tsd-kind-property">last<wbr/>Init</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type ">Date</span></div><aside class="tsd-sources">
+<p>Inherited from <a href="FormState.html">FormState</a>.<a href="FormState.html#lastInit">lastInit</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/sampbarrow/react-tform/blob/82c6713/src/form.tsx#L102">form.tsx:102</a></li></ul></aside></section>
-<section class="tsd-panel tsd-member tsd-is-inherited"><a id="setErrors" class="tsd-anchor"></a>
-<h3 class="tsd-anchor-link"><span>set<wbr/>Errors</span><a href="#setErrors" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
-<div class="tsd-signature"><span class="tsd-kind-property">set<wbr/>Errors</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">errors</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">)</span></div>
-<div class="tsd-type-declaration">
-<h4>Type declaration</h4>
-<ul class="tsd-parameters">
-<li class="tsd-parameter-signature">
-<ul class="tsd-signatures">
-<li class="tsd-signature" id="setErrors.__type.__type-1"><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">errors</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
-<li class="tsd-description">
+<li>Defined in state.ts:17</li></ul></aside></section>
+<section class="tsd-panel tsd-member tsd-is-inherited"><a id="lastSubmit" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagOptional">Optional</code> <code class="tsd-tag ts-flagReadonly">Readonly</code> <span>last<wbr/>Submit</span><a href="#lastSubmit" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<div class="tsd-signature"><span class="tsd-kind-property">last<wbr/>Submit</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type ">Date</span></div><aside class="tsd-sources">
+<p>Inherited from <a href="FormState.html">FormState</a>.<a href="FormState.html#lastSubmit">lastSubmit</a></p>
+<ul>
+<li>Defined in state.ts:22</li></ul></aside></section>
+<section class="tsd-panel tsd-member tsd-is-inherited"><a id="lastSubmitAttempt" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagOptional">Optional</code> <code class="tsd-tag ts-flagReadonly">Readonly</code> <span>last<wbr/>Submit<wbr/>Attempt</span><a href="#lastSubmitAttempt" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<div class="tsd-signature"><span class="tsd-kind-property">last<wbr/>Submit<wbr/>Attempt</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type ">Date</span></div><aside class="tsd-sources">
+<p>Inherited from <a href="FormState.html">FormState</a>.<a href="FormState.html#lastSubmitAttempt">lastSubmitAttempt</a></p>
+<ul>
+<li>Defined in state.ts:23</li></ul></aside></section>
+<section class="tsd-panel tsd-member tsd-is-inherited"><a id="lastSubmitCompleted" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagOptional">Optional</code> <code class="tsd-tag ts-flagReadonly">Readonly</code> <span>last<wbr/>Submit<wbr/>Completed</span><a href="#lastSubmitCompleted" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<div class="tsd-signature"><span class="tsd-kind-property">last<wbr/>Submit<wbr/>Completed</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type ">Date</span></div><aside class="tsd-sources">
+<p>Inherited from <a href="FormState.html">FormState</a>.<a href="FormState.html#lastSubmitCompleted">lastSubmitCompleted</a></p>
+<ul>
+<li>Defined in state.ts:25</li></ul></aside></section>
+<section class="tsd-panel tsd-member tsd-is-inherited"><a id="lastSubmitStarted" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagOptional">Optional</code> <code class="tsd-tag ts-flagReadonly">Readonly</code> <span>last<wbr/>Submit<wbr/>Started</span><a href="#lastSubmitStarted" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<div class="tsd-signature"><span class="tsd-kind-property">last<wbr/>Submit<wbr/>Started</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type ">Date</span></div><aside class="tsd-sources">
+<p>Inherited from <a href="FormState.html">FormState</a>.<a href="FormState.html#lastSubmitStarted">lastSubmitStarted</a></p>
+<ul>
+<li>Defined in state.ts:24</li></ul></aside></section>
+<section class="tsd-panel tsd-member tsd-is-inherited"><a id="lastValidate" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagOptional">Optional</code> <code class="tsd-tag ts-flagReadonly">Readonly</code> <span>last<wbr/>Validate</span><a href="#lastValidate" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<div class="tsd-signature"><span class="tsd-kind-property">last<wbr/>Validate</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type ">Date</span></div><aside class="tsd-sources">
+<p>Inherited from <a href="FormState.html">FormState</a>.<a href="FormState.html#lastValidate">lastValidate</a></p>
+<ul>
+<li>Defined in state.ts:26</li></ul></aside></section>
+<section class="tsd-panel tsd-member tsd-is-inherited"><a id="lastValidateCompleted" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagOptional">Optional</code> <code class="tsd-tag ts-flagReadonly">Readonly</code> <span>last<wbr/>Validate<wbr/>Completed</span><a href="#lastValidateCompleted" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<div class="tsd-signature"><span class="tsd-kind-property">last<wbr/>Validate<wbr/>Completed</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type ">Date</span></div><aside class="tsd-sources">
+<p>Inherited from <a href="FormState.html">FormState</a>.<a href="FormState.html#lastValidateCompleted">lastValidateCompleted</a></p>
+<ul>
+<li>Defined in state.ts:28</li></ul></aside></section>
+<section class="tsd-panel tsd-member tsd-is-inherited"><a id="lastValidateStarted" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagOptional">Optional</code> <code class="tsd-tag ts-flagReadonly">Readonly</code> <span>last<wbr/>Validate<wbr/>Started</span><a href="#lastValidateStarted" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<div class="tsd-signature"><span class="tsd-kind-property">last<wbr/>Validate<wbr/>Started</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type ">Date</span></div><aside class="tsd-sources">
+<p>Inherited from <a href="FormState.html">FormState</a>.<a href="FormState.html#lastValidateStarted">lastValidateStarted</a></p>
+<ul>
+<li>Defined in state.ts:27</li></ul></aside></section>
+<section class="tsd-panel tsd-member tsd-is-inherited"><a id="selfErrors" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagReadonly">Readonly</code> <span>self<wbr/>Errors</span><a href="#selfErrors" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<div class="tsd-signature"><span class="tsd-kind-property">self<wbr/>Errors</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">readonly </span><a href="../types/FormError.html" class="tsd-signature-type tsd-kind-type-alias">FormError</a><span class="tsd-signature-symbol">[]</span></div>
 <div class="tsd-comment tsd-typography"><p>A list of errors associated with this field or form.</p>
-</div>
-<div class="tsd-parameters">
-<h4 class="tsd-parameters-title">Parameters</h4>
-<ul class="tsd-parameter-list">
-<li>
-<h5><span class="tsd-kind-parameter">errors</span>: <a href="../types/FormError.html" class="tsd-signature-type tsd-kind-type-alias">FormError</a><span class="tsd-signature-symbol">[]</span></h5></li></ul></div>
-<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4></li></ul></li></ul></div><aside class="tsd-sources">
-<p>Inherited from <a href="FormGroup.html">FormGroup</a>.<a href="FormGroup.html#setErrors">setErrors</a></p>
+</div><aside class="tsd-sources">
+<p>Inherited from <a href="FormGroup.html">FormGroup</a>.<a href="FormGroup.html#selfErrors">selfErrors</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/sampbarrow/react-tform/blob/82c6713/src/form.tsx#L53">form.tsx:53</a></li></ul></aside></section>
+<li>Defined in field.tsx:47</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited"><a id="setValue" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>set<wbr/>Value</span><a href="#setValue" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
-<div class="tsd-signature"><span class="tsd-kind-property">set<wbr/>Value</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">value</span>, <span class="tsd-kind-parameter">action</span><span class="tsd-signature-symbol">?</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">)</span></div>
+<div class="tsd-signature"><span class="tsd-kind-property">set<wbr/>Value</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">value</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">)</span></div>
 <div class="tsd-type-declaration">
 <h4>Type declaration</h4>
 <ul class="tsd-parameters">
 <li class="tsd-parameter-signature">
 <ul class="tsd-signatures">
-<li class="tsd-signature" id="setValue.__type-2.__type-3"><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">value</span>, <span class="tsd-kind-parameter">action</span><span class="tsd-signature-symbol">?</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+<li class="tsd-signature" id="setValue.__type.__type-1"><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">value</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Set this field or form&#39;s value.</p>
 </div>
@@ -251,66 +411,78 @@
 <li>
 <h5><span class="tsd-kind-parameter">value</span>: <span class="tsd-signature-type tsd-kind-type-parameter">T</span></h5>
 <div class="tsd-comment tsd-typography"><p>The value.</p>
-</div></li>
-<li>
-<h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">action</span>: <span class="tsd-signature-type ">FormAction</span></h5></li></ul></div>
+</div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4></li></ul></li></ul></div><aside class="tsd-sources">
 <p>Inherited from <a href="FormGroup.html">FormGroup</a>.<a href="FormGroup.html#setValue">setValue</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/sampbarrow/react-tform/blob/82c6713/src/form.tsx#L37">form.tsx:37</a></li></ul></aside></section>
+<li>Defined in field.tsx:22</li></ul></aside></section>
+<section class="tsd-panel tsd-member tsd-is-inherited"><a id="submitAttemptCount" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagReadonly">Readonly</code> <span>submit<wbr/>Attempt<wbr/>Count</span><a href="#submitAttemptCount" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<div class="tsd-signature"><span class="tsd-kind-property">submit<wbr/>Attempt<wbr/>Count</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div><aside class="tsd-sources">
+<p>Inherited from <a href="FormState.html">FormState</a>.<a href="FormState.html#submitAttemptCount">submitAttemptCount</a></p>
+<ul>
+<li>Defined in state.ts:15</li></ul></aside></section>
+<section class="tsd-panel tsd-member tsd-is-inherited"><a id="submitCount" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagReadonly">Readonly</code> <span>submit<wbr/>Count</span><a href="#submitCount" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<div class="tsd-signature"><span class="tsd-kind-property">submit<wbr/>Count</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div><aside class="tsd-sources">
+<p>Inherited from <a href="FormState.html">FormState</a>.<a href="FormState.html#submitCount">submitCount</a></p>
+<ul>
+<li>Defined in state.ts:14</li></ul></aside></section>
+<section class="tsd-panel tsd-member tsd-is-inherited"><a id="submittedValue" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagOptional">Optional</code> <code class="tsd-tag ts-flagReadonly">Readonly</code> <span>submitted<wbr/>Value</span><a href="#submittedValue" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<div class="tsd-signature"><span class="tsd-kind-property">submitted<wbr/>Value</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type tsd-kind-type-parameter">T</span></div><aside class="tsd-sources">
+<p>Inherited from <a href="FormState.html">FormState</a>.<a href="FormState.html#submittedValue">submittedValue</a></p>
+<ul>
+<li>Defined in state.ts:13</li></ul></aside></section>
+<section class="tsd-panel tsd-member tsd-is-inherited"><a id="submittingCount" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagReadonly">Readonly</code> <span>submitting<wbr/>Count</span><a href="#submittingCount" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<div class="tsd-signature"><span class="tsd-kind-property">submitting<wbr/>Count</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div><aside class="tsd-sources">
+<p>Inherited from <a href="FormState.html">FormState</a>.<a href="FormState.html#submittingCount">submittingCount</a></p>
+<ul>
+<li>Defined in state.ts:16</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited"><a id="value" class="tsd-anchor"></a>
-<h3 class="tsd-anchor-link"><span>value</span><a href="#value" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagReadonly">Readonly</code> <span>value</span><a href="#value" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">value</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type tsd-kind-type-parameter">T</span></div>
 <div class="tsd-comment tsd-typography"><p>This field or form&#39;s value.</p>
 </div><aside class="tsd-sources">
 <p>Inherited from <a href="FormGroup.html">FormGroup</a>.<a href="FormGroup.html#value">value</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/sampbarrow/react-tform/blob/82c6713/src/form.tsx#L32">form.tsx:32</a></li></ul></aside></section></section>
+<li>Defined in state.ts:8</li></ul></aside></section></section>
 <section class="tsd-panel-group tsd-member-group">
 <h2>Methods</h2>
-<section class="tsd-panel tsd-member tsd-is-inherited"><a id="alert" class="tsd-anchor"></a>
-<h3 class="tsd-anchor-link"><span>alert</span><a href="#alert" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
-<ul class="tsd-signatures tsd-is-inherited">
-<li class="tsd-signature tsd-anchor-link" id="alert.alert-1"><span class="tsd-kind-call-signature">alert</span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><a href="#alert.alert-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
-<li class="tsd-description">
-<div class="tsd-comment tsd-typography"><p>Validate this form.</p>
-</div>
-<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
-<p>Inherited from <a href="FormActions.html">FormActions</a>.<a href="FormActions.html#alert">alert</a></p>
-<ul>
-<li>Defined in <a href="https://github.com/sampbarrow/react-tform/blob/82c6713/src/form.tsx#L153">form.tsx:153</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-inherited"><a id="blur" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>blur</span><a href="#blur" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-inherited">
-<li class="tsd-signature tsd-anchor-link" id="blur.blur-1"><span class="tsd-kind-call-signature">blur</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">action</span><span class="tsd-signature-symbol">?</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><a href="#blur.blur-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="blur.blur-1"><span class="tsd-kind-call-signature">blur</span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><a href="#blur.blur-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Mark this field or form as blurred. Call in the onBlur attribute of input elements.</p>
 </div>
-<div class="tsd-parameters">
-<h4 class="tsd-parameters-title">Parameters</h4>
-<ul class="tsd-parameter-list">
-<li>
-<h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">action</span>: <span class="tsd-signature-type ">FormAction</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <p>Inherited from <a href="FormGroup.html">FormGroup</a>.<a href="FormGroup.html#blur">blur</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/sampbarrow/react-tform/blob/82c6713/src/form.tsx#L41">form.tsx:41</a></li></ul></aside></li></ul></section>
+<li>Defined in field.tsx:27</li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member tsd-is-inherited"><a id="commit" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>commit</span><a href="#commit" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<ul class="tsd-signatures tsd-is-inherited">
+<li class="tsd-signature tsd-anchor-link" id="commit.commit-1"><span class="tsd-kind-call-signature">commit</span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><a href="#commit.commit-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Mark this field or form as committed. Call after changing the value of a radio button or checkbox etc.</p>
+</div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
+<p>Inherited from <a href="FormGroup.html">FormGroup</a>.<a href="FormGroup.html#commit">commit</a></p>
+<ul>
+<li>Defined in field.tsx:32</li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-inherited"><a id="focus" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>focus</span><a href="#focus" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-inherited">
-<li class="tsd-signature tsd-anchor-link" id="focus.focus-1"><span class="tsd-kind-call-signature">focus</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">action</span><span class="tsd-signature-symbol">?</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><a href="#focus.focus-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="focus.focus-1"><span class="tsd-kind-call-signature">focus</span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><a href="#focus.focus-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Mark this field or form as focused. Call in the onFocus attribute of input elements.</p>
 </div>
-<div class="tsd-parameters">
-<h4 class="tsd-parameters-title">Parameters</h4>
-<ul class="tsd-parameter-list">
-<li>
-<h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">action</span>: <span class="tsd-signature-type ">FormAction</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <p>Inherited from <a href="FormGroup.html">FormGroup</a>.<a href="FormGroup.html#focus">focus</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/sampbarrow/react-tform/blob/82c6713/src/form.tsx#L45">form.tsx:45</a></li></ul></aside></li></ul></section>
+<li>Defined in field.tsx:37</li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="initialize" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>initialize</span><a href="#initialize" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -325,7 +497,7 @@
 <h5><span class="tsd-kind-parameter">value</span>: <span class="tsd-signature-type tsd-kind-type-parameter">T</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/sampbarrow/react-tform/blob/82c6713/src/form.tsx#L172">form.tsx:172</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/sampbarrow/react-tform/blob/cd8de99/src/form.tsx#L27">form.tsx:27</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-inherited"><a id="lens" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>lens</span><a href="#lens" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-inherited">
@@ -348,13 +520,13 @@
 <div class="tsd-comment tsd-typography"><p>Key</p>
 </div></li>
 <li>
-<h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">path</span>: <span class="tsd-signature-symbol">(</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">[]</span></h5>
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">path</span>: <span class="tsd-signature-symbol">readonly </span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">[]</span></h5>
 <div class="tsd-comment tsd-typography"><p>The path used for errors.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="FormGroup.html" class="tsd-signature-type tsd-kind-interface">FormGroup</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">N</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <p>Inherited from <a href="FormGroup.html">FormGroup</a>.<a href="FormGroup.html#lens">lens</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/sampbarrow/react-tform/blob/82c6713/src/form.tsx#L75">form.tsx:75</a></li></ul></aside></li></ul></section>
+<li>Defined in field.tsx:73</li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-inherited"><a id="prop" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>prop</span><a href="#prop" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-inherited">
@@ -379,10 +551,30 @@
 <h4 class="tsd-returns-title">Returns <a href="FormGroup.html" class="tsd-signature-type tsd-kind-interface">FormGroup</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">T</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type tsd-kind-type-parameter">K</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <p>Inherited from <a href="FormGroup.html">FormGroup</a>.<a href="FormGroup.html#prop">prop</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/sampbarrow/react-tform/blob/82c6713/src/form.tsx#L67">form.tsx:67</a></li></ul></aside></li></ul></section>
-<section class="tsd-panel tsd-member tsd-is-inherited"><a id="submit" class="tsd-anchor"></a>
+<li>Defined in field.tsx:80</li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member"><a id="revert" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>revert</span><a href="#revert" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<ul class="tsd-signatures">
+<li class="tsd-signature tsd-anchor-link" id="revert.revert-1"><span class="tsd-kind-call-signature">revert</span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><a href="#revert.revert-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Revert this form&#39;s data back to the last initialization data.</p>
+</div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/sampbarrow/react-tform/blob/cd8de99/src/form.tsx#L32">form.tsx:32</a></li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member"><a id="revertToSubmitted" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>revert<wbr/>To<wbr/>Submitted</span><a href="#revertToSubmitted" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<ul class="tsd-signatures">
+<li class="tsd-signature tsd-anchor-link" id="revertToSubmitted.revertToSubmitted-1"><span class="tsd-kind-call-signature">revert<wbr/>To<wbr/>Submitted</span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><a href="#revertToSubmitted.revertToSubmitted-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Revert this form&#39;s data back to the last submitted data (or the initialization data, if never submitted).</p>
+</div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/sampbarrow/react-tform/blob/cd8de99/src/form.tsx#L37">form.tsx:37</a></li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member"><a id="submit" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>submit</span><a href="#submit" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
-<ul class="tsd-signatures tsd-is-inherited">
+<ul class="tsd-signatures">
 <li class="tsd-signature tsd-anchor-link" id="submit.submit-1"><span class="tsd-kind-call-signature">submit</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">event</span><span class="tsd-signature-symbol">?</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span><a href="#submit.submit-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Submit this form. Returns a boolean for success or failure.</p>
@@ -393,20 +585,18 @@
 <li>
 <h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">event</span>: <span class="tsd-signature-type ">FormEvent</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">unknown</span><span class="tsd-signature-symbol">&gt;</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
-<p>Inherited from <a href="FormActions.html">FormActions</a>.<a href="FormActions.html#submit">submit</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/sampbarrow/react-tform/blob/82c6713/src/form.tsx#L161">form.tsx:161</a></li></ul></aside></li></ul></section>
-<section class="tsd-panel tsd-member tsd-is-inherited"><a id="validate" class="tsd-anchor"></a>
+<li>Defined in <a href="https://github.com/sampbarrow/react-tform/blob/cd8de99/src/form.tsx#L22">form.tsx:22</a></li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member"><a id="validate" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>validate</span><a href="#validate" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
-<ul class="tsd-signatures tsd-is-inherited">
-<li class="tsd-signature tsd-anchor-link" id="validate.validate-1"><span class="tsd-kind-call-signature">validate</span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><a href="#validate.validate-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<ul class="tsd-signatures">
+<li class="tsd-signature tsd-anchor-link" id="validate.validate-1"><span class="tsd-kind-call-signature">validate</span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span><a href="#validate.validate-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Validate this form.</p>
 </div>
-<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
-<p>Inherited from <a href="FormActions.html">FormActions</a>.<a href="FormActions.html#validate">validate</a></p>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/sampbarrow/react-tform/blob/82c6713/src/form.tsx#L157">form.tsx:157</a></li></ul></aside></li></ul></section></section></div>
+<li>Defined in <a href="https://github.com/sampbarrow/react-tform/blob/cd8de99/src/form.tsx#L17">form.tsx:17</a></li></ul></aside></li></ul></section></section></div>
 <div class="col-sidebar">
 <div class="page-menu">
 <div class="tsd-navigation settings">
@@ -426,53 +616,90 @@
 <h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4.93896 8.531L12 15.591L19.061 8.531L16.939 6.409L12 11.349L7.06098 6.409L4.93896 8.531Z" fill="var(--color-text)"></path></svg>On This Page</h3></summary>
 <div class="tsd-accordion-details">
 <ul>
+<li><a href="#canSubmit" class="tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>can<wbr/>Submit</span></a></li>
 <li><a href="#errors" class="tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>errors</span></a></li>
+<li><a href="#exception" class="tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>exception</span></a></li>
 <li><a href="#hasBeenBlurred" class="tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>has<wbr/>Been<wbr/>Blurred</span></a></li>
 <li><a href="#hasBeenBlurredSinceSubmitted" class="tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>has<wbr/>Been<wbr/>Blurred<wbr/>Since<wbr/>Submitted</span></a></li>
+<li><a href="#hasBeenBlurredSinceValidated" class="tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>has<wbr/>Been<wbr/>Blurred<wbr/>Since<wbr/>Validated</span></a></li>
+<li><a href="#hasBeenChanged" class="tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>has<wbr/>Been<wbr/>Changed</span></a></li>
+<li><a href="#hasBeenChangedSinceSubmitted" class="tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>has<wbr/>Been<wbr/>Changed<wbr/>Since<wbr/>Submitted</span></a></li>
+<li><a href="#hasBeenChangedSinceValidated" class="tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>has<wbr/>Been<wbr/>Changed<wbr/>Since<wbr/>Validated</span></a></li>
+<li><a href="#hasBeenCommitted" class="tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>has<wbr/>Been<wbr/>Committed</span></a></li>
+<li><a href="#hasBeenCommittedSinceSubmitted" class="tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>has<wbr/>Been<wbr/>Committed<wbr/>Since<wbr/>Submitted</span></a></li>
+<li><a href="#hasBeenCommittedSinceValidated" class="tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>has<wbr/>Been<wbr/>Committed<wbr/>Since<wbr/>Validated</span></a></li>
 <li><a href="#hasBeenFocused" class="tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>has<wbr/>Been<wbr/>Focused</span></a></li>
 <li><a href="#hasBeenFocusedSinceSubmitted" class="tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>has<wbr/>Been<wbr/>Focused<wbr/>Since<wbr/>Submitted</span></a></li>
+<li><a href="#hasBeenFocusedSinceValidated" class="tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>has<wbr/>Been<wbr/>Focused<wbr/>Since<wbr/>Validated</span></a></li>
 <li><a href="#hasBeenSubmitted" class="tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>has<wbr/>Been<wbr/>Submitted</span></a></li>
+<li><a href="#hasBeenValidated" class="tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>has<wbr/>Been<wbr/>Validated</span></a></li>
+<li><a href="#hasErrors" class="tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>has<wbr/>Errors</span></a></li>
+<li><a href="#hasSelfErrors" class="tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>has<wbr/>Self<wbr/>Errors</span></a></li>
+<li><a href="#initialValue" class="tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>initial<wbr/>Value</span></a></li>
+<li><a href="#isCurrentlyBlurred" class="tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>is<wbr/>Currently<wbr/>Blurred</span></a></li>
 <li><a href="#isCurrentlyFocused" class="tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>is<wbr/>Currently<wbr/>Focused</span></a></li>
 <li><a href="#isDirty" class="tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>is<wbr/>Dirty</span></a></li>
 <li><a href="#isDirtySinceSubmitted" class="tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>is<wbr/>Dirty<wbr/>Since<wbr/>Submitted</span></a></li>
 <li><a href="#isSubmitting" class="tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>is<wbr/>Submitting</span></a></li>
 <li><a href="#isValid" class="tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>is<wbr/>Valid</span></a></li>
 <li><a href="#isValidating" class="tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>is<wbr/>Validating</span></a></li>
-<li><a href="#lastBlurred" class="tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>last<wbr/>Blurred</span></a></li>
-<li><a href="#lastChanged" class="tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>last<wbr/>Changed</span></a></li>
-<li><a href="#lastFocused" class="tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>last<wbr/>Focused</span></a></li>
-<li><a href="#lastInitialized" class="tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>last<wbr/>Initialized</span></a></li>
-<li><a href="#lastSubmitted" class="tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>last<wbr/>Submitted</span></a></li>
-<li><a href="#setErrors" class="tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>set<wbr/>Errors</span></a></li>
+<li><a href="#lastBlur" class="tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>last<wbr/>Blur</span></a></li>
+<li><a href="#lastChange" class="tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>last<wbr/>Change</span></a></li>
+<li><a href="#lastCommit" class="tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>last<wbr/>Commit</span></a></li>
+<li><a href="#lastFocus" class="tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>last<wbr/>Focus</span></a></li>
+<li><a href="#lastInit" class="tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>last<wbr/>Init</span></a></li>
+<li><a href="#lastSubmit" class="tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>last<wbr/>Submit</span></a></li>
+<li><a href="#lastSubmitAttempt" class="tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>last<wbr/>Submit<wbr/>Attempt</span></a></li>
+<li><a href="#lastSubmitCompleted" class="tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>last<wbr/>Submit<wbr/>Completed</span></a></li>
+<li><a href="#lastSubmitStarted" class="tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>last<wbr/>Submit<wbr/>Started</span></a></li>
+<li><a href="#lastValidate" class="tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>last<wbr/>Validate</span></a></li>
+<li><a href="#lastValidateCompleted" class="tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>last<wbr/>Validate<wbr/>Completed</span></a></li>
+<li><a href="#lastValidateStarted" class="tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>last<wbr/>Validate<wbr/>Started</span></a></li>
+<li><a href="#selfErrors" class="tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>self<wbr/>Errors</span></a></li>
 <li><a href="#setValue" class="tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>set<wbr/>Value</span></a></li>
+<li><a href="#submitAttemptCount" class="tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>submit<wbr/>Attempt<wbr/>Count</span></a></li>
+<li><a href="#submitCount" class="tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>submit<wbr/>Count</span></a></li>
+<li><a href="#submittedValue" class="tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>submitted<wbr/>Value</span></a></li>
+<li><a href="#submittingCount" class="tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>submitting<wbr/>Count</span></a></li>
 <li><a href="#value" class="tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>value</span></a></li>
-<li><a href="#alert" class="tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>alert</span></a></li>
 <li><a href="#blur" class="tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>blur</span></a></li>
+<li><a href="#commit" class="tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>commit</span></a></li>
 <li><a href="#focus" class="tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>focus</span></a></li>
 <li><a href="#initialize" class=""><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>initialize</span></a></li>
 <li><a href="#lens" class="tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>lens</span></a></li>
 <li><a href="#prop" class="tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>prop</span></a></li>
-<li><a href="#submit" class="tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>submit</span></a></li>
-<li><a href="#validate" class="tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>validate</span></a></li></ul></div></details></div>
+<li><a href="#revert" class=""><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>revert</span></a></li>
+<li><a href="#revertToSubmitted" class=""><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>revert<wbr/>To<wbr/>Submitted</span></a></li>
+<li><a href="#submit" class=""><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>submit</span></a></li>
+<li><a href="#validate" class=""><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>validate</span></a></li></ul></div></details></div>
 <div class="site-menu">
 <nav class="tsd-navigation"><a href="../modules.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-namespace)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-4-path"></rect><path d="M9.33 16V7.24H10.77L13.446 14.74C13.43 14.54 13.41 14.296 13.386 14.008C13.37 13.712 13.354 13.404 13.338 13.084C13.33 12.756 13.326 12.448 13.326 12.16V7.24H14.37V16H12.93L10.266 8.5C10.282 8.692 10.298 8.936 10.314 9.232C10.33 9.52 10.342 9.828 10.35 10.156C10.366 10.476 10.374 10.784 10.374 11.08V16H9.33Z" fill="var(--color-text)" id="icon-4-text"></path></svg><span>react-<wbr/>tform</span></a>
 <ul class="tsd-small-nested-navigation">
-<li><a href="FormActions.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-interface)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-256-path"></rect><path d="M9.51 16V15.016H11.298V8.224H9.51V7.24H14.19V8.224H12.402V15.016H14.19V16H9.51Z" fill="var(--color-text)" id="icon-256-text"></path></svg><span>Form<wbr/>Actions</span></a></li>
-<li><a href="FormContext.html" class="current"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg><span>Form<wbr/>Context</span></a></li>
+<li><a href="FormContext.html" class="current"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-interface)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-256-path"></rect><path d="M9.51 16V15.016H11.298V8.224H9.51V7.24H14.19V8.224H12.402V15.016H14.19V16H9.51Z" fill="var(--color-text)" id="icon-256-text"></path></svg><span>Form<wbr/>Context</span></a></li>
 <li><a href="FormField.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg><span>Form<wbr/>Field</span></a></li>
 <li><a href="FormGroup.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg><span>Form<wbr/>Group</span></a></li>
+<li><a href="FormInternalState.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg><span>Form<wbr/>Internal<wbr/>State</span></a></li>
 <li><a href="FormOptions.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg><span>Form<wbr/>Options</span></a></li>
 <li><a href="FormState.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg><span>Form<wbr/>State</span></a></li>
 <li><a href="../types/AutoSaveOptions.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-type-alias)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-4194304-path"></rect><path d="M11.31 16V8.224H8.91V7.24H14.79V8.224H12.39V16H11.31Z" fill="var(--color-text)" id="icon-4194304-text"></path></svg><span>Auto<wbr/>Save<wbr/>Options</span></a></li>
 <li><a href="../types/AutoSaveStatus.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4194304-path"></use><use href="#icon-4194304-text"></use></svg><span>Auto<wbr/>Save<wbr/>Status</span></a></li>
+<li><a href="../types/FormAction.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4194304-path"></use><use href="#icon-4194304-text"></use></svg><span>Form<wbr/>Action</span></a></li>
+<li><a href="../types/FormComparer.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4194304-path"></use><use href="#icon-4194304-text"></use></svg><span>Form<wbr/>Comparer</span></a></li>
 <li><a href="../types/FormError.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4194304-path"></use><use href="#icon-4194304-text"></use></svg><span>Form<wbr/>Error</span></a></li>
 <li><a href="../types/FormHook.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4194304-path"></use><use href="#icon-4194304-text"></use></svg><span>Form<wbr/>Hook</span></a></li>
 <li><a href="../types/FormHooks.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4194304-path"></use><use href="#icon-4194304-text"></use></svg><span>Form<wbr/>Hooks</span></a></li>
+<li><a href="../types/FormInternalAction.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4194304-path"></use><use href="#icon-4194304-text"></use></svg><span>Form<wbr/>Internal<wbr/>Action</span></a></li>
 <li><a href="../types/FormSubmitter.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4194304-path"></use><use href="#icon-4194304-text"></use></svg><span>Form<wbr/>Submitter</span></a></li>
-<li><a href="../types/FormValidationResult.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4194304-path"></use><use href="#icon-4194304-text"></use></svg><span>Form<wbr/>Validation<wbr/>Result</span></a></li>
 <li><a href="../types/FormValidator.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4194304-path"></use><use href="#icon-4194304-text"></use></svg><span>Form<wbr/>Validator</span></a></li>
-<li><a href="../functions/useAutoSave.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-function)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-64-path"></rect><path d="M9.39 16V7.24H14.55V8.224H10.446V11.128H14.238V12.112H10.47V16H9.39Z" fill="var(--color-text)" id="icon-64-text"></path></svg><span>use<wbr/>Auto<wbr/>Save</span></a></li>
-<li><a href="../functions/useForm.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>use<wbr/>Form</span></a></li></ul></nav></div></div></div>
+<li><a href="../variables/FORM_HOOKS.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-variable)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-32-path"></rect><path d="M11.106 16L8.85 7.24H9.966L11.454 13.192C11.558 13.608 11.646 13.996 11.718 14.356C11.79 14.708 11.842 14.976 11.874 15.16C11.906 14.976 11.954 14.708 12.018 14.356C12.09 13.996 12.178 13.608 12.282 13.192L13.758 7.24H14.85L12.582 16H11.106Z" fill="var(--color-text)" id="icon-32-text"></path></svg><span>FORM_<wbr/>HOOKS</span></a></li>
+<li><a href="../variables/FORM_HOOK_KEYS.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-32-path"></use><use href="#icon-32-text"></use></svg><span>FORM_<wbr/>HOOK_<wbr/>KEYS</span></a></li>
+<li><a href="../functions/formGroup-1.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-function)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-64-path"></rect><path d="M9.39 16V7.24H14.55V8.224H10.446V11.128H14.238V12.112H10.47V16H9.39Z" fill="var(--color-text)" id="icon-64-text"></path></svg><span>form<wbr/>Group</span></a></li>
+<li><a href="../functions/initialFormState.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>initial<wbr/>Form<wbr/>State</span></a></li>
+<li><a href="../functions/rootFormGroup.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>root<wbr/>Form<wbr/>Group</span></a></li>
+<li><a href="../functions/useAutoSave.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>use<wbr/>Auto<wbr/>Save</span></a></li>
+<li><a href="../functions/useForm.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>use<wbr/>Form</span></a></li>
+<li><a href="../functions/useFormHook.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>use<wbr/>Form<wbr/>Hook</span></a></li>
+<li><a href="../functions/useFormState.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg><span>use<wbr/>Form<wbr/>State</span></a></li></ul></nav></div></div></div>
 <div class="tsd-generator">
 <p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></div>
 <div class="overlay"></div></body></html>

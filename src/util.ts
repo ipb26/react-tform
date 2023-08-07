@@ -1,14 +1,15 @@
 import { either, equals, isEmpty, isNil, mapObjIndexed, reject } from "ramda"
-import { DependencyList, EffectCallback, useEffect, useMemo, useRef, useState } from "react"
+import { DependencyList, EffectCallback, useEffect, useRef } from "react"
+import { FormComparer } from "./options"
 
 /**
- * Deep compare two objects.
- * @param a Object 1.
- * @param b Object 2.
- * @returns Whether the objects are equal.
+ * Deep compare two values.
+ * @param value1 Value 1.
+ * @param value2 Value 2.
+ * @returns Whether the values are equal.
  */
-export function defaultCompare(a: unknown, b: unknown) {
-    return equals(cleanEmpty(a), cleanEmpty(b))
+export function defaultCompare(value1: unknown, value2: unknown) {
+    return equals(cleanEmpty(value1), cleanEmpty(value2))
 }
 
 /**
@@ -40,50 +41,31 @@ export function useCustomCompareEffect<TDeps extends DependencyList>(effect: Eff
     return useEffect(effect, ref.current)
 }
 
-export function useArray<T>(initialValue: T[] = []) {
-    const [value, setValue] = useState(initialValue)
-    const shift = () => {
-        const first = value.at(0)
-        setValue(value.slice(1))
-        return first
+/**
+ * Compare two values using a specific comparison type.
+ * @param value1 Value 1.
+ * @param value2 Value 2.
+ * @param comparer The comparison type.
+ * @returns Whether or not the values are equal.
+ */
+export function compare<T>(value1: T, value2: T, comparer?: FormComparer<T>) {
+    if (comparer === undefined || comparer === "deep") {
+        return equals(value1, value2)
     }
-    const shifts = (count = 1) => {
-        const first = value.slice(0, count)
-        setValue(value.slice(count))
-        return first
+    else if (comparer === "shallow") {
+        return value1 === value2
     }
-    const append = (...append: T[]) => {
-        setValue(value => [...value, ...append])
+    else {
+        return comparer(value1, value2)
     }
-    const prepend = (...prepend: T[]) => {
-        setValue(value => [...prepend, ...value])
-    }
-    const pop = () => {
-        const last = value.at(-1)
-        setValue(value.slice(0, -1))
-        return last
-    }
-    const pops = (count = 1) => {
-        const last = value.slice(-1 * count)
-        setValue(value.slice(0, -1 * count))
-        return last
-    }
-    const clear = () => {
-        setValue([])
-    }
-    return useMemo(() => {
-        return {
-            value,
-            setValue,
-            append,
-            prepend,
-            pop,
-            pops,
-            shift,
-            shifts,
-            clear
-        }
-    }, [
-        value
-    ])
+}
+
+/**
+ * Return a value, or a default if the value is a boolean true.
+ * @param value The value.
+ * @param defaultValue A default value. 
+ * @returns The value, or a default if the value is a boolean true.
+ */
+export function booleanOr<T>(value: boolean | T | undefined, defaultValue: T) {
+    return value === true ? defaultValue : (typeof value !== "boolean" ? value : undefined)
 }
