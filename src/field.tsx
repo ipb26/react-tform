@@ -82,17 +82,21 @@ export interface FormGroup<T> extends FormField<T, T> {
 }
 
 export function rootFormGroup<T>(state: ReturnType<typeof useFormState<T>>): FormGroup<T> {
-    return formGroup({
-        value: state.value.value,
-        errors: state.value.errors,
-        selfErrors: state.value.errors.filter(_ => _.path.length === 0),
-        hasErrors: state.value.errors.length > 0,
-        hasSelfErrors: state.value.errors.filter(_ => _.path.length === 0).length > 0,
-        setValue: (value: T) => state.patch({ value, lastChanged: new Date(), isValid: undefined, lastValidated: undefined }),
-        blur: () => state.patch({ lastBlurred: new Date() }),
-        commit: () => state.patch({ lastCommitted: new Date() }),
-        focus: () => state.patch({ lastFocused: new Date() })
-    }, lens(identity, identity), [])
+    return formGroup(
+        {
+            value: state.value.value,
+            errors: state.value.errors,
+            selfErrors: state.value.errors.filter(_ => _.path.length === 0),
+            hasErrors: state.value.errors.length > 0,
+            hasSelfErrors: state.value.errors.filter(_ => _.path.length === 0).length > 0,
+            setValue: (value: T) => state.patch({ value, lastChanged: new Date(), isValid: undefined, lastValidated: undefined }),
+            blur: () => state.patch({ lastBlurred: new Date() }),
+            commit: () => state.patch({ lastCommitted: new Date() }),
+            focus: () => state.patch({ lastFocused: new Date() })
+        },
+        lens(identity, identity),
+        []
+    )
 }
 
 export function formGroup<T, V>(parent: FormField<T, T>, field: Lens<T, V>, path: readonly (string | number)[]): FormGroup<V> {

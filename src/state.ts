@@ -1,17 +1,48 @@
-import { Dispatch, SetStateAction, useMemo, useState } from "react"
+import { useMemo, useState } from "react"
 import { ValueOrFactory, callOrGet } from "value-or-factory"
 import { FormError, FormOptions } from "./options"
 import { compare } from "./util"
 
+/**
+ * A form's internal state.
+ */
 export interface FormInternalState<T> {
 
+    /**
+     * The current value of the form.
+     */
     readonly value: T
+
+    /**
+     * The initial value of the form.
+     */
     readonly initialValue: T
-    readonly exception?: unknown
+
+    /**
+     * The form's errors.
+     */
     readonly errors: readonly FormError[]
+
+    /**
+     * Is the form valid?
+     */
     readonly isValid?: boolean | undefined
+
+    /**
+     * The most recently submitted value.
+     */
     readonly submittedValue?: T | undefined
+
+    /**
+     * The number of times the form was successfully submitted.
+     */
     readonly submitCount: number
+
+    /**
+     * The last exception to occur within submission or validation.
+     */
+    readonly exception?: unknown
+
     readonly lastInitialized: Date
     readonly lastBlurred?: Date | undefined
     readonly lastChanged?: Date | undefined
@@ -29,8 +60,11 @@ export interface FormInternalState<T> {
 
 }
 
-export type FormInternalAction<T> = Dispatch<SetStateAction<FormInternalState<T>>>
-
+/**
+ * Build the initial form state.
+ * @param initialValue The form's value.
+ * @returns An initial form state.
+ */
 export function initialFormState<T>(initialValue: T) {
     return {
         lastInitialized: new Date(),
@@ -73,7 +107,7 @@ export function useFormState<T>(options: FormOptions<T>) {
     const isValidating = (state.lastValidateStarted?.getTime() ?? 0) > (state.lastValidateCompleted?.getTime() ?? 0)
     const isSubmitting = (state.lastSubmitStarted?.getTime() ?? 0) > (state.lastSubmitCompleted?.getTime() ?? 0)
 
-    const fullState = {
+    const value = {
         ...state,
         canSubmit,
         isDirty,
@@ -99,7 +133,7 @@ export function useFormState<T>(options: FormOptions<T>) {
     }
 
     return {
-        value: fullState,
+        value,
         set: setState,
         patch: (partial: ValueOrFactory<Partial<FormInternalState<T>>, [FormInternalState<T>]>) => {
             setState(state => {

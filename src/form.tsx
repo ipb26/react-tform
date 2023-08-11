@@ -25,12 +25,12 @@ export interface FormContext<T> extends FormState<T>, FormGroup<T> {
     /**
      * Validate this form.
      */
-    requestValidate(): void
+    scheduleValidate(): void
 
     /**
      * Submit this form.
      */
-    requestSubmit(): void
+    scheduleSubmit(): void
 
     /**
      * Reinitialize this form. Clears all state, including errors and submission history.
@@ -66,28 +66,6 @@ export function useForm<T>(initialOptions: FormOptions<T>): FormContext<T> {
     // Initialization function. Can be called manually but generally won't be.
 
     const initialize = (value: T) => state.set(initialFormState(value))
-
-    // Automatic reinitalization if initialValue prop changes.
-
-    const firstMount = useIsFirstMount()
-    useCustomCompareEffect(() => {
-        const reinitialize = (() => {
-            if (options.autoReinitialize === undefined) {
-                return false
-            }
-            if (typeof options.autoReinitialize === "boolean") {
-                return options.autoReinitialize
-            }
-            return options.autoReinitialize(options.initialValue)
-        })()
-        if (!firstMount && reinitialize) {
-            initialize(options.initialValue)
-        }
-    }, [
-        options.initialValue
-    ] as const, (a, b) => {
-        return compare(a[0], b[0], options.comparer)
-    })
 
     // Validate function.
 
@@ -135,7 +113,10 @@ export function useForm<T>(initialOptions: FormOptions<T>): FormContext<T> {
                     }
                     return await options.submit(state.value.value) ?? []
                 })()
-                state.patch({ errors })
+                state.patch({
+                    errors,
+                    isValid: errors.length === 0
+                })
                 if (errors.length === 0) {
                     const date = new Date()
                     state.patch(state => {
@@ -160,8 +141,8 @@ export function useForm<T>(initialOptions: FormOptions<T>): FormContext<T> {
 
     // Revert to the initial data.
 
-    const requestSubmit = () => state.patch({ lastSubmitRequested: new Date() })
-    const requestValidate = () => state.patch({ lastValidateRequested: new Date() })
+    const scheduleSubmit = () => state.patch({ lastSubmitRequested: new Date() })
+    const scheduleValidate = () => state.patch({ lastValidateRequested: new Date() })
     const revert = () => initialize(options.initialValue)
     const revertToSubmitted = () => initialize(state.value.submittedValue ?? options.initialValue)
 
@@ -175,8 +156,8 @@ export function useForm<T>(initialOptions: FormOptions<T>): FormContext<T> {
         initialize,
         submit,
         validate,
-        requestSubmit,
-        requestValidate,
+        scheduleSubmit,
+        scheduleValidate,
         revert,
         revertToSubmitted,
     }
@@ -191,6 +172,28 @@ export function useForm<T>(initialOptions: FormOptions<T>): FormContext<T> {
                 action?.(context)
             }
         })
+    })
+
+    // Automatic reinitalization if initialValue prop changes.
+
+    const firstMount = useIsFirstMount()
+    useCustomCompareEffect(() => {
+        const reinitialize = (() => {
+            if (options.autoReinitialize === undefined) {
+                return false
+            }
+            if (typeof options.autoReinitialize === "boolean") {
+                return options.autoReinitialize
+            }
+            return options.autoReinitialize(options.initialValue)
+        })()
+        if (!firstMount && reinitialize) {
+            initialize(options.initialValue)
+        }
+    }, [
+        options.initialValue
+    ] as const, (a, b) => {
+        return compare(a[0], b[0], options.comparer)
     })
 
     if (state.value.exception !== undefined) {

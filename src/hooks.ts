@@ -50,7 +50,13 @@ export type FormHooks<T> = {
 
 }
 
-export function useFormHook<T>(form: FormContext<T>, hook: FormHook, callback: () => void) {
+/**
+ * Attach a callback to a form hook.
+ * @param form The form.
+ * @param hook Which hook to trigger on.
+ * @param callback The callback to run.
+ */
+export function useFormHook<T>(form: FormContext<T>, hook: FormHook, callback: Function) {
     const value = FORM_HOOKS[hook](form)
     useEffect(() => {
         if (value !== undefined) {
