@@ -89,7 +89,8 @@ export function rootFormGroup<T>(state: ReturnType<typeof useFormState<T>>): For
             selfErrors: state.value.errors.filter(_ => _.path.length === 0),
             hasErrors: state.value.errors.length > 0,
             hasSelfErrors: state.value.errors.filter(_ => _.path.length === 0).length > 0,
-            setValue: (value: T) => state.patch({ value, lastChanged: new Date(), isValid: undefined, lastValidated: undefined }),
+            //TODO do we need to reset lastValidateCompleted?
+            setValue: (value: T) => state.patch({ value, lastChanged: new Date(), isValid: undefined, lastValidateCompleted: undefined }),
             blur: () => state.patch({ lastBlurred: new Date() }),
             commit: () => state.patch({ lastCommitted: new Date() }),
             focus: () => state.patch({ lastFocused: new Date() })

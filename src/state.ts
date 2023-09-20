@@ -54,9 +54,11 @@ export interface FormInternalState<T> {
     readonly lastSubmitStarted?: Date | undefined
     readonly lastSubmitCompleted?: Date | undefined
     readonly lastValidateRequested?: Date | undefined
-    readonly lastValidated?: Date | undefined
-    readonly lastValidateStarted?: Date | undefined
     readonly lastValidateCompleted?: Date | undefined
+    readonly lastValidateSucceeded?: Date | undefined
+    readonly lastValidateFailed?: Date | undefined
+    readonly lastValidateAttemptStarted?: Date | undefined
+    readonly lastValidateAttemptCompleted?: Date | undefined
 
 }
 
@@ -85,7 +87,7 @@ export function useFormState<T>(options: FormOptions<T>) {
     const isDirtySinceSubmitted = useMemo(() => (state.lastChanged?.getTime() ?? 0) > (state.lastSubmitted?.getTime() ?? 0) && !compare(state.value, state.submittedValue ?? state.initialValue, options.comparer), [state.value, state.submittedValue ?? state.initialValue, options.comparer])
 
     const hasBeenSubmitted = state.lastSubmitted !== undefined
-    const hasBeenValidated = state.lastValidated !== undefined
+    const hasBeenValidated = state.lastValidateCompleted !== undefined
 
     const hasBeenBlurred = state.lastBlurred !== undefined
     const hasBeenChanged = state.lastChanged !== undefined
@@ -97,14 +99,14 @@ export function useFormState<T>(options: FormOptions<T>) {
     const hasBeenCommittedSinceSubmitted = (state.lastCommitted?.getTime() ?? 0) > (state.lastSubmitted?.getTime() ?? 0)
     const hasBeenFocusedSinceSubmitted = (state.lastFocused?.getTime() ?? 0) > (state.lastSubmitted?.getTime() ?? 0)
 
-    const hasBeenBlurredSinceValidated = (state.lastBlurred?.getTime() ?? 0) > (state.lastValidated?.getTime() ?? 0)
-    const hasBeenChangedSinceValidated = (state.lastChanged?.getTime() ?? 0) > (state.lastValidated?.getTime() ?? 0)
-    const hasBeenCommittedSinceValidated = (state.lastCommitted?.getTime() ?? 0) > (state.lastValidated?.getTime() ?? 0)
-    const hasBeenFocusedSinceValidated = (state.lastFocused?.getTime() ?? 0) > (state.lastValidated?.getTime() ?? 0)
+    const hasBeenBlurredSinceValidated = (state.lastBlurred?.getTime() ?? 0) > (state.lastValidateCompleted?.getTime() ?? 0)
+    const hasBeenChangedSinceValidated = (state.lastChanged?.getTime() ?? 0) > (state.lastValidateCompleted?.getTime() ?? 0)
+    const hasBeenCommittedSinceValidated = (state.lastCommitted?.getTime() ?? 0) > (state.lastValidateCompleted?.getTime() ?? 0)
+    const hasBeenFocusedSinceValidated = (state.lastFocused?.getTime() ?? 0) > (state.lastValidateCompleted?.getTime() ?? 0)
 
     const isCurrentlyFocused = (state.lastFocused?.getTime() ?? 0) > (state.lastBlurred?.getTime() ?? 0)
     const isCurrentlyBlurred = (state.lastBlurred?.getTime() ?? 0) > (state.lastFocused?.getTime() ?? 0)
-    const isValidating = (state.lastValidateStarted?.getTime() ?? 0) > (state.lastValidateCompleted?.getTime() ?? 0)
+    const isValidating = (state.lastValidateAttemptStarted?.getTime() ?? 0) > (state.lastValidateAttemptCompleted?.getTime() ?? 0)
     const isSubmitting = (state.lastSubmitStarted?.getTime() ?? 0) > (state.lastSubmitCompleted?.getTime() ?? 0)
 
     const value = {

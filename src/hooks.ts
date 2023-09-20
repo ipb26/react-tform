@@ -28,9 +28,11 @@ export const FORM_HOOKS = {
     submitAttempted: <T>(context: FormContext<T>) => context.lastSubmitAttempted,
     submitStarted: <T>(context: FormContext<T>) => context.lastSubmitStarted,
     submitCompleted: <T>(context: FormContext<T>) => context.lastSubmitCompleted,
-    validated: <T>(context: FormContext<T>) => context.lastValidated,
+    validateSucceeded: <T>(context: FormContext<T>) => context.lastValidateSucceeded,
+    validateFailed: <T>(context: FormContext<T>) => context.lastValidateFailed,
     validateRequested: <T>(context: FormContext<T>) => context.lastValidateRequested,
-    validateStarted: <T>(context: FormContext<T>) => context.lastValidateStarted,
+    validateAttemptStarted: <T>(context: FormContext<T>) => context.lastValidateAttemptStarted,
+    validateAttemptCompleted: <T>(context: FormContext<T>) => context.lastValidateAttemptCompleted,
     validateCompleted: <T>(context: FormContext<T>) => context.lastValidateCompleted,
 }
 
@@ -46,7 +48,7 @@ export type FormHook = keyof typeof FORM_HOOKS
  */
 export type FormHooks<T> = {
 
-    [K in FormHook]?: FormAction<T>
+    [K in FormHook]?: FormAction<T> | FormAction<T>[]
 
 }
 

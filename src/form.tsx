@@ -59,7 +59,7 @@ export function useForm<T>(initialOptions: FormOptions<T>): FormContext<T> {
 
     // Build options and state.
 
-    const options = { ...initialOptions, on: { validateRequested: "validate", submitRequested: "submit", change: "validate", ...initialOptions.on } } satisfies FormOptions<T>
+    const options = { ...initialOptions, on: { validateRequested: ["validate"], submitRequested: ["submit"], change: ["validate"], ...initialOptions.on } } satisfies FormOptions<T>
     const state = useFormState<T>(options)
     const mutex = useMemo(() => new Mutex(), [])
 
@@ -75,15 +75,25 @@ export function useForm<T>(initialOptions: FormOptions<T>): FormContext<T> {
             if (options.validate === undefined) {
                 return
             }
-            state.patch({ lastValidateStarted: new Date() })
+            state.patch({ lastValidateAttemptStarted: new Date() })
             try {
                 const errors = await options.validate(state.value.value) ?? []
                 state.patch({
-                    lastValidated: new Date(),
+                    lastValidateCompleted: new Date(),
                     value: state.value.value,
                     isValid: errors.length === 0,
                     errors: errors
                 })
+                if (errors.length === 0) {
+                    state.patch({
+                        lastValidateSucceeded: new Date(),
+                    })
+                }
+                else {
+                    state.patch({
+                        lastValidateFailed: new Date(),
+                    })
+                }
                 return errors.length === 0
             }
             catch (exception) {
@@ -91,7 +101,7 @@ export function useForm<T>(initialOptions: FormOptions<T>): FormContext<T> {
                 return false
             }
             finally {
-                state.patch({ lastValidateCompleted: new Date() })
+                state.patch({ lastValidateAttemptCompleted: new Date() })
             }
         })
     }
@@ -164,13 +174,15 @@ export function useForm<T>(initialOptions: FormOptions<T>): FormContext<T> {
 
     FORM_HOOK_KEYS.forEach(item => {
         useFormHook(context, item, () => {
-            const action = options.on?.[item]
-            if (typeof action === "string") {
-                context[action]()
-            }
-            else {
-                action?.(context)
-            }
+            const actions = [options.on?.[item]].flat()
+            actions.flat().forEach(action => {
+                if (typeof action === "string") {
+                    context[action]()
+                }
+                else {
+                    action?.(context)
+                }
+            })
         })
     })
 
