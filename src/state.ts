@@ -54,11 +54,10 @@ export interface FormInternalState<T> {
     readonly lastSubmitStarted?: Date | undefined
     readonly lastSubmitCompleted?: Date | undefined
     readonly lastValidateRequested?: Date | undefined
+    readonly lastValidateStarted?: Date | undefined
     readonly lastValidateCompleted?: Date | undefined
-    readonly lastValidateSucceeded?: Date | undefined
     readonly lastValidateFailed?: Date | undefined
-    readonly lastValidateAttemptStarted?: Date | undefined
-    readonly lastValidateAttemptCompleted?: Date | undefined
+    readonly lastValidateSucceeded?: Date | undefined
 
 }
 
@@ -106,7 +105,7 @@ export function useFormState<T>(options: FormOptions<T>) {
 
     const isCurrentlyFocused = (state.lastFocused?.getTime() ?? 0) > (state.lastBlurred?.getTime() ?? 0)
     const isCurrentlyBlurred = (state.lastBlurred?.getTime() ?? 0) > (state.lastFocused?.getTime() ?? 0)
-    const isValidating = (state.lastValidateAttemptStarted?.getTime() ?? 0) > (state.lastValidateAttemptCompleted?.getTime() ?? 0)
+    const isValidating = (state.lastValidateStarted?.getTime() ?? 0) > (state.lastValidateStarted?.getTime() ?? 0)
     const isSubmitting = (state.lastSubmitStarted?.getTime() ?? 0) > (state.lastSubmitCompleted?.getTime() ?? 0)
 
     const value = {

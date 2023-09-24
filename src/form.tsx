@@ -75,7 +75,7 @@ export function useForm<T>(initialOptions: FormOptions<T>): FormContext<T> {
             if (options.validate === undefined) {
                 return
             }
-            state.patch({ lastValidateAttemptStarted: new Date() })
+            state.patch({ lastValidateStarted: new Date() })
             try {
                 const errors = await options.validate(state.value.value) ?? []
                 state.patch({
@@ -101,7 +101,7 @@ export function useForm<T>(initialOptions: FormOptions<T>): FormContext<T> {
                 return false
             }
             finally {
-                state.patch({ lastValidateAttemptCompleted: new Date() })
+                //state.patch({ lastValidateAttemptCompleted: new Date() })
             }
         })
     }

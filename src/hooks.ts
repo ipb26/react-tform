@@ -31,8 +31,7 @@ export const FORM_HOOKS = {
     validateSucceeded: <T>(context: FormContext<T>) => context.lastValidateSucceeded,
     validateFailed: <T>(context: FormContext<T>) => context.lastValidateFailed,
     validateRequested: <T>(context: FormContext<T>) => context.lastValidateRequested,
-    validateAttemptStarted: <T>(context: FormContext<T>) => context.lastValidateAttemptStarted,
-    validateAttemptCompleted: <T>(context: FormContext<T>) => context.lastValidateAttemptCompleted,
+    validateStarted: <T>(context: FormContext<T>) => context.lastValidateStarted,
     validateCompleted: <T>(context: FormContext<T>) => context.lastValidateCompleted,
 }
 
