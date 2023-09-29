@@ -1,6 +1,7 @@
 import { ValueOrFactory } from "value-or-factory"
 import { FormContext } from "./form"
 import { FormHooks } from "./hooks"
+import { FormState } from "./state"
 
 export type FormSubmitter<T> = (value: T) => FormError[] | void | Promise<FormError[] | void>
 export type FormValidator<T> = (value: T) => FormError[] | void | Promise<FormError[] | void>
@@ -38,12 +39,7 @@ export interface FormOptions<T> {
      * Whether or not the form should update if the initialValue property changes (based on a deep comparison - or using the customCompare option).
      * @defaultValue `false`
      */
-    readonly autoReinitialize?: ValueOrFactory<boolean, [T]>
-
-    /**
-     * A custom comparison function for determining whether or not the data has changed (used for re-initialization as isDirty flag). The default strips out all nulls, undefined, empty arrays, empty objects, zeros, and blank strings before comparing.
-     */
-    readonly comparer?: FormComparer<T>
+    readonly autoReinitialize?: ValueOrFactory<boolean, [FormState<T>]>
 
     /**
      * Specify actions to be executed on form hooks.

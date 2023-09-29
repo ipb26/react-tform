@@ -1,28 +1,5 @@
-import { either, equals, isEmpty, isNil, mapObjIndexed, reject } from "ramda"
-import { DependencyList, EffectCallback, useEffect, useRef } from "react"
-import { FormComparer } from "./options"
-
-/**
- * Deep compare two values.
- * @param value1 Value 1.
- * @param value2 Value 2.
- * @returns Whether the values are equal.
- */
-export function defaultCompare(value1: unknown, value2: unknown) {
-    return equals(cleanEmpty(value1), cleanEmpty(value2))
-}
-
-/**
- * Recursively remove all empty (null, undefined, [], "", 0) values from a value.
- * @param value Value
- * @returns A cleaned value.
- */
-export function cleanEmpty(value: unknown): unknown {
-    const cleaned = typeof value === "object" && value !== null ? reject(either(isEmpty, isNil), mapObjIndexed(cleanEmpty, value)) : value
-    if (!isEmpty(cleaned)) {
-        return cleaned
-    }
-}
+import { equals } from "ramda"
+import { DependencyList, EffectCallback, useEffect, useMemo, useRef } from "react"
 
 export function useIsFirstMount() {
     const isFirst = useRef(true)
@@ -33,9 +10,21 @@ export function useIsFirstMount() {
     return isFirst.current
 }
 
-export function useCustomCompareEffect<TDeps extends DependencyList>(effect: EffectCallback, deps: TDeps, depsEqual: (prevDeps: TDeps, nextDeps: TDeps) => boolean = (a, b) => equals(a, b)) {
+export function useFormCompareMemo<T, TDeps extends DependencyList>(factory: () => T, deps: TDeps) {
     const ref = useRef<TDeps | undefined>(undefined)
-    if (ref.current === undefined || !depsEqual(deps, ref.current)) {
+    if (ref.current === undefined || !formCompare(deps, ref.current)) {
+        ref.current = deps
+    }
+    return useMemo(factory, ref.current)
+}
+
+export function useFormCompareConstant<T>(value: T) {
+    return useFormCompareMemo(() => value, [value])
+}
+
+export function useFormCompareEffect<TDeps extends DependencyList>(effect: EffectCallback, deps: TDeps) {
+    const ref = useRef<TDeps | undefined>(undefined)
+    if (ref.current === undefined || !formCompare(deps, ref.current)) {
         ref.current = deps
     }
     return useEffect(effect, ref.current)
@@ -48,16 +37,8 @@ export function useCustomCompareEffect<TDeps extends DependencyList>(effect: Eff
  * @param comparer The comparison type.
  * @returns Whether or not the values are equal.
  */
-export function compare<T>(value1: T, value2: T, comparer?: FormComparer<T>) {
-    if (comparer === undefined || comparer === "deep") {
-        return equals(value1, value2)
-    }
-    else if (comparer === "shallow") {
-        return value1 === value2
-    }
-    else {
-        return comparer(value1, value2)
-    }
+export function formCompare(value1: unknown, value2: unknown) {
+    return equals(value1, value2)
 }
 
 /**
@@ -69,3 +50,24 @@ export function compare<T>(value1: T, value2: T, comparer?: FormComparer<T>) {
 export function booleanOr<T>(value: boolean | T | undefined, defaultValue: T) {
     return value === true ? defaultValue : (typeof value !== "boolean" ? value : undefined)
 }
+
+/**
+ * Deep compare two values.
+ * @param value1 Value 1.
+ * @param value2 Value 2.
+ * @returns Whether the values are equal.
+
+export function defaultCompare(value1: unknown, value2: unknown) {
+    return equals(cleanEmpty(value1), cleanEmpty(value2))
+}
+
+ * Recursively remove all empty (null, undefined, [], "", 0) values from a value.
+ * @param value Value
+ * @returns A cleaned value.
+ 
+exportfunction cleanEmpty(value: unknown): unknown {
+    const cleaned = typeof value === "object" && value !== null ? reject(either(isEmpty, isNil), mapObjIndexed(cleanEmpty, value)) : value
+    if (!isEmpty(cleaned)) {
+        return cleaned
+    }
+} */

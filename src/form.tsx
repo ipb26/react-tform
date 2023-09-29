@@ -1,10 +1,11 @@
 import { Mutex } from "async-mutex"
-import { FormEvent, useMemo } from "react"
+import { FormEvent, useEffect, useMemo } from "react"
+import { callOrGet } from "value-or-factory"
 import { FormGroup, rootFormGroup } from "./field"
 import { FORM_HOOK_KEYS, useFormHook } from "./hooks"
 import { FormOptions } from "./options"
 import { FormState, initialFormState, useFormState } from "./state"
-import { compare, useCustomCompareEffect, useIsFirstMount } from "./util"
+import { formCompare } from "./util"
 
 /**
  * A full form object, including state and mutation methods.
@@ -38,14 +39,25 @@ export interface FormContext<T> extends FormState<T>, FormGroup<T> {
     initialize(value: T): void
 
     /**
+     * Reinitialize this form using its initialValue option. Clears all state, including errors and submission history.
+     */
+    reinitialize(): void
+
+    /**
      * Revert this form's data back to the last initialization data.
      */
-    revert(): void
+    //revert(): void
 
     /**
      * Revert this form's data back to the last submitted data (or the initialization data, if never submitted).
      */
-    revertToSubmitted(): void
+    //revertToSubmitted(): void
+
+    /**
+     * Compare using the form's preferred comparison method.
+     */
+    compare(a: T, b: T): boolean
+    //TODO get rid of all this custom comparison stuff and just use deep?
 
 }
 
@@ -66,6 +78,8 @@ export function useForm<T>(initialOptions: FormOptions<T>): FormContext<T> {
     // Initialization function. Can be called manually but generally won't be.
 
     const initialize = (value: T) => state.set(initialFormState(value))
+    const reinitialize = () => initialize(state.value.initialValue)
+    const compare = (a: T, b: T) => formCompare(a, b)
 
     // Validate function.
 
@@ -149,12 +163,22 @@ export function useForm<T>(initialOptions: FormOptions<T>): FormContext<T> {
         })
     }
 
+    // Automatic reinitalization if initialValue prop changes.
+
+    useEffect(() => {
+        if (callOrGet(options.autoReinitialize, state.value)) {
+            reinitialize()
+        }
+    }, [
+        state.value.initialValue
+    ])
+
     // Revert to the initial data.
 
     const scheduleSubmit = () => state.patch({ lastSubmitRequested: new Date() })
     const scheduleValidate = () => state.patch({ lastValidateRequested: new Date() })
-    const revert = () => initialize(options.initialValue)
-    const revertToSubmitted = () => initialize(state.value.submittedValue ?? options.initialValue)
+    //const revert = () => initialize(options.initialValue)
+    // const revertToSubmitted = () => initialize(state.value.submittedValue ?? options.initialValue)
 
     // The root form group.
 
@@ -163,13 +187,15 @@ export function useForm<T>(initialOptions: FormOptions<T>): FormContext<T> {
     const context = {
         ...state.value,
         ...group,
+        compare,
         initialize,
+        reinitialize,
         submit,
         validate,
         scheduleSubmit,
         scheduleValidate,
-        revert,
-        revertToSubmitted,
+        //revert,
+        // revertToSubmitted,
     }
 
     FORM_HOOK_KEYS.forEach(item => {
@@ -186,8 +212,7 @@ export function useForm<T>(initialOptions: FormOptions<T>): FormContext<T> {
         })
     })
 
-    // Automatic reinitalization if initialValue prop changes.
-
+    /*
     const firstMount = useIsFirstMount()
     useCustomCompareEffect(() => {
         const reinitialize = (() => {
@@ -197,7 +222,7 @@ export function useForm<T>(initialOptions: FormOptions<T>): FormContext<T> {
             if (typeof options.autoReinitialize === "boolean") {
                 return options.autoReinitialize
             }
-            return options.autoReinitialize(options.initialValue)
+            return options.autoReinitialize(state.value)
         })()
         if (!firstMount && reinitialize) {
             initialize(options.initialValue)
@@ -205,8 +230,8 @@ export function useForm<T>(initialOptions: FormOptions<T>): FormContext<T> {
     }, [
         options.initialValue
     ] as const, (a, b) => {
-        return compare(a[0], b[0], options.comparer)
-    })
+        return compareFormInput(a[0], b[0], options.comparer)
+    })*/
 
     if (state.value.exception !== undefined) {
         throw state.value.exception

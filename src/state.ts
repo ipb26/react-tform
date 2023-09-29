@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react"
 import { ValueOrFactory, callOrGet } from "value-or-factory"
 import { FormError, FormOptions } from "./options"
-import { compare } from "./util"
+import { formCompare, useFormCompareConstant } from "./util"
 
 /**
  * A form's internal state.
@@ -14,9 +14,9 @@ export interface FormInternalState<T> {
     readonly value: T
 
     /**
-     * The initial value of the form.
+     * The initialized value of the form.
      */
-    readonly initialValue: T
+    readonly initializedValue: T
 
     /**
      * The form's errors.
@@ -69,7 +69,7 @@ export interface FormInternalState<T> {
 export function initialFormState<T>(initialValue: T) {
     return {
         lastInitialized: new Date(),
-        initialValue: initialValue,
+        initializedValue: initialValue,
         value: initialValue,
         errors: [],
         submitCount: 0,
@@ -82,8 +82,8 @@ export function useFormState<T>(options: FormOptions<T>) {
 
     const canSubmit = state.isValid !== false
 
-    const isDirty = useMemo(() => (state.lastChanged?.getTime() ?? 0) > state.lastInitialized.getTime() && !compare(state.value, state.initialValue, options.comparer), [state.value, state.initialValue, options.comparer])
-    const isDirtySinceSubmitted = useMemo(() => (state.lastChanged?.getTime() ?? 0) > (state.lastSubmitted?.getTime() ?? 0) && !compare(state.value, state.submittedValue ?? state.initialValue, options.comparer), [state.value, state.submittedValue ?? state.initialValue, options.comparer])
+    const isDirty = useMemo(() => (state.lastChanged?.getTime() ?? 0) > state.lastInitialized.getTime() && !formCompare(state.value, state.initializedValue), [state.value, state.initializedValue])
+    const isDirtySinceSubmitted = useMemo(() => (state.lastChanged?.getTime() ?? 0) > (state.lastSubmitted?.getTime() ?? 0) && !formCompare(state.value, state.submittedValue ?? state.initializedValue), [state.value, state.submittedValue ?? state.initializedValue])
 
     const hasBeenSubmitted = state.lastSubmitted !== undefined
     const hasBeenValidated = state.lastValidateCompleted !== undefined
@@ -108,9 +108,17 @@ export function useFormState<T>(options: FormOptions<T>) {
     const isValidating = (state.lastValidateStarted?.getTime() ?? 0) > (state.lastValidateStarted?.getTime() ?? 0)
     const isSubmitting = (state.lastSubmitStarted?.getTime() ?? 0) > (state.lastSubmitCompleted?.getTime() ?? 0)
 
+    //TODO rename to clarify dif between initial vs initilized value?
+    const initialValue = useFormCompareConstant(options.initialValue)
+    const initialValueDirty = useMemo(() => !formCompare(initialValue, state.initializedValue), [initialValue, state.initializedValue])
+
+    //TODO do we need sinceSubmitted, sinceValidated, etc
+
     const value = {
         ...state,
         canSubmit,
+        initialValue,
+        initialValueDirty,
         isDirty,
         isDirtySinceSubmitted,
         hasBeenSubmitted,
@@ -149,6 +157,16 @@ export function useFormState<T>(options: FormOptions<T>) {
 }
 
 export interface FormState<T> extends FormInternalState<T> {
+
+    /**
+     * The latest initial value passed to the form. Not necessarily the form's initialized value.
+     */
+    readonly initialValue: T
+
+    /**
+     * Whether the latest initial value passed to the form is the same as the form's initialized value.
+     */
+    readonly initialValueDirty: boolean
 
     /**
      * Whether or not the form is ready for submission. Either it has been validated, or there is no validator required.
