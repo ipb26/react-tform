@@ -1,9 +1,9 @@
 import { Mutex } from "async-mutex"
 import { FormEvent, useEffect, useMemo } from "react"
-import { callOrGet } from "value-or-factory"
-import { FormGroup, rootFormGroup } from "./field"
+import { ValueOrFactory, callOrGet } from "value-or-factory"
+import { FormField, FormFieldImpl } from "./field"
 import { FORM_HOOK_KEYS, useFormHook } from "./hooks"
-import { FormOptions } from "./options"
+import { FormError, FormOptions } from "./options"
 import { FormState, initialFormState, useFormState } from "./state"
 import { formCompare } from "./util"
 
@@ -11,17 +11,17 @@ import { formCompare } from "./util"
  * A full form object, including state and mutation methods.
  * @typeParam T The value type.
  */
-export interface FormContext<T> extends FormState<T>, FormGroup<T> {
+export interface FormContext<T> extends FormState<T>, FormField<T> {
 
     /**
      * Validate this form.
      */
-    validate(): Promise<boolean | undefined>
+    validate(): PromiseLike<boolean | undefined>
 
     /**
      * Submit this form. Returns a boolean for success or failure.
      */
-    submit(event?: FormEvent<unknown>): Promise<boolean>
+    submit(event?: FormEvent<unknown>): PromiseLike<boolean>
 
     /**
      * Validate this form.
@@ -42,6 +42,11 @@ export interface FormContext<T> extends FormState<T>, FormGroup<T> {
      * Reinitialize this form using its initialValue option. Clears all state, including errors and submission history.
      */
     reinitialize(): void
+
+    /**
+     * Set the form's errors.
+     */
+    setErrors(errors: ValueOrFactory<readonly FormError[], [readonly FormError[]]>): void
 
     /**
      * Revert this form's data back to the last initialization data.
@@ -84,7 +89,7 @@ export function useForm<T>(initialOptions: FormOptions<T>): FormContext<T> {
     // Validate function.
 
     //TODO what happens if we change a value while validating? it will cause a conflict - could be marked as valid even though the value wouldnt pass
-    const validate = async (): Promise<boolean | undefined> => {
+    const validate = async () => {
         return await mutex.runExclusive(async () => {
             if (options.validate === undefined) {
                 return
@@ -122,7 +127,7 @@ export function useForm<T>(initialOptions: FormOptions<T>): FormContext<T> {
 
     // Submit function.
 
-    const submit = async (event?: FormEvent<unknown>): Promise<boolean> => {
+    const submit = async (event?: FormEvent<unknown>) => {
         event?.preventDefault()
         return await mutex.runExclusive(async () => {
             state.patch({ lastSubmitStarted: new Date() })
@@ -177,12 +182,36 @@ export function useForm<T>(initialOptions: FormOptions<T>): FormContext<T> {
 
     const scheduleSubmit = () => state.patch({ lastSubmitRequested: new Date() })
     const scheduleValidate = () => state.patch({ lastValidateRequested: new Date() })
+    const setErrors = (errors: ValueOrFactory<readonly FormError[], [readonly FormError[]]>) => {
+        state.set(state => {
+            return {
+                ...state,
+                errors: callOrGet(errors, state.errors)
+            }
+        })
+    }
     //const revert = () => initialize(options.initialValue)
     // const revertToSubmitted = () => initialize(state.value.submittedValue ?? options.initialValue)
 
     // The root form group.
 
-    const group = rootFormGroup(state)
+    const group = FormFieldImpl.from({
+        value: state.value.value,
+        errors: state.value.errors,
+        //TODO do we need to reset lastValidateCompleted?
+        setValue: (value: ValueOrFactory<T, [T]>) => state.set(state => {
+            return {
+                ...state,
+                value: callOrGet(value, state.value),
+                lastChanged: new Date(),
+                isValid: undefined,
+                lastValidateCompleted: undefined
+            }
+        }),
+        blur: () => state.patch({ lastBlurred: new Date() }),
+        commit: () => state.patch({ lastCommitted: new Date() }),
+        focus: () => state.patch({ lastFocused: new Date() }),
+    })
 
     const context = {
         ...state.value,
@@ -194,6 +223,7 @@ export function useForm<T>(initialOptions: FormOptions<T>): FormContext<T> {
         validate,
         scheduleSubmit,
         scheduleValidate,
+        setErrors,
         //revert,
         // revertToSubmitted,
     }
@@ -211,27 +241,6 @@ export function useForm<T>(initialOptions: FormOptions<T>): FormContext<T> {
             })
         })
     })
-
-    /*
-    const firstMount = useIsFirstMount()
-    useCustomCompareEffect(() => {
-        const reinitialize = (() => {
-            if (options.autoReinitialize === undefined) {
-                return false
-            }
-            if (typeof options.autoReinitialize === "boolean") {
-                return options.autoReinitialize
-            }
-            return options.autoReinitialize(state.value)
-        })()
-        if (!firstMount && reinitialize) {
-            initialize(options.initialValue)
-        }
-    }, [
-        options.initialValue
-    ] as const, (a, b) => {
-        return compareFormInput(a[0], b[0], options.comparer)
-    })*/
 
     if (state.value.exception !== undefined) {
         throw state.value.exception

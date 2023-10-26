@@ -1,8 +1,6 @@
-import { useEffect, useState } from "react";
-import { FormContext } from "./form";
 
-export function useUndoRedoPlugin<T>(form: FormContext<T>) {
-    const [redoStack, setRedoStack] = useState<T[]>([])
+export function useUndoRedoPlugin() {
+    /*const [redoStack, setRedoStack] = useState<T[]>([])
     const [undoStack, setUndoStack] = useState<T[]>([])
     useEffect(() => {
         setUndoStack(stack => [...stack, form.value])
@@ -16,5 +14,5 @@ export function useUndoRedoPlugin<T>(form: FormContext<T>) {
     return {
         undo,
         redo,
-    }
+    }*/
 }

@@ -3,8 +3,8 @@ import { FormContext } from "./form"
 import { FormHooks } from "./hooks"
 import { FormState } from "./state"
 
-export type FormSubmitter<T> = (value: T) => FormError[] | void | Promise<FormError[] | void>
-export type FormValidator<T> = (value: T) => FormError[] | void | Promise<FormError[] | void>
+export type FormSubmitter<T> = (value: T) => FormError[] | void | PromiseLike<FormError[] | void>
+export type FormValidator<T> = (value: T) => FormError[] | void | PromiseLike<FormError[] | void>
 export type FormComparer<T> = "deep" | "shallow" | ((a: T, b: T) => boolean)
 export type FormAction<T> = "submit" | "validate" | ((actions: FormContext<T>) => void)
 

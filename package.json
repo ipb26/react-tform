@@ -5,7 +5,8 @@
     "type": "module",
     "sideEffects": false,
     "scripts": {
-        "build": "npx typedoc src/index.ts && rollup -c --configPlugin @rollup/plugin-typescript",
+        "doc": "npx typedoc src/index.ts",
+        "build": "rollup -c --configPlugin @rollup/plugin-typescript",
         "watch": "yarn build -w"
     },
     "main": "./dist/index.cjs",

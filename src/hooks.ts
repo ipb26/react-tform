@@ -47,7 +47,7 @@ export type FormHook = keyof typeof FORM_HOOKS
  */
 export type FormHooks<T> = {
 
-    [K in FormHook]?: FormAction<T> | FormAction<T>[]
+    readonly [K in FormHook]?: FormAction<T> | FormAction<T>[]
 
 }
 

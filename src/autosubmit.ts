@@ -12,18 +12,18 @@ export type AutoSubmitOptions<T> = {
     /**
      * The form context.
      */
-    form: FormContext<T>
+    readonly form: FormContext<T>
 
     /**
      * Set this to true to disable autosaving.
      */
-    disabled?: boolean
+    readonly disabled?: boolean
 
     /**
      * Specify which events to save on. A boolean or a number for a delay.
      */
-    on?: {
-        [K in FormHook]?: boolean | number | undefined
+    readonly on?: {
+        readonly [K in FormHook]?: boolean | number | undefined
     }
 
 }
@@ -36,12 +36,12 @@ export type AutoSubmitStatus = {
     /**
      * Whether or not this autosave is active. Will be false if the disabled option is passed into useAutoSave.
      */
-    active: boolean
+    readonly active: boolean
 
     /**
      * When the next autosave will fire, millisecond timestamp.
      */
-    next: number | undefined
+    readonly next: number | undefined
 
     /**
      * Cancel any pending autosaves.
