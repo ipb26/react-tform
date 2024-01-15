@@ -42,6 +42,11 @@ export interface FormOptions<T> {
     readonly autoReinitialize?: ValueOrFactory<boolean, [FormState<T>]>
 
     /**
+     * Allow resubmit if validation errors are found.
+     */
+    readonly alwaysAllowResubmit?: boolean
+
+    /**
      * Specify actions to be executed on form hooks.
      */
     readonly on?: FormHooks<T>
@@ -62,5 +67,10 @@ export type FormError = {
      * A path for an error. Strings represent properties, numbers represent array indexes.
      */
     readonly path: readonly (string | number)[]
+
+    /**
+     * Whether to allow a resubmit.
+     */
+    readonly allowResubmit?: boolean | undefined
 
 }

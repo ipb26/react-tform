@@ -7,6 +7,8 @@ import { FormError, FormOptions } from "./options"
 import { FormState, initialFormState, useFormState } from "./state"
 import { formCompare } from "./util"
 
+//TODO merge schedule and submit?
+
 /**
  * A full form object, including state and mutation methods.
  * @typeParam T The value type.
@@ -16,32 +18,32 @@ export interface FormContext<T> extends FormState<T>, FormField<T> {
     /**
      * Validate this form.
      */
-    validate(): PromiseLike<boolean | undefined>
+    validate: () => void
 
     /**
      * Submit this form. Returns a boolean for success or failure.
      */
-    submit(event?: FormEvent<unknown>): PromiseLike<boolean>
+    submit: (event?: FormEvent<unknown> | undefined) => void
 
     /**
      * Validate this form.
      */
-    scheduleValidate(): void
+    scheduleValidate: () => void
 
     /**
      * Submit this form.
      */
-    scheduleSubmit(): void
+    scheduleSubmit: () => void
 
     /**
      * Reinitialize this form. Clears all state, including errors and submission history.
      */
-    initialize(value: T): void
+    initialize: (value: T) => void
 
     /**
      * Reinitialize this form using its initialValue option. Clears all state, including errors and submission history.
      */
-    reinitialize(): void
+    reinitialize: () => void
 
     /**
      * Set the form's errors.
@@ -63,6 +65,11 @@ export interface FormContext<T> extends FormState<T>, FormField<T> {
      */
     compare(a: T, b: T): boolean
     //TODO get rid of all this custom comparison stuff and just use deep?
+
+    /**
+     * An onKeyUp handler for non-form root elements.
+     */
+    keyHandler: (event: React.KeyboardEvent<HTMLElement>) => void
 
 }
 
@@ -89,6 +96,7 @@ export function useForm<T>(initialOptions: FormOptions<T>): FormContext<T> {
     // Validate function.
 
     //TODO what happens if we change a value while validating? it will cause a conflict - could be marked as valid even though the value wouldnt pass
+    //resetting it below, but maybe a way to block or delay changes?
     const validate = async () => {
         return await mutex.runExclusive(async () => {
             if (options.validate === undefined) {
@@ -100,8 +108,7 @@ export function useForm<T>(initialOptions: FormOptions<T>): FormContext<T> {
                 state.patch({
                     lastValidateCompleted: new Date(),
                     value: state.value.value,
-                    isValid: errors.length === 0,
-                    errors: errors
+                    errors
                 })
                 if (errors.length === 0) {
                     state.patch({
@@ -143,13 +150,13 @@ export function useForm<T>(initialOptions: FormOptions<T>): FormContext<T> {
                     return await options.submit(state.value.value) ?? []
                 })()
                 state.patch({
-                    errors,
-                    isValid: errors.length === 0
+                    errors
                 })
                 if (errors.length === 0) {
                     const date = new Date()
-                    state.patch(state => {
+                    state.set(state => {
                         return {
+                            ...state,
                             lastSubmitted: date,
                             submitCount: state.submitCount + 1,
                             submittedValue: state.value,
@@ -186,7 +193,7 @@ export function useForm<T>(initialOptions: FormOptions<T>): FormContext<T> {
         state.set(state => {
             return {
                 ...state,
-                errors: callOrGet(errors, state.errors)
+                errors: callOrGet(errors, state.errors ?? [])
             }
         })
     }
@@ -196,6 +203,7 @@ export function useForm<T>(initialOptions: FormOptions<T>): FormContext<T> {
     // The root form group.
 
     const group = FormFieldImpl.from({
+        path: [],
         value: state.value.value,
         errors: state.value.errors,
         //TODO do we need to reset lastValidateCompleted?
@@ -203,8 +211,8 @@ export function useForm<T>(initialOptions: FormOptions<T>): FormContext<T> {
             return {
                 ...state,
                 value: callOrGet(value, state.value),
+                errors: undefined,
                 lastChanged: new Date(),
-                isValid: undefined,
                 lastValidateCompleted: undefined
             }
         }),
@@ -212,6 +220,16 @@ export function useForm<T>(initialOptions: FormOptions<T>): FormContext<T> {
         commit: () => state.patch({ lastCommitted: new Date() }),
         focus: () => state.patch({ lastFocused: new Date() }),
     })
+
+    const keyHandler = (event: React.KeyboardEvent<HTMLElement>) => {
+        if (event.key !== "Enter") {
+            return
+        }
+        const target = event.target as HTMLElement
+        if (target.tagName === "INPUT") {
+            submit()
+        }
+    }
 
     const context = {
         ...state.value,
@@ -224,8 +242,7 @@ export function useForm<T>(initialOptions: FormOptions<T>): FormContext<T> {
         scheduleSubmit,
         scheduleValidate,
         setErrors,
-        //revert,
-        // revertToSubmitted,
+        keyHandler,
     }
 
     FORM_HOOK_KEYS.forEach(item => {

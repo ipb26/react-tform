@@ -50,24 +50,3 @@ export function formCompare(value1: unknown, value2: unknown) {
 export function booleanOr<T>(value: boolean | T | undefined, defaultValue: T) {
     return value === true ? defaultValue : (typeof value !== "boolean" ? value : undefined)
 }
-
-/**
- * Deep compare two values.
- * @param value1 Value 1.
- * @param value2 Value 2.
- * @returns Whether the values are equal.
-
-export function defaultCompare(value1: unknown, value2: unknown) {
-    return equals(cleanEmpty(value1), cleanEmpty(value2))
-}
-
- * Recursively remove all empty (null, undefined, [], "", 0) values from a value.
- * @param value Value
- * @returns A cleaned value.
- 
-exportfunction cleanEmpty(value: unknown): unknown {
-    const cleaned = typeof value === "object" && value !== null ? reject(either(isEmpty, isNil), mapObjIndexed(cleanEmpty, value)) : value
-    if (!isEmpty(cleaned)) {
-        return cleaned
-    }
-} */

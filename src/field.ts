@@ -34,8 +34,10 @@ export interface FormField<T> extends FieldControl<T> {
 
 export class FormFieldImpl<T> implements FormField<T>{
 
+    readonly path
     readonly value
     readonly setValue
+    readonly setValueAndCommit
     readonly blur
     readonly commit
     readonly focus
@@ -55,6 +57,7 @@ export class FormFieldImpl<T> implements FormField<T>{
     }
 
     private constructor(readonly from: FieldInput<T, T>) {
+        this.path = from.path
         this.value = from.value
         this.setValue = from.setValue
         this.blur = from.blur
@@ -68,10 +71,14 @@ export class FormFieldImpl<T> implements FormField<T>{
                 from.blur()
             }
         }
+        this.setValueAndCommit = (value: T) => {
+            from.setValue(value)
+            from.commit()
+        }
         this.errors = from.errors
-        this.selfErrors = from.errors.filter(_ => _.path.length === 0)
-        this.hasErrors = from.errors.length > 0
-        this.hasSelfErrors = this.selfErrors.length > 0
+        this.selfErrors = from.errors?.filter(_ => _.path.length === 0)
+        this.hasErrors = (from.errors?.length ?? 0) > 0
+        this.hasSelfErrors = (this.selfErrors?.length ?? 0) > 0
         this.pipe = this.doPipe.bind(this)
         this.prop = this.doProp.bind(this)
         this.transform = this.doTransform.bind(this)
@@ -115,8 +122,9 @@ export class FormFieldImpl<T> implements FormField<T>{
             })
         }
         const pathLength = operator.path?.length ?? 0
-        const errors = this.errors.filter(_ => equals(_.path.slice(0, pathLength), operator.path)).map(error => ({ message: error.message, path: error.path.slice(pathLength) }))
+        const errors = this.errors?.filter(_ => equals(_.path.slice(0, pathLength), operator.path ?? [])).map(error => ({ message: error.message, path: error.path.slice(pathLength) }))
         return FormFieldImpl.from({
+            path: [...this.path, ...this.path !== undefined ? this.path : []],
             value: newValue,
             setValue: newSetValue,
             blur: this.blur,
@@ -194,114 +202,3 @@ export namespace FormField {
     }
 
 }
-
-
-
-
-
-type IndexOf<T> = T extends readonly unknown[] ? T[number] : never
-
-
-
-
-
-
-
-
-
-
-/*
-import { Lens, equals, identity, lens, lensProp, set, view } from "ramda"
-import { FormError } from "./options"
-import { useFormState } from "./state"
-
-export interface FormField<R, W = R> {
-
-    readonly value: R
-
-    setValue: (value: W) => void
-
-    blur(): void
-
-    commit(): void
-
-    focus(): void
-
-    toggle(status: "focused" | "blurred"): void
-
-    readonly errors: readonly FormError[]
-
-    readonly selfErrors: readonly FormError[]
-
-    readonly hasErrors: boolean
-
-    readonly hasSelfErrors: boolean
-
-}
-
-export interface FormGroup<T> extends FormField<T, T> {
-
-    lens<N>(key: Lens<T, N>, path?: readonly (string | number)[]): FormGroup<N>
-
-    prop<K extends string & (keyof T)>(key: K): FormGroup<T[K]>
-
-}
-
-export function rootFormGroup<T>(state: ReturnType<typeof useFormState<T>>): FormGroup<T> {
-    return formGroup(
-        {
-            value: state.value.value,
-            errors: state.value.errors,
-            selfErrors: state.value.errors.filter(_ => _.path.length === 0),
-            hasErrors: state.value.errors.length > 0,
-            hasSelfErrors: state.value.errors.filter(_ => _.path.length === 0).length > 0,
-            //TODO do we need to reset lastValidateCompleted?
-            setValue: (value: T) => state.patch({ value, lastChanged: new Date(), isValid: undefined, lastValidateCompleted: undefined }),
-            blur: () => state.patch({ lastBlurred: new Date() }),
-            commit: () => state.patch({ lastCommitted: new Date() }),
-            focus: () => state.patch({ lastFocused: new Date() }),
-            toggle: (status: "focused" | "blurred") => {
-                if (status === "focused") {
-                    state.patch({ lastFocused: new Date() })
-                }
-                else {
-                    state.patch({ lastBlurred: new Date() })
-                }
-            }
-        },
-        lens(identity, identity),
-        []
-    )
-}
-
-export function formGroup<T, V>(parent: FormField<T, T>, field: Lens<T, V>, path: readonly (string | number)[]): FormGroup<V> {
-
-    const errors = parent.errors.filter(_ => equals(_.path.slice(0, path.length), path))
-    const selfErrors = errors.filter(_ => _.path.length === 0)
-
-    const data = {
-        value: view(field, parent.value),
-        setValue: (value: V) => parent.setValue(set(field, value, parent.value)),
-        blur: parent.blur,
-        commit: parent.commit,
-        focus: parent.focus,
-        toggle: parent.toggle,
-        errors,
-        selfErrors: selfErrors,
-        hasErrors: errors.length > 0,
-        hasSelfErrors: selfErrors.length > 0,
-    }
-
-    const lens = <N,>(lens: Lens<V, N>, path: readonly (string | number)[]) => {
-        return formGroup(data, lens, path ?? [])
-    }
-
-    return {
-        ...data,
-        lens,
-        prop: prop => lens(lensProp(prop), [prop]),
-    }
-
-}
-
-*/

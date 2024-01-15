@@ -32,6 +32,8 @@ export interface FieldInput<G, S = G> {
     /**
      * A list of errors associated with this field or form and its children.
      */
-    readonly errors: readonly FormError[]
+    readonly errors?: readonly FormError[] | undefined
+
+    readonly path: readonly (string | number)[]
 
 }

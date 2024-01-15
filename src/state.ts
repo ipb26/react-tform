@@ -21,12 +21,7 @@ export interface FormInternalState<T> {
     /**
      * The form's errors.
      */
-    readonly errors: readonly FormError[]
-
-    /**
-     * Is the form valid?
-     */
-    readonly isValid?: boolean | undefined
+    readonly errors?: readonly FormError[] | undefined
 
     /**
      * The most recently submitted value.
@@ -71,7 +66,6 @@ export function initialFormState<T>(initialValue: T) {
         lastInitialized: new Date(),
         initializedValue: initialValue,
         value: initialValue,
-        errors: [],
         submitCount: 0,
     }
 }
@@ -80,7 +74,9 @@ export function useFormState<T>(options: FormOptions<T>) {
 
     const [state, setState] = useState<FormInternalState<T>>(initialFormState(options.initialValue))
 
-    const canSubmit = state.isValid !== false
+    const isInvalid = state.errors === undefined ? undefined : state.errors.length !== 0
+    const isValid = state.errors === undefined ? undefined : state.errors.length === 0
+    const canSubmit = state.errors === undefined ? true : (options.alwaysAllowResubmit ? true : !state.errors.some(_ => _.allowResubmit !== true))
 
     const isDirty = useMemo(() => (state.lastChanged?.getTime() ?? 0) > state.lastInitialized.getTime() && !formCompare(state.value, state.initializedValue), [state.value, state.initializedValue])
     const isDirtySinceSubmitted = useMemo(() => (state.lastChanged?.getTime() ?? 0) > (state.lastSubmitted?.getTime() ?? 0) && !formCompare(state.value, state.submittedValue ?? state.initializedValue), [state.value, state.submittedValue ?? state.initializedValue])
@@ -117,6 +113,8 @@ export function useFormState<T>(options: FormOptions<T>) {
     const value = {
         ...state,
         canSubmit,
+        isValid,
+        isInvalid,
         initialValue,
         initialValueDirty,
         isDirty,
