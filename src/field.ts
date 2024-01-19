@@ -132,6 +132,7 @@ export class FormFieldImpl<T> implements FormField<T>{
             blur: this.blur,
             commit: this.commit,
             focus: this.focus,
+            disabled: this.disabled,
             errors
         })
     }
