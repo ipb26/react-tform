@@ -69,7 +69,7 @@ export interface FormContext<T> extends FormState<T>, FormField<T> {
     /**
      * An onKeyUp handler for non-form root elements.
      */
-    keyHandler: (event: React.KeyboardEvent<HTMLElement>) => void
+    keyHandler?: ((event: React.KeyboardEvent<HTMLElement>) => void) | undefined
 
 }
 
@@ -93,11 +93,19 @@ export function useForm<T>(initialOptions: FormOptions<T>): FormContext<T> {
     const reinitialize = () => initialize(state.value.initialValue)
     const compare = (a: T, b: T) => formCompare(a, b)
 
+    const disabled = options.disabled ?? false
+    const throwErrorIfDisabled = (action: string) => {
+        if (disabled) {
+            state.patch({ exception: new Error("Can not call action \"" + action + "\" on a form that is disabled.") })
+        }
+    }
+
     // Validate function.
 
     //TODO what happens if we change a value while validating? it will cause a conflict - could be marked as valid even though the value wouldnt pass
     //resetting it below, but maybe a way to block or delay changes?
     const validate = async () => {
+        throwErrorIfDisabled("validate")
         return await mutex.runExclusive(async () => {
             if (options.validate === undefined) {
                 return
@@ -135,6 +143,7 @@ export function useForm<T>(initialOptions: FormOptions<T>): FormContext<T> {
     // Submit function.
 
     const submit = async (event?: FormEvent<unknown>) => {
+        throwErrorIfDisabled("submit")
         event?.preventDefault()
         return await mutex.runExclusive(async () => {
             state.patch({ lastSubmitStarted: new Date() })
@@ -190,6 +199,7 @@ export function useForm<T>(initialOptions: FormOptions<T>): FormContext<T> {
     const scheduleSubmit = () => state.patch({ lastSubmitRequested: new Date() })
     const scheduleValidate = () => state.patch({ lastValidateRequested: new Date() })
     const setErrors = (errors: ValueOrFactory<readonly FormError[], [readonly FormError[]]>) => {
+        throwErrorIfDisabled("setErrors")
         state.set(state => {
             return {
                 ...state,
@@ -206,30 +216,39 @@ export function useForm<T>(initialOptions: FormOptions<T>): FormContext<T> {
         path: [],
         value: state.value.value,
         errors: state.value.errors,
+        disabled,
         //TODO do we need to reset lastValidateCompleted?
-        setValue: (value: ValueOrFactory<T, [T]>) => state.set(state => {
-            return {
-                ...state,
-                value: callOrGet(value, state.value),
-                errors: undefined,
-                lastChanged: new Date(),
-                lastValidateCompleted: undefined
-            }
-        }),
+        setValue: (value: ValueOrFactory<T, [T]>) => {
+            throwErrorIfDisabled("setValue")
+            state.set(state => {
+                return {
+                    ...state,
+                    value: callOrGet(value, state.value),
+                    errors: undefined,
+                    lastChanged: new Date(),
+                    lastValidateCompleted: undefined
+                }
+            })
+        },
         blur: () => state.patch({ lastBlurred: new Date() }),
         commit: () => state.patch({ lastCommitted: new Date() }),
         focus: () => state.patch({ lastFocused: new Date() }),
     })
 
-    const keyHandler = (event: React.KeyboardEvent<HTMLElement>) => {
-        if (event.key !== "Enter") {
+    const keyHandler = (() => {
+        if (disabled) {
             return
         }
-        const target = event.target as HTMLElement
-        if (target.tagName === "INPUT") {
-            submit()
+        return (event: React.KeyboardEvent<HTMLElement>) => {
+            if (event.key !== "Enter") {
+                return
+            }
+            const target = event.target as HTMLElement
+            if (target.tagName === "INPUT") {
+                submit()
+            }
         }
-    }
+    })()
 
     const context = {
         ...state.value,

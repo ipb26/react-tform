@@ -64,12 +64,15 @@ export function useAutoSubmit<T>(initialOptions: AutoSubmitOptions<T>): AutoSubm
             ...initialOptions.on
         }
     }
-    const active = options.disabled !== true
+    const active = options.disabled !== true && options.form.disabled !== true
     const [next, setNext] = useState<number>()
     FORM_HOOK_KEYS.forEach(hook => {
         const delay = booleanOr(options.on[hook], 0)
         useFormHook(options.form, hook, () => {
-            if (active && delay !== undefined && options.form.isDirtySinceSubmitted && options.form.canSubmit) {
+            if (!active) {
+                return
+            }
+            if (delay !== undefined && options.form.canSubmit) {
                 setNext(Date.now() + delay)
             }
         })

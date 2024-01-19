@@ -35,6 +35,7 @@ export interface FormField<T> extends FieldControl<T> {
 export class FormFieldImpl<T> implements FormField<T>{
 
     readonly path
+    readonly disabled
     readonly value
     readonly setValue
     readonly setValueAndCommit
@@ -58,6 +59,7 @@ export class FormFieldImpl<T> implements FormField<T>{
 
     private constructor(readonly from: FieldInput<T, T>) {
         this.path = from.path
+        this.disabled = from.disabled
         this.value = from.value
         this.setValue = from.setValue
         this.blur = from.blur

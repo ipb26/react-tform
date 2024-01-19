@@ -4,6 +4,11 @@ import { FormError } from "./options"
 export interface FieldInput<G, S = G> {
 
     /**
+     * Is this field disabled?
+     */
+    readonly disabled?: boolean | undefined
+
+    /**
      * Mark this field or form as blurred. Call in the onBlur attribute of input elements.
      */
     blur(): void

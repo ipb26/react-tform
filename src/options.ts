@@ -47,6 +47,11 @@ export interface FormOptions<T> {
     readonly alwaysAllowResubmit?: boolean
 
     /**
+     * Disable the form.
+     */
+    readonly disabled?: boolean | undefined
+
+    /**
      * Specify actions to be executed on form hooks.
      */
     readonly on?: FormHooks<T>
