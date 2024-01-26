@@ -5,7 +5,6 @@ import { FormField, FormFieldImpl } from "./field"
 import { FORM_HOOK_KEYS, useFormHook } from "./hooks"
 import { FormError, FormOptions } from "./options"
 import { FormState, initialFormState, useFormState } from "./state"
-import { formCompare } from "./util"
 
 //TODO merge schedule and submit?
 
@@ -51,22 +50,6 @@ export interface FormContext<T> extends FormState<T>, FormField<T> {
     setErrors(errors: ValueOrFactory<readonly FormError[], [readonly FormError[]]>): void
 
     /**
-     * Revert this form's data back to the last initialization data.
-     */
-    //revert(): void
-
-    /**
-     * Revert this form's data back to the last submitted data (or the initialization data, if never submitted).
-     */
-    //revertToSubmitted(): void
-
-    /**
-     * Compare using the form's preferred comparison method.
-     */
-    compare(a: T, b: T): boolean
-    //TODO get rid of all this custom comparison stuff and just use deep?
-
-    /**
      * An onKeyUp handler for non-form root elements.
      */
     keyHandler?: ((event: React.KeyboardEvent<HTMLElement>) => void) | undefined
@@ -91,12 +74,11 @@ export function useForm<T>(initialOptions: FormOptions<T>): FormContext<T> {
 
     const initialize = (value: T) => state.set(initialFormState(value))
     const reinitialize = () => initialize(state.value.initialValue)
-    const compare = (a: T, b: T) => formCompare(a, b)
 
     const disabled = options.disabled ?? false
-    const throwErrorIfDisabled = (action: string) => {
+    const throwErrorIfDisabled = () => {
         if (disabled) {
-            state.patch({ exception: new Error("Can not call action \"" + action + "\" on a form that is disabled.") })
+            state.patch({ exception: new Error("Can not submit a form that is disabled.") })
         }
     }
 
@@ -105,7 +87,6 @@ export function useForm<T>(initialOptions: FormOptions<T>): FormContext<T> {
     //TODO what happens if we change a value while validating? it will cause a conflict - could be marked as valid even though the value wouldnt pass
     //resetting it below, but maybe a way to block or delay changes?
     const validate = async () => {
-        throwErrorIfDisabled("validate")
         return await mutex.runExclusive(async () => {
             if (options.validate === undefined) {
                 return
@@ -143,7 +124,7 @@ export function useForm<T>(initialOptions: FormOptions<T>): FormContext<T> {
     // Submit function.
 
     const submit = async (event?: FormEvent<unknown>) => {
-        throwErrorIfDisabled("submit")
+        throwErrorIfDisabled()
         event?.preventDefault()
         return await mutex.runExclusive(async () => {
             state.patch({ lastSubmitStarted: new Date() })
@@ -199,7 +180,6 @@ export function useForm<T>(initialOptions: FormOptions<T>): FormContext<T> {
     const scheduleSubmit = () => state.patch({ lastSubmitRequested: new Date() })
     const scheduleValidate = () => state.patch({ lastValidateRequested: new Date() })
     const setErrors = (errors: ValueOrFactory<readonly FormError[], [readonly FormError[]]>) => {
-        throwErrorIfDisabled("setErrors")
         state.set(state => {
             return {
                 ...state,
@@ -219,7 +199,6 @@ export function useForm<T>(initialOptions: FormOptions<T>): FormContext<T> {
         disabled,
         //TODO do we need to reset lastValidateCompleted?
         setValue: (value: ValueOrFactory<T, [T]>) => {
-            throwErrorIfDisabled("setValue")
             state.set(state => {
                 return {
                     ...state,
@@ -253,7 +232,6 @@ export function useForm<T>(initialOptions: FormOptions<T>): FormContext<T> {
     const context = {
         ...state.value,
         ...group,
-        compare,
         initialize,
         reinitialize,
         submit,

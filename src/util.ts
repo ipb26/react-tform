@@ -10,43 +10,22 @@ export function useIsFirstMount() {
     return isFirst.current
 }
 
-export function useFormCompareMemo<T, TDeps extends DependencyList>(factory: () => T, deps: TDeps) {
+export function useDeepCompareMemo<T, TDeps extends DependencyList>(factory: () => T, deps: TDeps) {
     const ref = useRef<TDeps | undefined>(undefined)
-    if (ref.current === undefined || !formCompare(deps, ref.current)) {
+    if (ref.current === undefined || !equals(deps, ref.current)) {
         ref.current = deps
     }
     return useMemo(factory, ref.current)
 }
 
-export function useFormCompareConstant<T>(value: T) {
-    return useFormCompareMemo(() => value, [value])
+export function useDeepCompareConstant<T>(value: T) {
+    return useDeepCompareMemo(() => value, [value])
 }
 
-export function useFormCompareEffect<TDeps extends DependencyList>(effect: EffectCallback, deps: TDeps) {
+export function useDeepCompareEffect<TDeps extends DependencyList>(effect: EffectCallback, deps: TDeps) {
     const ref = useRef<TDeps | undefined>(undefined)
-    if (ref.current === undefined || !formCompare(deps, ref.current)) {
+    if (ref.current === undefined || !equals(deps, ref.current)) {
         ref.current = deps
     }
     return useEffect(effect, ref.current)
-}
-
-/**
- * Compare two values using a specific comparison type.
- * @param value1 Value 1.
- * @param value2 Value 2.
- * @param comparer The comparison type.
- * @returns Whether or not the values are equal.
- */
-export function formCompare(value1: unknown, value2: unknown) {
-    return equals(value1, value2)
-}
-
-/**
- * Return a value, or a default if the value is a boolean true.
- * @param value The value.
- * @param defaultValue A default value. 
- * @returns The value, or a default if the value is a boolean true.
- */
-export function booleanOr<T>(value: boolean | T | undefined, defaultValue: T) {
-    return value === true ? defaultValue : (typeof value !== "boolean" ? value : undefined)
 }

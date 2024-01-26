@@ -1,7 +1,8 @@
+import { equals } from "ramda"
 import { useMemo, useState } from "react"
 import { ValueOrFactory, callOrGet } from "value-or-factory"
 import { FormError, FormOptions } from "./options"
-import { formCompare, useFormCompareConstant } from "./util"
+import { useDeepCompareConstant } from "./util"
 
 /**
  * A form's internal state.
@@ -78,8 +79,8 @@ export function useFormState<T>(options: FormOptions<T>) {
     const isValid = state.errors === undefined ? undefined : state.errors.length === 0
     const canSubmit = state.errors === undefined ? true : (options.alwaysAllowResubmit ? true : !state.errors.some(_ => _.allowResubmit !== true))
 
-    const isDirty = useMemo(() => (state.lastChanged?.getTime() ?? 0) > state.lastInitialized.getTime() && !formCompare(state.value, state.initializedValue), [state.value, state.initializedValue])
-    const isDirtySinceSubmitted = useMemo(() => (state.lastChanged?.getTime() ?? 0) > (state.lastSubmitted?.getTime() ?? 0) && !formCompare(state.value, state.submittedValue ?? state.initializedValue), [state.value, state.submittedValue ?? state.initializedValue])
+    const isDirty = useMemo(() => (state.lastChanged?.getTime() ?? 0) > state.lastInitialized.getTime() && !equals(state.value, state.initializedValue), [state.value, state.initializedValue])
+    const isDirtySinceSubmitted = useMemo(() => (state.lastChanged?.getTime() ?? 0) > (state.lastSubmitted?.getTime() ?? 0) && !equals(state.value, state.submittedValue ?? state.initializedValue), [state.value, state.submittedValue ?? state.initializedValue])
 
     const hasBeenSubmitted = state.lastSubmitted !== undefined
     const hasBeenValidated = state.lastValidateCompleted !== undefined
@@ -105,8 +106,8 @@ export function useFormState<T>(options: FormOptions<T>) {
     const isSubmitting = (state.lastSubmitStarted?.getTime() ?? 0) > (state.lastSubmitCompleted?.getTime() ?? 0)
 
     //TODO rename to clarify dif between initial vs initilized value?
-    const initialValue = useFormCompareConstant(options.initialValue)
-    const initialValueDirty = useMemo(() => !formCompare(initialValue, state.initializedValue), [initialValue, state.initializedValue])
+    const initialValue = useDeepCompareConstant(options.initialValue)
+    const initialValueDirty = useMemo(() => !equals(initialValue, state.initializedValue), [initialValue, state.initializedValue])
 
     //TODO do we need sinceSubmitted, sinceValidated, etc
 
@@ -141,7 +142,9 @@ export function useFormState<T>(options: FormOptions<T>) {
 
     return {
         value,
-        set: setState,
+        set: (value: React.SetStateAction<FormInternalState<T>>) => {
+            setState(value)
+        },
         patch: (partial: ValueOrFactory<Partial<FormInternalState<T>>, [FormInternalState<T>]>) => {
             setState(state => {
                 return {

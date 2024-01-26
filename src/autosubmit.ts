@@ -1,13 +1,17 @@
 import { useEffect, useState } from "react"
 import { FormContext } from "./form"
-import { FORM_HOOK_KEYS, FormHook, useFormHook } from "./hooks"
-import { booleanOr } from "./util"
+import { useFormHook } from "./hooks"
 
 /**
- * The autosave options. Note that you MUST set either the onChange or onBlur option (or both), or the autosave will not take effect.
+ * An autosave trigger. Immediate will fire on change, delayed will fire on blur and commit.
+ */
+export type AutoSubmitTrigger = "immediate" | "delayed"
+
+/**
+ * The autosave options. Note that you, or the autosave will not take effect.
  * @typeParam T The form's value type.
  */
-export type AutoSubmitOptions<T> = {
+export interface AutoSubmitOptions<T> {
 
     /**
      * The form context.
@@ -17,13 +21,15 @@ export type AutoSubmitOptions<T> = {
     /**
      * Set this to true to disable autosaving.
      */
-    readonly disabled?: boolean
+    readonly disabled?: boolean | undefined
 
     /**
-     * Specify which events to save on. A boolean or a number for a delay.
+     * The autosave triggers.
      */
-    readonly on?: {
-        readonly [K in FormHook]?: boolean | number | undefined
+    readonly on: {
+
+        [K in AutoSubmitTrigger]?: number | undefined
+
     }
 
 }
@@ -56,30 +62,23 @@ export type AutoSubmitStatus = {
  * @param options The configuration object.
  * @returns Autosave status.
  */
-export function useAutoSubmit<T>(initialOptions: AutoSubmitOptions<T>): AutoSubmitStatus {
-    const options = {
-        ...initialOptions,
-        on: {
-            blur: true,
-            ...initialOptions.on
-        }
-    }
+export function useAutoSubmit<T>(options: AutoSubmitOptions<T>): AutoSubmitStatus {
     const active = options.disabled !== true && options.form.disabled !== true
     const [next, setNext] = useState<number>()
-    FORM_HOOK_KEYS.forEach(hook => {
-        const delay = booleanOr(options.on[hook], 0)
-        useFormHook(options.form, hook, () => {
-            if (!active) {
-                return
-            }
-            if (delay !== undefined && options.form.canSubmit) {
-                setNext(Date.now() + delay)
-            }
-        })
-    })
     const cancel = () => setNext(undefined)
+    const trigger = (delay?: number | undefined) => {
+        if (delay === undefined) {
+            return
+        }
+        if (!options.form.canSubmit || !options.form.isDirtySinceSubmitted) {
+            return
+        }
+        setNext(Date.now() + delay)
+    }
+    useFormHook(options.form, ["change"], () => trigger(options.on?.immediate))
+    useFormHook(options.form, ["blur", "commit"], () => trigger(options.on?.delayed))
     useEffect(() => {
-        if (next === undefined || !active) {
+        if (next === undefined) {
             return
         }
         const timeout = setTimeout(options.form.submit, Math.max(next - Date.now(), 0))
@@ -87,8 +86,14 @@ export function useAutoSubmit<T>(initialOptions: AutoSubmitOptions<T>): AutoSubm
             clearTimeout(timeout)
         }
     }, [
-        active,
         next
+    ])
+    useEffect(() => {
+        if (!active) {
+            cancel()
+        }
+    }, [
+        active
     ])
     useFormHook(options.form, "submit", cancel)
     return {

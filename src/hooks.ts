@@ -1,21 +1,6 @@
-import { useEffect } from "react"
 import { FormContext } from "./form"
 import { FormAction } from "./options"
-
-/*
-export function formHooks<T>(context: FormContext<T>) {
-    return {
-        blur: context.lastBlur,
-        change: context.lastChange,
-        commit: context.lastCommit,
-        focus: context.lastFocus,
-        init: context.lastInit,
-        submit: context.lastSubmit,
-        submitAttempt: context.lastSubmitAttempt,
-        validated: context.lastValidate,
-    }
-}
-*/
+import { useDeepCompareEffect } from "./util"
 
 export const FORM_HOOKS = {
     blur: <T>(context: FormContext<T>) => context.lastBlurred,
@@ -54,17 +39,17 @@ export type FormHooks<T> = {
 /**
  * Attach a callback to a form hook.
  * @param form The form.
- * @param hook Which hook to trigger on.
+ * @param hooks Which hook to trigger on.
  * @param callback The callback to run.
  */
-export function useFormHook<T>(form: FormContext<T>, hook: FormHook, callback: Function) {
-    const value = FORM_HOOKS[hook](form)
-    useEffect(() => {
-        if (value !== undefined) {
+export function useFormHook<T>(form: FormContext<T>, hooks: FormHook | FormHook[], callback: Function) {
+    const value = [hooks].flat().map(hook => FORM_HOOKS[hook](form))
+    useDeepCompareEffect(() => {
+        if (!value.some(value => value === undefined)) {
             callback()
         }
     }, [
-        hook,
+        hooks,
         value
     ])
 }
