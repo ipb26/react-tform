@@ -199,6 +199,11 @@ export function useForm<T>(initialOptions: FormOptions<T>): FormContext<T> {
         disabled,
         //TODO do we need to reset lastValidateCompleted?
         setValue: (value: ValueOrFactory<T, [T]>) => {
+            //TODO we need to separate out "validated" vs "unknown"
+            //the LAST validation might be different from the current validation
+            //for example, on a non-auto-validating form, if you change a value, a new validation is not triggered - however the form may no longer be valid (we dont know)
+            //so we need a "lastValidation" but also a "isValid" - which might be unknown separate
+            //this is because we dont want to reset form state, causing flickering, if we re-validate and a new error is generated
             state.set(state => {
                 return {
                     ...state,
