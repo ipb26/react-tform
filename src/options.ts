@@ -1,12 +1,10 @@
 import { ValueOrFactory } from "value-or-factory"
-import { FormContext } from "./form"
+import { FormErrors } from "./errors"
 import { FormHooks } from "./hooks"
 import { FormState } from "./state"
 
-export type FormSubmitter<T> = (value: T) => FormError[] | void | PromiseLike<FormError[] | void>
-export type FormValidator<T> = (value: T) => FormError[] | void | PromiseLike<FormError[] | void>
-export type FormComparer<T> = "deep" | "shallow" | ((a: T, b: T) => boolean)
-export type FormAction<T> = "submit" | "validate" | ((actions: FormContext<T>) => void)
+export type FormSubmitter<T> = (value: T) => FormErrors | void | PromiseLike<FormErrors | void>
+export type FormValidator<T> = (value: T) => FormErrors | void | PromiseLike<FormErrors | void>
 
 /**
  * Form setup options.
@@ -25,26 +23,15 @@ export interface FormOptions<T> {
     readonly validate?: FormValidator<T>
 
     /**
-     * Whether or not to run a validation before submission. Default `true`. You can also pass a custom validation function.
-     * @defaultValue `true`
-     */
-    readonly submitValidate?: FormValidator<T>
-
-    /**
      * The initial data for the form. Memoize this for performance benefits.
      */
     readonly initialValue: T
 
     /**
-     * Whether or not the form should update if the initialValue property changes (based on a deep comparison - or using the customCompare option).
+     * Whether or not the form should update if the initialValue property changes.
      * @defaultValue `false`
      */
     readonly autoReinitialize?: ValueOrFactory<boolean, [FormState<T>]>
-
-    /**
-     * Allow resubmit if validation errors are found.
-     */
-    readonly alwaysAllowResubmit?: boolean
 
     /**
      * Disable the form.
@@ -54,28 +41,6 @@ export interface FormOptions<T> {
     /**
      * Specify actions to be executed on form hooks.
      */
-    readonly on?: FormHooks<T>
-
-}
-
-/**
- * Error object for a form field.
- */
-export type FormError = {
-
-    /**
-     * The error message.
-     */
-    readonly message: string
-
-    /**
-     * A path for an error. Strings represent properties, numbers represent array indexes.
-     */
-    readonly path: readonly (string | number)[]
-
-    /**
-     * Whether to allow a resubmit.
-     */
-    readonly allowResubmit?: boolean | undefined
+    readonly on?: readonly FormHooks<T>[] | FormHooks<T> | undefined
 
 }

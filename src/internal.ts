@@ -1,5 +1,7 @@
 import { ValueOrFactory } from "value-or-factory"
-import { FormError } from "./options"
+import { FormErrors } from "./errors"
+import { FormContext } from "./form"
+import { FormAction } from "./types"
 
 export interface FieldInput<G, S = G> {
 
@@ -32,13 +34,30 @@ export interface FieldInput<G, S = G> {
      * Set this field or form's value.
      * @param value The value.
      */
-    setValue: (value: ValueOrFactory<S, [G]>) => void
+    readonly setValue: (value: ValueOrFactory<S, [G]>) => void
 
     /**
      * A list of errors associated with this field or form and its children.
      */
-    readonly errors?: readonly FormError[] | undefined
+    readonly errors?: FormErrors | undefined
+
+    /**
+     * Set this field's errors.
+     * @param errors The errors.
+     */
+    readonly setErrors: (errors: ValueOrFactory<FormErrors, [FormErrors]>) => void
 
     readonly path: readonly (string | number)[]
 
+}
+
+//TODO Move?
+
+export function execAction<T>(form: FormContext<T>, action: FormAction<T>) {
+    if (typeof action === "string") {
+        form[action]()
+    }
+    else {
+        action?.(form)
+    }
 }

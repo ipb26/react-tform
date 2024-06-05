@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { FormContext } from "./form"
 import { useFormHook } from "./hooks"
 
@@ -28,7 +28,7 @@ export interface AutoSubmitOptions<T> {
      */
     readonly on: {
 
-        [K in AutoSubmitTrigger]?: number | undefined
+        readonly [K in AutoSubmitTrigger]?: number | undefined
 
     }
 
@@ -37,7 +37,7 @@ export interface AutoSubmitOptions<T> {
 /**
  * The status of a currently activate autosave.
  */
-export type AutoSubmitStatus = {
+export interface AutoSubmitStatus {
 
     /**
      * Whether or not this autosave is active. Will be false if the disabled option is passed into useAutoSave.
@@ -56,6 +56,10 @@ export type AutoSubmitStatus = {
 
 }
 
+export function useAutoValidate<T>(form: FormContext<T>) {
+    useFormHook(form, "change", "validate")
+}
+
 /**
  * Attach autosaving functionality to a form.
  * @typeParam T The form's value type.
@@ -65,7 +69,7 @@ export type AutoSubmitStatus = {
 export function useAutoSubmit<T>(options: AutoSubmitOptions<T>): AutoSubmitStatus {
     const active = options.disabled !== true && options.form.disabled !== true
     const [next, setNext] = useState<number>()
-    const cancel = () => setNext(undefined)
+    const cancel = useCallback(() => setNext(undefined), [])
     const trigger = (delay?: number | undefined) => {
         if (delay === undefined) {
             return

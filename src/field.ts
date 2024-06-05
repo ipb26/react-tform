@@ -1,8 +1,18 @@
 
-import { Lens, compose, defaultTo, equals, identity, lens, lensIndex, lensProp, set, view } from "ramda"
+import { Lens, defaultTo, identity, lens, lensIndex, lensProp, set, view } from "ramda"
 import { ValueOrFactory, callOrGet } from "value-or-factory"
 import { FieldControl } from "./control"
+import { FormError, descendErrors } from "./errors"
 import { FieldInput } from "./internal"
+
+/*
+type E<T> = { readonly value: T, readonly errors: readonly string[] }
+type Enriched<T> = T extends object ? { readonly [K in keyof T]: E<T[K]> } : E<T>
+
+type XXX = Enriched<{ id: Uint8Array }>
+*/
+
+//type Op = string | number | 
 
 export interface FormField<T> extends FieldControl<T> {
 
@@ -28,11 +38,8 @@ export interface FormField<T> extends FieldControl<T> {
      */
     or(value: NonNullable<T>): FormField<NonNullable<T>>
 
-    //index(index: number): FormField<IndexOf<T>>
-
 }
-
-export class FormFieldImpl<T> implements FormField<T>{
+export class FormFieldImpl<T> implements FormField<T> {
 
     readonly path
     readonly disabled
@@ -47,6 +54,7 @@ export class FormFieldImpl<T> implements FormField<T>{
     readonly selfErrors
     readonly hasErrors
     readonly hasSelfErrors
+    readonly setErrors
     readonly pipe
     readonly prop
     readonly transform
@@ -81,12 +89,14 @@ export class FormFieldImpl<T> implements FormField<T>{
         this.selfErrors = from.errors?.filter(_ => _.path.length === 0)
         this.hasErrors = (from.errors?.length ?? 0) > 0
         this.hasSelfErrors = (this.selfErrors?.length ?? 0) > 0
+        this.setErrors = from.setErrors
         this.pipe = this.doPipe.bind(this)
         this.prop = this.doProp.bind(this)
         this.transform = this.doTransform.bind(this)
         this.narrow = this.doNarrow.bind(this)
         this.or = this.doOr.bind(this)
     }
+
     /*
     index(index: number): FormField<IndexOf<T>> {
         throw new Error("Method not implemented.")
@@ -100,6 +110,7 @@ export class FormFieldImpl<T> implements FormField<T>{
             throw new Error("This is not an array field.")
         }
     }*/
+
     private doTransform<N>(to: (value: T) => N, back: (value: N) => T) {
         return this.doPipe(FormField.transform(to, back))
     }
@@ -109,6 +120,11 @@ export class FormFieldImpl<T> implements FormField<T>{
     private doNarrow<N extends T>(to: (value: T) => N) {
         return this.doPipe(FormField.narrow(to))
     }
+    /*
+    private doAt<K extends IndexOf<T>>(key: K) {
+        return this.doPipe(FormField.at(key))
+    }
+    */
     private doProp<K extends string & (keyof T)>(key: K) {
         return this.doPipe(FormField.prop(key))
     }
@@ -123,8 +139,18 @@ export class FormFieldImpl<T> implements FormField<T>{
                 return set(operator.operator, callOrGet(newValue, view(operator.operator, prev)), this.value)
             })
         }
-        const pathLength = operator.path?.length ?? 0
-        const errors = this.errors?.filter(_ => equals(_.path.slice(0, pathLength), operator.path ?? [])).map(error => ({ message: error.message, path: error.path.slice(pathLength) }))
+        const errors = descendErrors(this.errors ?? [], operator.path ?? [])
+        const setErrors = (errors: ValueOrFactory<readonly FormError[], [readonly FormError[]]>) => {
+            this.setErrors(prevErrors => {
+                const newErrors = callOrGet(errors, descendErrors(prevErrors, operator.path ?? []))
+                return newErrors.map(error => {
+                    return {
+                        ...error,
+                        path: [...operator.path ?? [], ...error.path]
+                    }
+                })
+            })
+        }
         return FormFieldImpl.from({
             path: [...this.path, ...this.path !== undefined ? this.path : []],
             value: newValue,
@@ -133,7 +159,8 @@ export class FormFieldImpl<T> implements FormField<T>{
             commit: this.commit,
             focus: this.focus,
             disabled: this.disabled,
-            errors
+            errors,
+            setErrors,
         })
     }
 
@@ -156,44 +183,15 @@ export namespace FormField {
             path: [index],
         }
     }
-    export function atOr<A extends readonly unknown[]>(index: number, or: A[number]): OperatorWithPath<A, A[number]> {
-        return {
-            operator: compose(undefinedIndex<A>(index), lens<A[number] | undefined, A[number]>(defaultTo(or), identity)),
-            path: [index],
-        }
-    }
     export function transform<I, O>(to: (value: I) => O, back: (value: O) => I): Operator<I, O> {
         return lens<I, O>(to, back)
     }
     export function narrow<I, O extends I>(func: (input: I) => O): Operator<I, O> {
         return transform<I, O>(func, identity)
     }
-    export function or<V>(def: V) {
+    export function or<V, T extends V>(def: T): Operator<V | undefined, V> {
         return narrow<V | undefined, V>(defaultTo(def))
     }
-
-    /*
-    export function index<A extends any[], N extends number>(number: N) {
-        return lensIndex<A, N>(number)
-    }
-
-    export function index<T>(index: number) {
-        return lens<T, IndexOf<T>>(value => {
-            if (Array.isArray(value)) {
-                return value[index]
-            }
-            else {
-                throw new Error("X")
-            }
-        }, (x, v) => {
-            if (Array.isArray(v)) {
-                return [...v.slice(0, index), x] as T
-            }
-            else {
-                throw new Error("X")
-            }
-        })
-    }*/
 
     export type Operator<I, O> = Lens<I, O>
 
