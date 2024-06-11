@@ -76,9 +76,10 @@ export function useFormState<T>(options: FormOptions<T>) {
 
     const [state, setState] = useState<FormInternalState<T>>(initialFormState(options.initialValue))
 
-    const isInvalid = state.errors === undefined ? undefined : state.errors.length !== 0
-    const isValid = state.errors === undefined ? undefined : state.errors.length === 0
-    const canSubmit = state.errors === undefined ? true : !state.errors.some(_ => _.temporary !== true)
+    const isValidationCurrent = (state.lastValidated?.getTime() ?? 0) > (state.lastChanged?.getTime() ?? 0)
+    const isInvalid = !isValidationCurrent || state.errors === undefined ? undefined : state.errors.length !== 0
+    const isValid = !isValidationCurrent || state.errors === undefined ? undefined : state.errors.length === 0
+    const canSubmit = !isValidationCurrent || state.errors === undefined ? true : !state.errors.some(_ => _.temporary !== true)
 
     const isDirty = useMemo(() => (state.lastChanged?.getTime() ?? 0) > state.lastInitialized.getTime() && !equals(state.value, state.initializedValue), [state.value, state.initializedValue])
     const isDirtySinceSubmitted = useMemo(() => (state.lastChanged?.getTime() ?? 0) > (state.lastSubmitted?.getTime() ?? 0) && !equals(state.value, state.submittedValue ?? state.initializedValue), [state.value, state.submittedValue ?? state.initializedValue])

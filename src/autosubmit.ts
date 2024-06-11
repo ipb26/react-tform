@@ -71,6 +71,9 @@ export function useAutoSubmit<T>(options: AutoSubmitOptions<T>): AutoSubmitStatu
     const [next, setNext] = useState<number>()
     const cancel = useCallback(() => setNext(undefined), [])
     const trigger = (delay?: number | undefined) => {
+        if (!active) {
+            return
+        }
         if (delay === undefined) {
             return
         }

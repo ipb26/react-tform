@@ -1,5 +1,5 @@
 
-import { Lens, defaultTo, identity, lens, lensIndex, lensProp, set, view } from "ramda"
+import { Lens, defaultTo, identity, lens, lensIndex, lensProp, pick, set, view } from "ramda"
 import { ValueOrFactory, callOrGet } from "value-or-factory"
 import { FieldControl } from "./control"
 import { FormError, descendErrors } from "./errors"
@@ -14,6 +14,16 @@ type XXX = Enriched<{ id: Uint8Array }>
 
 //type Op = string | number | 
 
+type AutoLens<I, O> = number | string | ((value: I) => O) | { or: I }
+
+/*
+export function autoLens() {
+    return {
+        of: lensProp()
+    }
+}
+*/
+
 export interface FormField<T> extends FieldControl<T> {
 
     /**
@@ -25,6 +35,11 @@ export interface FormField<T> extends FieldControl<T> {
      * Create a field from a prop of this field.
      */
     prop<K extends string & (keyof T)>(key: K): FormField<T[K]>
+
+    /**
+     * Create a field from a prop of this field.
+     */
+    props<K extends (keyof T)>(key: readonly K[]): FormField<Pick<T, K>>
 
     transform<R>(to: (value: T) => R, back: (value: R) => T): FormField<R>
 
@@ -39,6 +54,7 @@ export interface FormField<T> extends FieldControl<T> {
     or(value: NonNullable<T>): FormField<NonNullable<T>>
 
 }
+
 export class FormFieldImpl<T> implements FormField<T> {
 
     readonly path
@@ -60,6 +76,7 @@ export class FormFieldImpl<T> implements FormField<T> {
     readonly transform
     readonly narrow
     readonly or
+    readonly props
 
     static from<T>(input: FieldInput<T>) {
         return new FormFieldImpl(input)
@@ -95,6 +112,7 @@ export class FormFieldImpl<T> implements FormField<T> {
         this.transform = this.doTransform.bind(this)
         this.narrow = this.doNarrow.bind(this)
         this.or = this.doOr.bind(this)
+        this.props = this.doProps.bind(this)
     }
 
     /*
@@ -128,6 +146,9 @@ export class FormFieldImpl<T> implements FormField<T> {
     private doProp<K extends string & (keyof T)>(key: K) {
         return this.doPipe(FormField.prop(key))
     }
+    private doProps<K extends (keyof T)>(keys: readonly K[]) {
+        return this.doPipe(FormField.props(keys))
+    }
     private doPipe<N>(operator: FormField.OperatorWithPath<T, N> | FormField.Operator<T, N>): FormField<N> {
         if (typeof operator === "function") {
             return this.doPipe({ operator })
@@ -135,8 +156,9 @@ export class FormFieldImpl<T> implements FormField<T> {
         const newValue = view(operator.operator, this.value)
         const newSetValue = (newValue: ValueOrFactory<N, [N]>) => {
             this.setValue(prev => {
+                const newPrev = view(operator.operator, prev)
                 //TODO change callOrGet to a functional style
-                return set(operator.operator, callOrGet(newValue, view(operator.operator, prev)), this.value)
+                return set(operator.operator, callOrGet(newValue, newPrev), prev)
             })
         }
         const errors = descendErrors(this.errors ?? [], operator.path ?? [])
@@ -174,6 +196,12 @@ export namespace FormField {
         return {
             operator: lensProp<T, K>(key),
             path: [key],
+        }
+    }
+    export function props<T, K extends (keyof T)>(keys: readonly K[]): OperatorWithPath<T, Pick<T, K>> {
+        return {
+            operator: lens(object => pick(keys, object), (sub, object) => ({ ...object, ...sub })),
+            path: [],
         }
     }
 

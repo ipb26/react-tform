@@ -35,11 +35,6 @@ export interface FormContext<T> extends FormState<T>, FormField<T> {
     readonly reinitialize: () => void
 
     /**
-     * Set the form's errors.
-     */
-    readonly setErrors: (errors: ValueOrFactory<readonly FormError[], [readonly FormError[]]>) => void
-
-    /**
      * An onKeyUp handler for non-form root elements. If the form is disabled, this will be undefined.
      */
     readonly keyHandler: ((event: React.KeyboardEvent<HTMLElement>) => void) | undefined
@@ -188,9 +183,7 @@ export function useForm<T>(options: FormOptions<T>): FormContext<T> {
             return {
                 ...state,
                 value: callOrGet(value, state.value),
-                errors: undefined,
                 lastChanged: new Date(),
-                lastValidateCompleted: undefined
             }
         })
     }
