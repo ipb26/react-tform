@@ -1,6 +1,5 @@
 import { equals } from "ramda"
 import { useMemo, useState } from "react"
-import { ValueOrFactory, callOrGet } from "value-or-factory"
 import { FormError } from "./errors"
 import { FormOptions } from "./options"
 import { useDeepCompareConstant } from "./util"
@@ -52,6 +51,7 @@ export interface FormInternalState<T> {
     readonly isSubmitting: boolean
 
     readonly lastValidateRequested?: Date | undefined
+    readonly validateRequests: number
     readonly isValidating: boolean
 
 }
@@ -67,6 +67,7 @@ export function initialFormState<T>(initialValue: T) {
         initializedValue: initialValue,
         value: initialValue,
         submitCount: 0,
+        validateRequests: 0,
         isSubmitting: false,
         isValidating: false,
     }
@@ -76,10 +77,14 @@ export function useFormState<T>(options: FormOptions<T>) {
 
     const [state, setState] = useState<FormInternalState<T>>(initialFormState(options.initialValue))
 
+    //TODO this wont be accurate - we need a counter or something
+    const isValidating = state.validateRequests > 0
     const isValidationCurrent = (state.lastValidated?.getTime() ?? 0) > (state.lastChanged?.getTime() ?? 0)
     const isInvalid = !isValidationCurrent || state.errors === undefined ? undefined : state.errors.length !== 0
     const isValid = !isValidationCurrent || state.errors === undefined ? undefined : state.errors.length === 0
-    const canSubmit = !isValidationCurrent || state.errors === undefined ? true : !state.errors.some(_ => _.temporary !== true)
+    const canSubmit = (() => {
+        return !(state.errors ?? []).some(_ => _.temporary !== true)
+    })()
 
     const isDirty = useMemo(() => (state.lastChanged?.getTime() ?? 0) > state.lastInitialized.getTime() && !equals(state.value, state.initializedValue), [state.value, state.initializedValue])
     const isDirtySinceSubmitted = useMemo(() => (state.lastChanged?.getTime() ?? 0) > (state.lastSubmitted?.getTime() ?? 0) && !equals(state.value, state.submittedValue ?? state.initializedValue), [state.value, state.submittedValue ?? state.initializedValue])
@@ -92,7 +97,6 @@ export function useFormState<T>(options: FormOptions<T>) {
 
     //TODO rename to clarify dif between initial vs initilized value?
     const initialValue = useDeepCompareConstant(options.initialValue)
-    const initialValueDirty = useMemo(() => !equals(initialValue, state.initializedValue), [initialValue, state.initializedValue])
 
     //TODO do we need sinceSubmitted, sinceValidated, etc
 
@@ -102,7 +106,6 @@ export function useFormState<T>(options: FormOptions<T>) {
         isValid,
         isInvalid,
         initialValue,
-        initialValueDirty,
         isDirty,
         isDirtySinceSubmitted,
         hasBeenSubmitted,
@@ -113,16 +116,9 @@ export function useFormState<T>(options: FormOptions<T>) {
 
     return {
         value,
+        //TODO rename
         set: (value: React.SetStateAction<FormInternalState<T>>) => {
             setState(value)
-        },
-        patch: (partial: ValueOrFactory<Partial<FormInternalState<T>>, [FormInternalState<T>]>) => {
-            setState(state => {
-                return {
-                    ...state,
-                    ...callOrGet(partial, state),
-                }
-            })
         },
     }
 
@@ -136,11 +132,6 @@ export interface FormState<T> extends FormInternalState<T> {
     readonly initialValue: T
 
     /**
-     * Whether the latest initial value passed to the form is the same as the form's initialized value.
-     */
-    readonly initialValueDirty: boolean
-
-    /**
      * Whether or not the form is ready for submission. Either it has been validated, there is no validator required, or it failed validation but all errors were temporary.
      */
     readonly canSubmit: boolean
@@ -149,6 +140,7 @@ export interface FormState<T> extends FormInternalState<T> {
      * Has the form been changed from its initial value?
      */
     readonly isDirty: boolean
+
     /**
      * Has the form been changed from its last submitted value?
      */
@@ -158,6 +150,7 @@ export interface FormState<T> extends FormInternalState<T> {
      * True if the form is focused.
      */
     readonly isFocused: boolean
+
     /**
      * True if the form is blurred.
      */
@@ -167,6 +160,7 @@ export interface FormState<T> extends FormInternalState<T> {
      * True if the form is currently validating.
      */
     readonly isValidating: boolean
+
     /**
      * True if the form is currently submitting.
      */

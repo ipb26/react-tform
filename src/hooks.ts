@@ -41,7 +41,9 @@ export type FormHooks<T> = {
 export function useFormHook<T>(form: FormContext<T>, hooks: FormHook | readonly FormHook[], action: FormAction<T>) {
     const value = [hooks].flat().map(hook => FORM_HOOKS[hook](form)).filter(isNotNil)
     useDeepCompareEffect(() => {
-        execAction(form, action)
+        if (value.length > 0) {
+            execAction(form, action)
+        }
     }, [
         hooks,
         value

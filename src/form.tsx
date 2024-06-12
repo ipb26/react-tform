@@ -1,6 +1,6 @@
 import { Mutex } from "async-mutex"
-import { FormEvent, useEffect, useMemo } from "react"
-import { ValueOrFactory, callOrGet } from "value-or-factory"
+import { FormEvent, SetStateAction, useEffect, useMemo } from "react"
+import { callOrGet } from "value-or-factory"
 import { FormError } from "./errors"
 import { FormField, FormFieldImpl } from "./field"
 import { FORM_HOOK_KEYS, useFormHook } from "./hooks"
@@ -30,11 +30,6 @@ export interface FormContext<T> extends FormState<T>, FormField<T> {
     readonly initialize: (value: T) => void
 
     /**
-     * Reinitialize this form using its initialValue option. Clears all state, including errors and submission history.
-     */
-    readonly reinitialize: () => void
-
-    /**
      * An onKeyUp handler for non-form root elements. If the form is disabled, this will be undefined.
      */
     readonly keyHandler: ((event: React.KeyboardEvent<HTMLElement>) => void) | undefined
@@ -54,54 +49,64 @@ export function useForm<T>(options: FormOptions<T>): FormContext<T> {
     const state = useFormState<T>(options)
     const mutex = useMemo(() => new Mutex(), [])
 
-    // Initialization function. Can be called manually but generally won't be.
-
-    const initialize = (value: T) => state.set(initialFormState(value))
-    const reinitialize = () => initialize(state.value.initialValue)
-
-    const disabled = options.disabled ?? false
-    const throwErrorIfDisabled = () => {
-        if (disabled) {
-            state.patch({ exception: new Error("Can not submit a form that is disabled.") })
-        }
-    }
+    //TODO we need to know if we are PENDING validation or submission - not just if we are currently validating
 
     // Validate function.
 
-    //TODO what happens if we change a value while validating? it will cause a conflict - could be marked as valid even though the value wouldnt pass
-    //resetting it below, but maybe a way to block or delay changes?
-    const doValidate = () => {
-        mutex.runExclusive(async () => {
-            if (options.validate === undefined) {
-                return
-            }
-            state.patch({ isValidating: true })
-            try {
+    /*
+    const markValidating = () => {
+
+    }
+    const unmarkValidating = () => {
+
+    }*/
+
+    const doValidate = async (requests: number) => {
+        try {
+            if (options.validate !== undefined) { //TODO throw an error?
                 const errors = await options.validate(state.value.value) ?? []
-                state.patch({
-                    lastValidated: new Date(),
-                    value: state.value.value,
-                    errors
+                state.set(state => {
+                    return {
+                        ...state,
+                        lastValidated: new Date(),
+                        errors
+                    }
                 })
-                // return errors.length === 0
             }
-            catch (exception) {
-                state.patch({ exception })
-                return false
-            }
-            finally {
-                state.patch({ isValidating: false })
-            }
-        })
+        }
+        catch (exception) {
+            state.set(state => {
+                return {
+                    ...state,
+                    exception
+                }
+            })
+            return false
+        }
+        finally {
+            state.set(state => {
+                return {
+                    ...state,
+                    validateRequests: state.validateRequests - requests
+                }
+            })
+        }
     }
 
     // Submit function.
 
     const doSubmit = () => {
-        throwErrorIfDisabled() //TODO wont this be in the background only?
         mutex.runExclusive(async () => {
-            state.patch({ isSubmitting: true })
             try {
+                if (options.disabled) {
+                    throw new Error("Can not submit a form that is disabled.")
+                }
+                state.set(state => {
+                    return {
+                        ...state,
+                        isSubmitting: true,
+                    }
+                })
                 const errors = await (async () => {
                     if (options.validate !== undefined) {
                         const errors = await options.validate(state.value.value) ?? []
@@ -111,8 +116,11 @@ export function useForm<T>(options: FormOptions<T>): FormContext<T> {
                     }
                     return await options.submit(state.value.value) ?? []
                 })()
-                state.patch({
-                    errors
+                state.set(state => {
+                    return {
+                        ...state,
+                        errors
+                    }
                 })
                 if (errors.length === 0) {
                     const date = new Date()
@@ -128,21 +136,33 @@ export function useForm<T>(options: FormOptions<T>): FormContext<T> {
                 //return errors.length === 0
             }
             catch (exception) {
-                state.patch({ exception })
+                state.set(state => {
+                    return {
+                        ...state,
+                        exception
+                    }
+                })
                 return false
             }
             finally {
-                state.patch({ isSubmitting: false })
+                state.set(state => {
+                    return {
+                        ...state,
+                        isSubmitting: false
+                    }
+                })
             }
         })
     }
 
-    // Automatic reinitalization if initialValue prop changes.
+    // Initialization function. Can be called manually but generally won't be.
+
+    const initialize = (value: T) => state.set(initialFormState(value))
 
     //TODO Shouldn't this be a deep comparison?
     useEffect(() => {
         if (callOrGet(options.autoReinitialize, state.value)) {
-            reinitialize()
+            initialize(state.value.initialValue)
         }
     }, [
         state.value.initialValue
@@ -151,7 +171,7 @@ export function useForm<T>(options: FormOptions<T>): FormContext<T> {
         if (state.value.lastValidateRequested === undefined) {
             return
         }
-        doValidate()
+        doValidate(state.value.validateRequests)
     }, [
         state.value.lastValidateRequested
     ])
@@ -168,12 +188,23 @@ export function useForm<T>(options: FormOptions<T>): FormContext<T> {
 
     const submit = (event?: FormEvent<unknown> | undefined) => {
         event?.preventDefault()
-        state.patch({ lastSubmitRequested: new Date() })
+        state.set(state => {
+            return {
+                ...state,
+                lastSubmitRequested: new Date(),
+            }
+        })
     }
     const validate = () => {
-        state.patch({ lastValidateRequested: new Date() })
+        state.set(state => {
+            return {
+                ...state,
+                lastValidateRequested: new Date(),
+                validateRequests: state.validateRequests + 1,
+            }
+        })
     }
-    const setValue = (value: ValueOrFactory<T, [T]>) => {
+    const setValue = (value: SetStateAction<T>) => {
         //TODO we need to separate out "validated" vs "unknown"
         //the LAST validation might be different from the current validation
         //for example, on a non-auto-validating form, if you change a value, a new validation is not triggered - however the form may no longer be valid (we dont know)
@@ -187,7 +218,7 @@ export function useForm<T>(options: FormOptions<T>): FormContext<T> {
             }
         })
     }
-    const setErrors = (errors: ValueOrFactory<readonly FormError[], [readonly FormError[]]>) => {
+    const setErrors = (errors: SetStateAction<readonly FormError[]>) => {
         state.set(state => {
             return {
                 ...state,
@@ -204,14 +235,14 @@ export function useForm<T>(options: FormOptions<T>): FormContext<T> {
         setValue,
         errors: state.value.errors,
         setErrors,
-        disabled,
-        blur: () => state.patch({ lastBlurred: new Date() }),
-        commit: () => state.patch({ lastCommitted: new Date() }),
-        focus: () => state.patch({ lastFocused: new Date() }),
+        disabled: options.disabled,
+        blur: () => state.set(state => ({ ...state, lastBlurred: new Date() })),
+        commit: () => state.set(state => ({ ...state, lastCommitted: new Date() })),
+        focus: () => state.set(state => ({ ...state, lastFocused: new Date() })),
     })
 
     const keyHandler = (() => {
-        if (disabled) {
+        if (options.disabled) {
             return
         }
         return (event: React.KeyboardEvent<HTMLElement>) => {
@@ -229,7 +260,6 @@ export function useForm<T>(options: FormOptions<T>): FormContext<T> {
         ...state.value,
         ...group,
         initialize,
-        reinitialize,
         submit,
         validate,
         setErrors,

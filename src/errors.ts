@@ -32,6 +32,20 @@ export interface FormError {
 
 }
 
+export function stringifyErrors(errors: FormErrors | undefined) {
+    if (errors === undefined) {
+        return
+    }
+    if (errors.length === 0) {
+        return
+    }
+    return errors.map(_ => _.message).join(", ") + "."
+}
+export function errorAt(path: FormErrorPath) {
+    return (error: FormError) => {
+        return equals(path, error.path)
+    }
+}
 export function descendErrors(errors: FormErrors, path: FormErrorPath) {
     return errors.filter(_ => equals(_.path.slice(0, path.length), path ?? [])).map(error => ({ ...error, path: error.path.slice(path.length) }))
 }
