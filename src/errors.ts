@@ -23,7 +23,7 @@ export interface FormError {
     /**
      * A path for an error. Strings represent properties, numbers represent array indexes.
      */
-    readonly path: FormErrorPath
+    readonly path?: FormErrorPath | undefined
 
     /**
      * Whether the error is temporary. Temporary errors will not block submission.
@@ -47,5 +47,5 @@ export function errorAt(path: FormErrorPath) {
     }
 }
 export function descendErrors(errors: FormErrors, path: FormErrorPath) {
-    return errors.filter(_ => equals(_.path.slice(0, path.length), path ?? [])).map(error => ({ ...error, path: error.path.slice(path.length) }))
+    return errors.filter(_ => equals((_.path ?? []).slice(0, path.length), path ?? [])).map(error => ({ ...error, path: (error.path ?? []).slice(path.length) }))
 }

@@ -14,7 +14,7 @@ export const FORM_HOOKS = {
     submit: <T>(context: FormContext<T>) => context.lastSubmitted,
     validate: <T>(context: FormContext<T>) => context.lastValidated,
 
-}
+} as const
 
 export const FORM_HOOK_KEYS = Object.keys(FORM_HOOKS) as FormHook[]
 
@@ -28,7 +28,7 @@ export type FormHook = keyof typeof FORM_HOOKS
  */
 export type FormHooks<T> = {
 
-    readonly [K in FormHook]?: FormAction<T> | FormAction<T>[]
+    readonly [K in FormHook]?: FormAction<T> | readonly FormAction<T>[]
 
 }
 

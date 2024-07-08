@@ -13,16 +13,6 @@ export type FormValidator<T> = (value: T) => FormErrors | void | PromiseLike<For
 export interface FormOptions<T> {
 
     /**
-     * Submission function for the form. If this throws an exception, it will be thrown within React. If you want to handle errors, make sure to return a FormError[].
-     */
-    readonly submit: FormSubmitter<T>
-
-    /**
-     * Validation function for the form. Should return an array of errors (empty if validation is successful). If this throws an exception, it will be thrown within React. If you want to handle errors, make sure to return a FormError[].
-     */
-    readonly validate?: FormValidator<T>
-
-    /**
      * The initial data for the form. Memoize this for performance benefits.
      */
     readonly initialValue: T
@@ -31,7 +21,17 @@ export interface FormOptions<T> {
      * Whether or not the form should update if the initialValue property changes.
      * @defaultValue `false`
      */
-    readonly autoReinitialize?: ValueOrFactory<boolean, [FormState<T>]>
+    readonly autoReinitialize?: ValueOrFactory<boolean, [FormState<T>]> | undefined
+
+    /**
+     * Submission function for the form. If this throws an exception, it will be thrown within React. If you want to handle errors, make sure to return a FormError[].
+     */
+    readonly submit: FormSubmitter<T>
+
+    /**
+     * Validation function for the form. Should return an array of errors (empty if validation is successful). If this throws an exception, it will be thrown within React. If you want to handle errors, make sure to return a FormError[].
+     */
+    readonly validate?: FormValidator<T> | undefined
 
     /**
      * Disable the form.

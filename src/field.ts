@@ -5,25 +5,6 @@ import { FieldControl } from "./control"
 import { FormError, descendErrors } from "./errors"
 import { FieldInput } from "./internal"
 
-/*
-type E<T> = { readonly value: T, readonly errors: readonly string[] }
-type Enriched<T> = T extends object ? { readonly [K in keyof T]: E<T[K]> } : E<T>
-
-type XXX = Enriched<{ id: Uint8Array }>
-*/
-
-//type Op = string | number | 
-
-type AutoLens<I, O> = number | string | ((value: I) => O) | { or: I }
-
-/*
-export function autoLens() {
-    return {
-        of: lensProp()
-    }
-}
-*/
-
 export interface FormField<T> extends FieldControl<T> {
 
     /**
@@ -103,7 +84,7 @@ export class FormFieldImpl<T> implements FormField<T> {
             from.commit()
         }
         this.errors = from.errors
-        this.selfErrors = from.errors?.filter(_ => _.path.length === 0)
+        this.selfErrors = from.errors?.filter(_ => (_.path ?? []).length === 0)
         this.hasErrors = (from.errors?.length ?? 0) > 0
         this.hasSelfErrors = (this.selfErrors?.length ?? 0) > 0
         this.setErrors = from.setErrors
@@ -168,7 +149,7 @@ export class FormFieldImpl<T> implements FormField<T> {
                 return newErrors.map(error => {
                     return {
                         ...error,
-                        path: [...operator.path ?? [], ...error.path]
+                        path: [...operator.path ?? [], ...error.path ?? []]
                     }
                 })
             })

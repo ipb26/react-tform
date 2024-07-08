@@ -83,7 +83,7 @@ export function useFormState<T>(options: FormOptions<T>) {
     const isInvalid = !isValidationCurrent || state.errors === undefined ? undefined : state.errors.length !== 0
     const isValid = !isValidationCurrent || state.errors === undefined ? undefined : state.errors.length === 0
     const canSubmit = (() => {
-        return !(state.errors ?? []).some(_ => _.temporary !== true)
+        return !isValidationCurrent || !(state.errors ?? []).some(_ => _.temporary !== true)
     })()
 
     const isDirty = useMemo(() => (state.lastChanged?.getTime() ?? 0) > state.lastInitialized.getTime() && !equals(state.value, state.initializedValue), [state.value, state.initializedValue])
@@ -102,6 +102,7 @@ export function useFormState<T>(options: FormOptions<T>) {
 
     const value = {
         ...state,
+        isValidationCurrent,
         canSubmit,
         isValid,
         isInvalid,

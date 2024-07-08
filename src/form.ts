@@ -7,6 +7,7 @@ import { FORM_HOOK_KEYS, useFormHook } from "./hooks"
 import { execAction } from "./internal"
 import { FormOptions } from "./options"
 import { FormState, initialFormState, useFormState } from "./state"
+import { useDeepCompareEffect } from "./util"
 
 /**
  * A full form object, including state and mutation methods.
@@ -52,14 +53,6 @@ export function useForm<T>(options: FormOptions<T>): FormContext<T> {
     //TODO we need to know if we are PENDING validation or submission - not just if we are currently validating
 
     // Validate function.
-
-    /*
-    const markValidating = () => {
-
-    }
-    const unmarkValidating = () => {
-
-    }*/
 
     const doValidate = async (requests: number) => {
         try {
@@ -119,6 +112,7 @@ export function useForm<T>(options: FormOptions<T>): FormContext<T> {
                 state.set(state => {
                     return {
                         ...state,
+                        lastValidated: new Date(),
                         errors
                     }
                 })
@@ -160,7 +154,7 @@ export function useForm<T>(options: FormOptions<T>): FormContext<T> {
     const initialize = (value: T) => state.set(initialFormState(value))
 
     //TODO Shouldn't this be a deep comparison?
-    useEffect(() => {
+    useDeepCompareEffect(() => {
         if (callOrGet(options.autoReinitialize, state.value)) {
             initialize(state.value.initialValue)
         }
