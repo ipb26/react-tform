@@ -115,13 +115,7 @@ export function useFormState<T>(options: FormOptions<T>) {
         isBlurred,
     }
 
-    return {
-        value,
-        //TODO rename
-        set: (value: React.SetStateAction<FormInternalState<T>>) => {
-            setState(value)
-        },
-    }
+    return [value, setState] as const
 
 }
 

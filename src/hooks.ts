@@ -1,6 +1,8 @@
 import { isNotNil } from "ramda"
+import { createContext } from "react"
 import { FormContext } from "./form"
 import { execAction } from "./internal"
+import { FormActions } from "./options"
 import { FormAction } from "./types"
 import { useDeepCompareEffect } from "./util"
 
@@ -22,15 +24,6 @@ export const FORM_HOOK_KEYS = Object.keys(FORM_HOOKS) as FormHook[]
  * An event type for the form.
  */
 export type FormHook = keyof typeof FORM_HOOKS
-
-/**
- * A map of event types to actions.
- */
-export type FormHooks<T> = {
-
-    readonly [K in FormHook]?: FormAction<T> | readonly FormAction<T>[]
-
-}
 
 /**
  * Attach a callback to a form hook.

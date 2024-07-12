@@ -1,6 +1,7 @@
+import { createContext } from "react"
 import { ValueOrFactory } from "value-or-factory"
 import { FormErrors } from "./errors"
-import { FormHooks } from "./hooks"
+import { FormHook } from "./hooks"
 import { FormState } from "./state"
 
 export type FormSubmitter<T> = (value: T) => FormErrors | void | PromiseLike<FormErrors | void>
@@ -41,6 +42,17 @@ export interface FormOptions<T> {
     /**
      * Specify actions to be executed on form hooks.
      */
-    readonly on?: readonly FormHooks<T>[] | FormHooks<T> | undefined
+    readonly on?: FormActions | undefined
 
 }
+
+/**
+ * A map of event types to actions.
+ */
+export type FormActions = {
+
+    readonly [K in FormHook]?: "submit" | "validate"
+
+}
+
+export const FormDefaults = createContext<FormActions>({})

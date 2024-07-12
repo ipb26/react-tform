@@ -1,11 +1,11 @@
 import { Mutex } from "async-mutex"
-import { FormEvent, SetStateAction, useEffect, useMemo } from "react"
+import { FormEvent, SetStateAction, useContext, useEffect, useMemo } from "react"
 import { callOrGet } from "value-or-factory"
 import { FormError } from "./errors"
 import { FormField, FormFieldImpl } from "./field"
 import { FORM_HOOK_KEYS, useFormHook } from "./hooks"
 import { execAction } from "./internal"
-import { FormOptions } from "./options"
+import { FormDefaults, FormOptions } from "./options"
 import { FormState, initialFormState, useFormState } from "./state"
 import { useDeepCompareEffect } from "./util"
 
@@ -47,7 +47,8 @@ export function useForm<T>(options: FormOptions<T>): FormContext<T> {
 
     // Build options and state.
 
-    const state = useFormState<T>(options)
+    const [state, setState] = useFormState<T>(options)
+    const defaults = useContext(FormDefaults)
     const mutex = useMemo(() => new Mutex(), [])
 
     //TODO we need to know if we are PENDING validation or submission - not just if we are currently validating
@@ -57,8 +58,8 @@ export function useForm<T>(options: FormOptions<T>): FormContext<T> {
     const doValidate = async (requests: number) => {
         try {
             if (options.validate !== undefined) { //TODO throw an error?
-                const errors = await options.validate(state.value.value) ?? []
-                state.set(state => {
+                const errors = await options.validate(state.value) ?? []
+                setState(state => {
                     return {
                         ...state,
                         lastValidated: new Date(),
@@ -68,7 +69,7 @@ export function useForm<T>(options: FormOptions<T>): FormContext<T> {
             }
         }
         catch (exception) {
-            state.set(state => {
+            setState(state => {
                 return {
                     ...state,
                     exception
@@ -77,7 +78,7 @@ export function useForm<T>(options: FormOptions<T>): FormContext<T> {
             return false
         }
         finally {
-            state.set(state => {
+            setState(state => {
                 return {
                     ...state,
                     validateRequests: state.validateRequests - requests
@@ -90,11 +91,14 @@ export function useForm<T>(options: FormOptions<T>): FormContext<T> {
 
     const doSubmit = () => {
         mutex.runExclusive(async () => {
+            if (!state.canSubmit) {
+                return
+            }
             try {
                 if (options.disabled) {
                     throw new Error("Can not submit a form that is disabled.")
                 }
-                state.set(state => {
+                setState(state => {
                     return {
                         ...state,
                         isSubmitting: true,
@@ -102,14 +106,14 @@ export function useForm<T>(options: FormOptions<T>): FormContext<T> {
                 })
                 const errors = await (async () => {
                     if (options.validate !== undefined) {
-                        const errors = await options.validate(state.value.value) ?? []
+                        const errors = await options.validate(state.value) ?? []
                         if (errors.length > 0) {
                             return errors
                         }
                     }
-                    return await options.submit(state.value.value) ?? []
+                    return await options.submit(state.value) ?? []
                 })()
-                state.set(state => {
+                setState(state => {
                     return {
                         ...state,
                         lastValidated: new Date(),
@@ -118,7 +122,7 @@ export function useForm<T>(options: FormOptions<T>): FormContext<T> {
                 })
                 if (errors.length === 0) {
                     const date = new Date()
-                    state.set(state => {
+                    setState(state => {
                         return {
                             ...state,
                             lastSubmitted: date,
@@ -130,7 +134,7 @@ export function useForm<T>(options: FormOptions<T>): FormContext<T> {
                 //return errors.length === 0
             }
             catch (exception) {
-                state.set(state => {
+                setState(state => {
                     return {
                         ...state,
                         exception
@@ -139,7 +143,7 @@ export function useForm<T>(options: FormOptions<T>): FormContext<T> {
                 return false
             }
             finally {
-                state.set(state => {
+                setState(state => {
                     return {
                         ...state,
                         isSubmitting: false
@@ -151,38 +155,38 @@ export function useForm<T>(options: FormOptions<T>): FormContext<T> {
 
     // Initialization function. Can be called manually but generally won't be.
 
-    const initialize = (value: T) => state.set(initialFormState(value))
+    const initialize = (value: T) => setState(initialFormState(value))
 
     //TODO Shouldn't this be a deep comparison?
     useDeepCompareEffect(() => {
-        if (callOrGet(options.autoReinitialize, state.value)) {
-            initialize(state.value.initialValue)
+        if (callOrGet(options.autoReinitialize, state)) {
+            initialize(state.initialValue)
         }
     }, [
-        state.value.initialValue
+        state.initialValue
     ])
     useEffect(() => {
-        if (state.value.lastValidateRequested === undefined) {
+        if (state.lastValidateRequested === undefined) {
             return
         }
-        doValidate(state.value.validateRequests)
+        doValidate(state.validateRequests)
     }, [
-        state.value.lastValidateRequested
+        state.lastValidateRequested
     ])
     useEffect(() => {
-        if (state.value.lastSubmitRequested === undefined) {
+        if (state.lastSubmitRequested === undefined) {
             return
         }
         doSubmit()
     }, [
-        state.value.lastSubmitRequested
+        state.lastSubmitRequested
     ])
 
     // Revert to the initial data.
 
     const submit = (event?: FormEvent<unknown> | undefined) => {
         event?.preventDefault()
-        state.set(state => {
+        setState(state => {
             return {
                 ...state,
                 lastSubmitRequested: new Date(),
@@ -190,7 +194,7 @@ export function useForm<T>(options: FormOptions<T>): FormContext<T> {
         })
     }
     const validate = () => {
-        state.set(state => {
+        setState(state => {
             return {
                 ...state,
                 lastValidateRequested: new Date(),
@@ -204,7 +208,7 @@ export function useForm<T>(options: FormOptions<T>): FormContext<T> {
         //for example, on a non-auto-validating form, if you change a value, a new validation is not triggered - however the form may no longer be valid (we dont know)
         //so we need a "lastValidation" but also a "isValid" - which might be unknown separate
         //this is because we dont want to reset form state, causing flickering, if we re-validate and a new error is generated
-        state.set(state => {
+        setState(state => {
             return {
                 ...state,
                 value: callOrGet(value, state.value),
@@ -213,7 +217,7 @@ export function useForm<T>(options: FormOptions<T>): FormContext<T> {
         })
     }
     const setErrors = (errors: SetStateAction<readonly FormError[]>) => {
-        state.set(state => {
+        setState(state => {
             return {
                 ...state,
                 errors: callOrGet(errors, state.errors ?? [])
@@ -225,14 +229,14 @@ export function useForm<T>(options: FormOptions<T>): FormContext<T> {
 
     const group = FormFieldImpl.from({
         path: [],
-        value: state.value.value,
+        value: state.value,
         setValue,
-        errors: state.value.errors,
+        errors: state.errors,
         setErrors,
         disabled: options.disabled,
-        blur: () => state.set(state => ({ ...state, lastBlurred: new Date() })),
-        commit: () => state.set(state => ({ ...state, lastCommitted: new Date() })),
-        focus: () => state.set(state => ({ ...state, lastFocused: new Date() })),
+        blur: () => setState(state => ({ ...state, lastBlurred: new Date() })),
+        commit: () => setState(state => ({ ...state, lastCommitted: new Date() })),
+        focus: () => setState(state => ({ ...state, lastFocused: new Date() })),
     })
 
     const keyHandler = (() => {
@@ -251,7 +255,7 @@ export function useForm<T>(options: FormOptions<T>): FormContext<T> {
     })()
 
     const context = {
-        ...state.value,
+        ...state,
         ...group,
         initialize,
         submit,
@@ -260,20 +264,19 @@ export function useForm<T>(options: FormOptions<T>): FormContext<T> {
         keyHandler,
     }
 
+    const allActions = { ...defaults, ...options.on }
     FORM_HOOK_KEYS.forEach(item => {
         useFormHook(context, item, form => {
-            const actions = [options.on].flat().map(_ => _?.[item]) ?? []
-            actions.flat().forEach(action => {
-                if (action === undefined) {
-                    return
-                }
-                execAction(form, action)
-            })
+            const action = allActions[item]
+            if (action === undefined) {
+                return
+            }
+            execAction(form, action)
         })
     })
 
-    if (state.value.exception !== undefined) {
-        throw state.value.exception
+    if (state.exception !== undefined) {
+        throw state.exception
     }
 
     return context
