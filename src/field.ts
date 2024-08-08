@@ -2,7 +2,7 @@
 import { Lens, defaultTo, identity, lens, lensIndex, lensProp, pick, set, view } from "ramda"
 import { ValueOrFactory, callOrGet } from "value-or-factory"
 import { FieldControl } from "./control"
-import { FormError, descendErrors } from "./errors"
+import { FormErrorInput, FormErrors, buildErrors, descendErrors } from "./errors"
 import { FieldInput } from "./internal"
 
 export interface FormField<T> extends FieldControl<T> {
@@ -88,6 +88,14 @@ export class FormFieldImpl<T> implements FormField<T> {
         this.hasErrors = (from.errors?.length ?? 0) > 0
         this.hasSelfErrors = (this.selfErrors?.length ?? 0) > 0
         this.setErrors = from.setErrors
+        this.attachErrors = (inputErrors: FormErrorInput) => {
+            this.setErrors(errors => {
+                return [
+                    ...errors ?? [],
+                    ...buildErrors(inputErrors),
+                ]
+            })
+        }
         this.pipe = this.doPipe.bind(this)
         this.prop = this.doProp.bind(this)
         this.transform = this.doTransform.bind(this)
@@ -95,6 +103,7 @@ export class FormFieldImpl<T> implements FormField<T> {
         this.or = this.doOr.bind(this)
         this.props = this.doProps.bind(this)
     }
+    attachErrors: (errors: FormErrorInput) => void
 
     /*
     index(index: number): FormField<IndexOf<T>> {
@@ -143,9 +152,9 @@ export class FormFieldImpl<T> implements FormField<T> {
             })
         }
         const errors = descendErrors(this.errors ?? [], operator.path ?? [])
-        const setErrors = (errors: ValueOrFactory<readonly FormError[], [readonly FormError[]]>) => {
+        const setErrors = (errors: ValueOrFactory<FormErrorInput, [FormErrors]>) => {
             this.setErrors(prevErrors => {
-                const newErrors = callOrGet(errors, descendErrors(prevErrors, operator.path ?? []))
+                const newErrors = buildErrors(callOrGet(errors, descendErrors(prevErrors, operator.path ?? [])))
                 return newErrors.map(error => {
                     return {
                         ...error,

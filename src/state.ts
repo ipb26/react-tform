@@ -10,6 +10,11 @@ import { useDeepCompareConstant } from "./util"
 export interface FormInternalState<T> {
 
     /**
+     * The last exception to occur within submission or validation.
+     */
+    readonly exception?: unknown
+
+    /**
      * The current value of the form.
      */
     readonly value: T
@@ -24,6 +29,8 @@ export interface FormInternalState<T> {
      */
     readonly errors?: readonly FormError[] | undefined
 
+    readonly lastSubmitResult?: boolean | undefined
+    
     /**
      * The most recently submitted value.
      */
@@ -32,27 +39,20 @@ export interface FormInternalState<T> {
     /**
      * The number of times the form was successfully submitted.
      */
-    readonly submitCount: number
-
-    /**
-     * The last exception to occur within submission or validation.
-     */
-    readonly exception?: unknown
+    // readonly submitCount: number
 
     readonly lastInitialized: Date
     readonly lastBlurred?: Date | undefined
     readonly lastChanged?: Date | undefined
     readonly lastCommitted?: Date | undefined
     readonly lastFocused?: Date | undefined
+    readonly lastSubmitRequested?: Date | undefined
     readonly lastSubmitted?: Date | undefined
+    readonly lastValidateRequested?: Date | undefined
     readonly lastValidated?: Date | undefined
 
-    readonly lastSubmitRequested?: Date | undefined
-    readonly isSubmitting: boolean
-
-    readonly lastValidateRequested?: Date | undefined
-    readonly validateRequests: number
-    readonly isValidating: boolean
+    //    readonly isSubmitting: boolean
+    //  readonly isValidating: boolean
 
 }
 
@@ -66,10 +66,10 @@ export function initialFormState<T>(initialValue: T) {
         lastInitialized: new Date(),
         initializedValue: initialValue,
         value: initialValue,
-        submitCount: 0,
-        validateRequests: 0,
-        isSubmitting: false,
-        isValidating: false,
+        //submitCount: 0,
+        //validateRequests: 0,
+        //  isSubmitting: false,
+        // isValidating: false,
     }
 }
 
@@ -78,22 +78,32 @@ export function useFormState<T>(options: FormOptions<T>) {
     const [state, setState] = useState<FormInternalState<T>>(initialFormState(options.initialValue))
 
     //TODO this wont be accurate - we need a counter or something
-    const isValidating = state.validateRequests > 0
+    // const isValidating = state.isValidating// > 0
+
+    const isValidating = (state.lastValidateRequested?.getTime() ?? 0) > (state.lastValidated?.getTime() ?? 0)
+    const isSubmitting = (state.lastSubmitRequested?.getTime() ?? 0) > (state.lastSubmitted?.getTime() ?? 0)
+
     const isValidationCurrent = (state.lastValidated?.getTime() ?? 0) > (state.lastChanged?.getTime() ?? 0)
     const isInvalid = !isValidationCurrent || state.errors === undefined ? undefined : state.errors.length !== 0
     const isValid = !isValidationCurrent || state.errors === undefined ? undefined : state.errors.length === 0
     const canSubmit = (() => {
-        return !isValidationCurrent || !(state.errors ?? []).some(_ => _.temporary !== true)
+        return !(state.errors ?? []).some(_ => _.temporary !== true)
+        /*
+        return valid
+        if (valid) {
+            return true
+            //return !isValidating
+        }
+        else {
+            return false
+        }
+        */
     })()
 
     const isDirty = useMemo(() => (state.lastChanged?.getTime() ?? 0) > state.lastInitialized.getTime() && !equals(state.value, state.initializedValue), [state.value, state.initializedValue])
     const isDirtySinceSubmitted = useMemo(() => (state.lastChanged?.getTime() ?? 0) > (state.lastSubmitted?.getTime() ?? 0) && !equals(state.value, state.submittedValue ?? state.initializedValue), [state.value, state.submittedValue ?? state.initializedValue])
 
-    const hasBeenSubmitted = state.lastSubmitted !== undefined
-    const hasBeenValidated = state.lastValidated !== undefined
-
     const isFocused = (state.lastFocused?.getTime() ?? 0) > (state.lastBlurred?.getTime() ?? 0)
-    const isBlurred = (state.lastBlurred?.getTime() ?? 0) > (state.lastFocused?.getTime() ?? 0)
 
     //TODO rename to clarify dif between initial vs initilized value?
     const initialValue = useDeepCompareConstant(options.initialValue)
@@ -102,17 +112,15 @@ export function useFormState<T>(options: FormOptions<T>) {
 
     const value = {
         ...state,
-        isValidationCurrent,
+        isValidating,
+        isSubmitting,
         canSubmit,
         isValid,
         isInvalid,
         initialValue,
         isDirty,
         isDirtySinceSubmitted,
-        hasBeenSubmitted,
-        hasBeenValidated,
         isFocused,
-        isBlurred,
     }
 
     return [value, setState] as const
@@ -137,7 +145,7 @@ export interface FormState<T> extends FormInternalState<T> {
     readonly isDirty: boolean
 
     /**
-     * Has the form been changed from its last submitted value?
+     * Has the form been changed since submission?
      */
     readonly isDirtySinceSubmitted: boolean
 
@@ -145,11 +153,6 @@ export interface FormState<T> extends FormInternalState<T> {
      * True if the form is focused.
      */
     readonly isFocused: boolean
-
-    /**
-     * True if the form is blurred.
-     */
-    readonly isBlurred: boolean
 
     /**
      * True if the form is currently validating.

@@ -50,6 +50,16 @@ export interface AutoSubmitStatus {
     readonly next: number | undefined
 
     /**
+     * Whether or not an autosave is pending.
+     */
+    readonly pending: boolean
+
+    /**
+     * The number of autosaves completed.
+     */
+    // readonly count: number
+
+    /**
      * Cancel any pending autosaves.
      */
     cancel(): void
@@ -57,7 +67,7 @@ export interface AutoSubmitStatus {
 }
 
 export function useAutoValidate<T>(form: FormContext<T>) {
-    useFormHook(form, "change", "validate")
+    useFormHook(form, "change", () => form.validate())
 }
 
 /**
@@ -67,7 +77,7 @@ export function useAutoValidate<T>(form: FormContext<T>) {
  * @returns Autosave status.
  */
 export function useAutoSubmit<T>(options: AutoSubmitOptions<T>): AutoSubmitStatus {
-    const active = options.disabled !== true && options.form.disabled !== true
+    const active = options.disabled !== true && options.form.disabled !== true && options.form.canSubmit && options.form.isDirtySinceSubmitted
     const [next, setNext] = useState<number>()
     const cancel = useCallback(() => setNext(undefined), [])
     const trigger = (delay?: number | undefined) => {
@@ -77,13 +87,11 @@ export function useAutoSubmit<T>(options: AutoSubmitOptions<T>): AutoSubmitStatu
         if (delay === undefined) {
             return
         }
-        if (!options.form.canSubmit || !options.form.isDirtySinceSubmitted) {
-            return
-        }
         setNext(Date.now() + delay)
     }
-    useFormHook(options.form, ["change"], () => trigger(options.on?.immediate))
-    useFormHook(options.form, ["blur", "commit"], () => trigger(options.on?.delayed))
+    useFormHook(options.form, "change", () => trigger(options.on?.immediate))
+    useFormHook(options.form, "blur", () => trigger(options.on?.delayed))
+    useFormHook(options.form, "commit", () => trigger(options.on?.delayed))
     useEffect(() => {
         if (next === undefined) {
             return
@@ -95,6 +103,7 @@ export function useAutoSubmit<T>(options: AutoSubmitOptions<T>): AutoSubmitStatu
     }, [
         next
     ])
+    useFormHook(options.form, "beforeSubmit", cancel)
     useEffect(() => {
         if (!active) {
             cancel()
@@ -102,10 +111,10 @@ export function useAutoSubmit<T>(options: AutoSubmitOptions<T>): AutoSubmitStatu
     }, [
         active
     ])
-    useFormHook(options.form, "submit", cancel)
     return {
         active,
         next,
+        pending: next !== undefined,
         cancel
     }
 }

@@ -1,11 +1,13 @@
 import { createContext } from "react"
 import { ValueOrFactory } from "value-or-factory"
-import { FormErrors } from "./errors"
+import { FormErrorInput } from "./errors"
 import { FormHook } from "./hooks"
 import { FormState } from "./state"
 
-export type FormSubmitter<T> = (value: T) => FormErrors | void | PromiseLike<FormErrors | void>
-export type FormValidator<T> = (value: T) => FormErrors | void | PromiseLike<FormErrors | void>
+export type FormValidationResult = FormErrorInput | void | PromiseLike<FormErrorInput | void>
+export type FormSubmissionResult = FormErrorInput | void | PromiseLike<FormErrorInput | void>
+export type FormValidator<T> = (value: T) => FormValidationResult
+export type FormSubmitter<T> = (value: T) => FormSubmissionResult
 
 /**
  * Form setup options.

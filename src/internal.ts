@@ -1,5 +1,5 @@
 import { ValueOrFactory } from "value-or-factory"
-import { FormErrors } from "./errors"
+import { FormErrorInput, FormErrors } from "./errors"
 import { FormContext } from "./form"
 import { FormAction } from "./types"
 
@@ -45,7 +45,7 @@ export interface FieldInput<G, S = G> {
      * Set this field's errors.
      * @param errors The errors.
      */
-    readonly setErrors: (errors: ValueOrFactory<FormErrors, [FormErrors]>) => void
+    readonly setErrors: (errors: ValueOrFactory<FormErrorInput, [FormErrors]>) => void
 
     readonly path: readonly (string | number)[]
 

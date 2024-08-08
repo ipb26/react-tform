@@ -1,7 +1,6 @@
-import { Mutex } from "async-mutex"
-import { FormEvent, SetStateAction, useContext, useEffect, useMemo } from "react"
-import { callOrGet } from "value-or-factory"
-import { FormError } from "./errors"
+import { FormEvent, SetStateAction, useContext, useEffect } from "react"
+import { ValueOrFactory, callOrGet } from "value-or-factory"
+import { FormErrorInput, FormErrors, buildErrors } from "./errors"
 import { FormField, FormFieldImpl } from "./field"
 import { FORM_HOOK_KEYS, useFormHook } from "./hooks"
 import { execAction } from "./internal"
@@ -19,6 +18,8 @@ export interface FormContext<T> extends FormState<T>, FormField<T> {
      * Validate this form.
      */
     readonly validate: () => void
+
+    //    readonly validateOn: "change" | "blur" | "submit"
 
     /**
      * Submit this form.
@@ -49,16 +50,13 @@ export function useForm<T>(options: FormOptions<T>): FormContext<T> {
 
     const [state, setState] = useFormState<T>(options)
     const defaults = useContext(FormDefaults)
-    const mutex = useMemo(() => new Mutex(), [])
-
-    //TODO we need to know if we are PENDING validation or submission - not just if we are currently validating
 
     // Validate function.
 
-    const doValidate = async (requests: number) => {
+    const doValidate = async () => {
         try {
-            if (options.validate !== undefined) { //TODO throw an error?
-                const errors = await options.validate(state.value) ?? []
+            if (options.validate !== undefined) {
+                const errors = buildErrors(await options.validate(state.value))
                 setState(state => {
                     return {
                         ...state,
@@ -75,93 +73,52 @@ export function useForm<T>(options: FormOptions<T>): FormContext<T> {
                     exception
                 }
             })
-            return false
-        }
-        finally {
-            setState(state => {
-                return {
-                    ...state,
-                    validateRequests: state.validateRequests - requests
-                }
-            })
         }
     }
 
     // Submit function.
 
-    const doSubmit = () => {
-        mutex.runExclusive(async () => {
-            if (!state.canSubmit) {
-                return
-            }
-            try {
-                if (options.disabled) {
-                    throw new Error("Can not submit a form that is disabled.")
+    const doSubmit = async () => {
+        if (!state.canSubmit || options.disabled) {
+            setState(state => {
+                return {
+                    ...state,
+                    lastSubmitted: new Date(),
+                    lastSubmitResult: false,
                 }
-                setState(state => {
-                    return {
-                        ...state,
-                        isSubmitting: true,
-                    }
-                })
-                const errors = await (async () => {
-                    if (options.validate !== undefined) {
-                        const errors = await options.validate(state.value) ?? []
-                        if (errors.length > 0) {
-                            return errors
-                        }
-                    }
-                    return await options.submit(state.value) ?? []
-                })()
-                setState(state => {
-                    return {
-                        ...state,
-                        lastValidated: new Date(),
-                        errors
-                    }
-                })
-                if (errors.length === 0) {
-                    const date = new Date()
-                    setState(state => {
-                        return {
-                            ...state,
-                            lastSubmitted: date,
-                            submitCount: state.submitCount + 1,
-                            submittedValue: state.value,
-                        }
-                    })
+            })
+            return
+        }
+        try {
+            const value = state.value
+            const errors = buildErrors(await options.submit(state.value))
+            setState(state => {
+                return {
+                    ...state,
+                    lastSubmitted: new Date(),
+                    lastSubmitResult: errors.length === 0,
+                    submittedValue: value,
+                    errors
                 }
-                //return errors.length === 0
-            }
-            catch (exception) {
-                setState(state => {
-                    return {
-                        ...state,
-                        exception
-                    }
-                })
-                return false
-            }
-            finally {
-                setState(state => {
-                    return {
-                        ...state,
-                        isSubmitting: false
-                    }
-                })
-            }
-        })
+            })
+        }
+        catch (exception) {
+            setState(state => {
+                return {
+                    ...state,
+                    exception
+                }
+            })
+            return false
+        }
     }
 
     // Initialization function. Can be called manually but generally won't be.
 
     const initialize = (value: T) => setState(initialFormState(value))
 
-    //TODO Shouldn't this be a deep comparison?
     useDeepCompareEffect(() => {
-        if (callOrGet(options.autoReinitialize, state)) {
-            initialize(state.initialValue)
-        }
+        initialize(state.initialValue)
     }, [
         state.initialValue
     ])
@@ -169,7 +126,7 @@ export function useForm<T>(options: FormOptions<T>): FormContext<T> {
         if (state.lastValidateRequested === undefined) {
             return
         }
-        doValidate(state.validateRequests)
+        doValidate()
     }, [
         state.lastValidateRequested
     ])
@@ -198,7 +155,7 @@ export function useForm<T>(options: FormOptions<T>): FormContext<T> {
             return {
                 ...state,
                 lastValidateRequested: new Date(),
-                validateRequests: state.validateRequests + 1,
+                // validateRequests: state.validateRequests + 1,
             }
         })
     }
@@ -216,11 +173,11 @@ export function useForm<T>(options: FormOptions<T>): FormContext<T> {
             }
         })
     }
-    const setErrors = (errors: SetStateAction<readonly FormError[]>) => {
+    const setErrors = (errors: ValueOrFactory<FormErrorInput, [FormErrors]>) => {
         setState(state => {
             return {
                 ...state,
-                errors: callOrGet(errors, state.errors ?? [])
+                errors: buildErrors(callOrGet(errors, state.errors ?? []))
             }
         })
     }
@@ -249,7 +206,7 @@ export function useForm<T>(options: FormOptions<T>): FormContext<T> {
             }
             const target = event.target as HTMLElement
             if (target.tagName === "INPUT") {
-                doSubmit()
+                submit()
             }
         }
     })()
@@ -266,12 +223,12 @@ export function useForm<T>(options: FormOptions<T>): FormContext<T> {
 
     const allActions = { ...defaults, ...options.on }
     FORM_HOOK_KEYS.forEach(item => {
-        useFormHook(context, item, form => {
+        useFormHook(context, item, () => {
             const action = allActions[item]
             if (action === undefined) {
                 return
             }
-            execAction(form, action)
+            execAction(context, action)
         })
     })
 

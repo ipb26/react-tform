@@ -11,6 +11,34 @@ export type FormErrorPath = readonly (string | number)[]
 export type FormErrors = readonly FormError[]
 
 /**
+ * Used to easily create a form error.
+ */
+export type FormErrorInput = undefined | void | string | FormError | readonly (undefined | void | string | FormError)[]
+
+/**
+ * Turn a form error input into an array of form errors.
+ * @param input The input.
+ * @returns Form errors.
+ */
+export function buildErrors(input: FormErrorInput): FormErrors {
+    if (Array.isArray(input)) {
+        return input.flatMap(buildErrors)
+    }
+    else if (typeof input === "string") {
+        return [{
+            path: [],
+            message: input,
+        }]
+    }
+    else if (input === undefined) {
+        return []
+    }
+    else {
+        return [input as FormError]
+    }
+}
+
+/**
  * Error object for a form field.
  */
 export interface FormError {

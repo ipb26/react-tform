@@ -1,5 +1,5 @@
 import { ValueOrFactory } from "value-or-factory"
-import { FormError } from "./errors"
+import { FormError, FormErrorInput } from "./errors"
 import { FieldInput } from "./internal"
 
 export interface FieldControl<G, S = G> extends FieldInput<G, S> {
@@ -28,5 +28,10 @@ export interface FieldControl<G, S = G> extends FieldInput<G, S> {
      * Does this field or form have errors?
      */
     readonly hasSelfErrors: boolean
+
+    /**
+     * Add an error to a form.
+     */
+    readonly attachErrors: (errors: FormErrorInput) => void
 
 }
