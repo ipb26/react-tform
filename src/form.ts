@@ -61,6 +61,8 @@ export function useForm<T>(options: FormOptions<T>): FormContext<T> {
                     return {
                         ...state,
                         lastValidated: new Date(),
+                        isValid: errors.length === 0,
+                        isInvalid: errors.length > 0,
                         errors
                     }
                 })
@@ -155,7 +157,6 @@ export function useForm<T>(options: FormOptions<T>): FormContext<T> {
             return {
                 ...state,
                 lastValidateRequested: new Date(),
-                // validateRequests: state.validateRequests + 1,
             }
         })
     }

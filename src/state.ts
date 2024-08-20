@@ -30,11 +30,14 @@ export interface FormInternalState<T> {
     readonly errors?: readonly FormError[] | undefined
 
     readonly lastSubmitResult?: boolean | undefined
-    
+
     /**
      * The most recently submitted value.
      */
     readonly submittedValue?: T | undefined
+
+    readonly isValid?: boolean | undefined
+    readonly isInvalid?: boolean | undefined
 
     /**
      * The number of times the form was successfully submitted.
@@ -83,9 +86,9 @@ export function useFormState<T>(options: FormOptions<T>) {
     const isValidating = (state.lastValidateRequested?.getTime() ?? 0) > (state.lastValidated?.getTime() ?? 0)
     const isSubmitting = (state.lastSubmitRequested?.getTime() ?? 0) > (state.lastSubmitted?.getTime() ?? 0)
 
-    const isValidationCurrent = (state.lastValidated?.getTime() ?? 0) > (state.lastChanged?.getTime() ?? 0)
-    const isInvalid = !isValidationCurrent || state.errors === undefined ? undefined : state.errors.length !== 0
-    const isValid = !isValidationCurrent || state.errors === undefined ? undefined : state.errors.length === 0
+   // const isValidationCurrent = (state.lastValidated?.getTime() ?? 0) > (state.lastChanged?.getTime() ?? 0)
+    // const isInvalid = !isValidationCurrent || state.errors === undefined ? undefined : state.errors.length !== 0
+    // const isValid = !isValidationCurrent || state.errors === undefined ? undefined : state.errors.length === 0
     const canSubmit = (() => {
         return !(state.errors ?? []).some(_ => _.temporary !== true)
         /*
@@ -115,8 +118,8 @@ export function useFormState<T>(options: FormOptions<T>) {
         isValidating,
         isSubmitting,
         canSubmit,
-        isValid,
-        isInvalid,
+        //  isValid,
+        //  isInvalid,
         initialValue,
         isDirty,
         isDirtySinceSubmitted,

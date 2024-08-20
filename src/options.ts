@@ -48,12 +48,14 @@ export interface FormOptions<T> {
 
 }
 
+export type FormAction = "submit" | "validate" | (() => void)
+
 /**
  * A map of event types to actions.
  */
 export type FormActions = {
 
-    readonly [K in FormHook]?: "submit" | "validate"
+    readonly [K in FormHook]?: FormAction | readonly FormAction[]
 
 }
 
