@@ -1,9 +1,11 @@
-import { ValueOrFactory } from "value-or-factory"
-import { FormErrorInput, FormErrors } from "./errors"
+import { Dispatch, SetStateAction, useState } from "react"
+import { ValueOrFactory, callOrGet } from "value-or-factory"
+import { FormErrorInput, FormErrors, buildErrors } from "./errors"
+import { FormFieldImpl } from "./field"
 import { FormContext } from "./form"
 import { FormAction } from "./options"
 
-export interface FieldInput<G, S = G> {
+export interface FieldBehaviors {
 
     /**
      * Is this field disabled?
@@ -24,6 +26,34 @@ export interface FieldInput<G, S = G> {
      * Mark this field or form as focused. Call in the onFocus attribute of input elements.
      */
     focus(): void
+
+}
+
+export interface PartialFieldBehaviors {
+
+    /**
+     * Is this field disabled?
+     */
+    readonly disabled?: boolean | undefined
+
+    /**
+     * Mark this field or form as blurred. Call in the onBlur attribute of input elements.
+     */
+    blur?: (() => void) | undefined
+
+    /**
+     * Mark this field or form as committed. Call after changing the value of a radio button or checkbox etc.
+     */
+    commit?: (() => void) | undefined
+
+    /**
+     * Mark this field or form as focused. Call in the onFocus attribute of input elements.
+     */
+    focus?: (() => void) | undefined
+
+}
+
+export interface FieldManagement<G, S = G> {
 
     /**
      * This field or form's value.
@@ -47,8 +77,9 @@ export interface FieldInput<G, S = G> {
      */
     readonly setErrors: (errors: ValueOrFactory<FormErrorInput, [FormErrors]>) => void
 
-    readonly path: readonly (string | number)[]
+}
 
+export interface FieldInput<G, S = G> extends FieldManagement<G, S>, PartialFieldBehaviors {
 }
 
 //TODO Move?

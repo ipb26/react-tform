@@ -1,8 +1,8 @@
 import { ValueOrFactory } from "value-or-factory"
 import { FormError, FormErrorInput } from "./errors"
-import { FieldInput } from "./internal"
+import { FieldBehaviors, FieldManagement } from "./internal"
 
-export interface FieldControl<G, S = G> extends FieldInput<G, S> {
+export interface FieldControl<G, S = G> extends FieldManagement<G, S>, FieldBehaviors {
 
     /**
      * Mark this field or form as blurred or focused.

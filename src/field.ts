@@ -1,9 +1,10 @@
 
 import { Lens, defaultTo, identity, lens, lensIndex, lensProp, pick, set, view } from "ramda"
+import { Dispatch, SetStateAction, useState } from "react"
 import { ValueOrFactory, callOrGet } from "value-or-factory"
 import { FieldControl } from "./control"
 import { FormErrorInput, FormErrors, buildErrors, descendErrors } from "./errors"
-import { FieldInput } from "./internal"
+import { FieldInput, PartialFieldBehaviors } from "./internal"
 
 export interface FormField<T> extends FieldControl<T> {
 
@@ -38,7 +39,7 @@ export interface FormField<T> extends FieldControl<T> {
 
 export class FormFieldImpl<T> implements FormField<T> {
 
-    readonly path
+    // readonly path
     readonly disabled
     readonly value
     readonly setValue
@@ -64,24 +65,24 @@ export class FormFieldImpl<T> implements FormField<T> {
     }
 
     private constructor(readonly from: FieldInput<T, T>) {
-        this.path = from.path
+        //  this.path = from.path
         this.disabled = from.disabled
         this.value = from.value
         this.setValue = from.setValue
-        this.blur = from.blur
-        this.commit = from.commit
-        this.focus = from.focus
+        this.blur = () => from.blur?.()
+        this.commit = () => from.commit?.()
+        this.focus = () => from.focus?.()
         this.toggle = (status: "focused" | "blurred") => {
             if (status === "focused") {
-                from.focus()
+                from.focus?.()
             }
             else {
-                from.blur()
+                from.blur?.()
             }
         }
         this.setValueAndCommit = (value: T) => {
             from.setValue(value)
-            from.commit()
+            from.commit?.()
         }
         this.errors = from.errors
         this.selfErrors = from.errors?.filter(_ => (_.path ?? []).length === 0)
@@ -164,7 +165,7 @@ export class FormFieldImpl<T> implements FormField<T> {
             })
         }
         return FormFieldImpl.from({
-            path: [...this.path, ...this.path !== undefined ? this.path : []],
+            //path: [...this.path, ...this.path !== undefined ? this.path : []],
             value: newValue,
             setValue: newSetValue,
             blur: this.blur,
@@ -220,4 +221,20 @@ export namespace FormField {
 
     }
 
+}
+
+export function useField<T>(value: T, setValue: Dispatch<SetStateAction<T>>, options: PartialFieldBehaviors = {}) {
+    const [errors, setRawErrors] = useState<FormErrors>([])
+    const setErrors = (errors: ValueOrFactory<FormErrorInput, [FormErrors]>) => {
+        setRawErrors(prev => {
+            return buildErrors(callOrGet(errors, prev))
+        })
+    }
+    return FormFieldImpl.from({
+        ...options,
+        value,
+        setValue,
+        errors,
+        setErrors,
+    })
 }

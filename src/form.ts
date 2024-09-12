@@ -8,6 +8,12 @@ import { FormDefaults, FormOptions } from "./options"
 import { FormState, initialFormState, useFormState } from "./state"
 import { useDeepCompareEffect } from "./util"
 
+export interface FormHandlers {
+
+    onKeyUp: ((event: React.KeyboardEvent<HTMLElement>) => void) | undefined
+
+}
+
 /**
  * A full form object, including state and mutation methods.
  * @typeParam T The value type.
@@ -34,7 +40,7 @@ export interface FormContext<T> extends FormState<T>, FormField<T> {
     /**
      * An onKeyUp handler for non-form root elements. If the form is disabled, this will be undefined.
      */
-    readonly keyHandler: ((event: React.KeyboardEvent<HTMLElement>) => void) | undefined
+    readonly handlers: FormHandlers
 
 }
 
@@ -186,7 +192,7 @@ export function useForm<T>(options: FormOptions<T>): FormContext<T> {
     // The root form group.
 
     const group = FormFieldImpl.from({
-        path: [],
+        //  path: [],
         value: state.value,
         setValue,
         errors: state.errors,
@@ -197,20 +203,22 @@ export function useForm<T>(options: FormOptions<T>): FormContext<T> {
         focus: () => setState(state => ({ ...state, lastFocused: new Date() })),
     })
 
-    const keyHandler = (() => {
-        if (options.disabled) {
-            return
-        }
-        return (event: React.KeyboardEvent<HTMLElement>) => {
-            if (event.key !== "Enter") {
+    const handlers = {
+        onKeyUp: (() => {
+            if (options.disabled) {
                 return
             }
-            const target = event.target as HTMLElement
-            if (target.tagName === "INPUT") {
-                submit()
+            return (event: React.KeyboardEvent<HTMLElement>) => {
+                if (event.key !== "Enter") {
+                    return
+                }
+                const target = event.target as HTMLElement
+                if (target.tagName === "INPUT") {
+                    submit()
+                }
             }
-        }
-    })()
+        })()
+    }
 
     const context = {
         ...state,
@@ -219,7 +227,7 @@ export function useForm<T>(options: FormOptions<T>): FormContext<T> {
         submit,
         validate,
         setErrors,
-        keyHandler,
+        handlers,
     }
 
     const allActions = { ...defaults, ...options.on }
