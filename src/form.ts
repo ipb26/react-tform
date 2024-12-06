@@ -10,7 +10,7 @@ import { useDeepCompareEffect } from "./util"
 
 export interface FormHandlers {
 
-    onKeyUp: ((event: React.KeyboardEvent<HTMLElement>) => void) | undefined
+    readonly onKeyUp: ((event: React.KeyboardEvent<HTMLElement>) => void) | undefined
 
 }
 
