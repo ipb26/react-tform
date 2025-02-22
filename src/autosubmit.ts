@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react"
 import { FormContext } from "./form"
-import { useFormHook } from "./hooks"
+import { useFormAction } from "./hooks"
 
 /**
  * An autosave trigger. Immediate will fire on change, delayed will fire on blur and commit.
@@ -66,10 +66,6 @@ export interface AutoSubmitStatus {
 
 }
 
-export function useAutoValidate<T>(form: FormContext<T>) {
-    useFormHook(form, "change", () => form.validate())
-}
-
 /**
  * Attach autosaving functionality to a form.
  * @typeParam T The form's value type.
@@ -89,9 +85,9 @@ export function useAutoSubmit<T>(options: AutoSubmitOptions<T>): AutoSubmitStatu
         }
         setNext(Date.now() + delay)
     }
-    useFormHook(options.form, "change", () => trigger(options.on?.immediate))
-    useFormHook(options.form, "blur", () => trigger(options.on?.delayed))
-    useFormHook(options.form, "commit", () => trigger(options.on?.delayed))
+    useFormAction(options.form, "change", () => trigger(options.on?.immediate))
+    useFormAction(options.form, "blur", () => trigger(options.on?.delayed))
+    useFormAction(options.form, "commit", () => trigger(options.on?.delayed))
     useEffect(() => {
         if (next === undefined) {
             return
@@ -103,7 +99,7 @@ export function useAutoSubmit<T>(options: AutoSubmitOptions<T>): AutoSubmitStatu
     }, [
         next
     ])
-    useFormHook(options.form, "beforeSubmit", cancel)
+    useFormAction(options.form, "beforeSubmit", cancel)
     useEffect(() => {
         if (!active) {
             cancel()

@@ -92,12 +92,4 @@ export function execAction<T>(form: FormContext<T>, action: FormAction | readonl
             action?.()
         }
     })
-    /*
-    if (typeof action === "string") {
-        form[action]()
-    }
-    else {
-        action?.(form)
-    }
-    */
 }

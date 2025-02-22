@@ -1,12 +1,12 @@
-import { FormEvent, SetStateAction, useContext, useEffect } from "react"
+import { isNotNil } from "ramda"
+import { FormEvent, SetStateAction, useCallback, useEffect } from "react"
 import { ValueOrFactory, callOrGet } from "value-or-factory"
 import { FormErrorInput, FormErrors, buildErrors } from "./errors"
 import { FormField, FormFieldImpl } from "./field"
-import { FORM_HOOK_KEYS, useFormHook } from "./hooks"
-import { execAction } from "./internal"
-import { FormDefaults, FormOptions } from "./options"
+import { FORM_HOOK_KEYS, useFormAction } from "./hooks"
+import { FormOptions, useFormOptions } from "./options"
 import { FormState, initialFormState, useFormState } from "./state"
-import { useDeepCompareEffect } from "./util"
+import { useDeepCompareConstant } from "./util"
 
 export interface FormHandlers {
 
@@ -21,11 +21,14 @@ export interface FormHandlers {
 export interface FormContext<T> extends FormState<T>, FormField<T> {
 
     /**
+     * The form's initial value.
+     */
+    readonly initialValue: T
+
+    /**
      * Validate this form.
      */
     readonly validate: () => void
-
-    //    readonly validateOn: "change" | "blur" | "submit"
 
     /**
      * Submit this form.
@@ -36,6 +39,11 @@ export interface FormContext<T> extends FormState<T>, FormField<T> {
      * Reinitialize this form. Clears all state, including errors and submission history.
      */
     readonly initialize: (value: T) => void
+
+    /**
+     * Reinitialize this form. Clears all state, including errors and submission history.
+     */
+    readonly reinitialize: () => void
 
     /**
      * An onKeyUp handler for non-form root elements. If the form is disabled, this will be undefined.
@@ -50,37 +58,49 @@ export interface FormContext<T> extends FormState<T>, FormField<T> {
  * @param options Form options.
  * @returns A form context.
  */
-export function useForm<T>(options: FormOptions<T>): FormContext<T> {
+export function useForm<T>(input: FormOptions<T>): FormContext<T> {
 
     // Build options and state.
 
+    const options = useFormOptions(input)
+    const initialValue = useDeepCompareConstant(options.initialValue)
+
     const [state, setState] = useFormState<T>(options)
-    const defaults = useContext(FormDefaults)
+
+    const logException = (exception: unknown) => {
+        setState(state => {
+            return {
+                ...state,
+                exception
+            }
+        })
+    }
+
+    // Initialization function. Can be called manually but generally won't be.
+
+    const doReinitialize = useCallback(() => setState(initialFormState(initialValue)), [initialValue])
 
     // Validate function.
 
     const doValidate = async () => {
         try {
-            if (options.validate !== undefined) {
-                const errors = buildErrors(await options.validate(state.value))
-                setState(state => {
-                    return {
-                        ...state,
-                        lastValidated: new Date(),
-                        isValid: errors.length === 0,
-                        isInvalid: errors.length > 0,
-                        errors
-                    }
-                })
+            if (options.validate === undefined) {
+                return
             }
-        }
-        catch (exception) {
+            const errors = buildErrors(await options.validate(state.value))
             setState(state => {
+                const date = new Date()
                 return {
                     ...state,
-                    exception
+                    lastValidated: date,
+                    isValid: errors.length === 0,
+                    isInvalid: errors.length > 0,
+                    errors
                 }
             })
+        }
+        catch (exception) {
+            logException(exception)
         }
     }
 
@@ -88,47 +108,37 @@ export function useForm<T>(options: FormOptions<T>): FormContext<T> {
 
     const doSubmit = async () => {
         if (!state.canSubmit || options.disabled) {
-            setState(state => {
-                return {
-                    ...state,
-                    lastSubmitted: new Date(),
-                    lastSubmitResult: false,
-                }
-            })
             return
         }
+        //TODO make it so all submit errors are temporary?
         try {
             const value = state.value
             const errors = buildErrors(await options.submit(state.value))
             setState(state => {
+                const date = new Date()
                 return {
                     ...state,
-                    lastSubmitted: new Date(),
+                    lastSubmitted: date,
+                    lastSubmitValue: value,
                     lastSubmitResult: errors.length === 0,
-                    submittedValue: value,
+                    submitCount: state.submitCount + 1,
                     errors
                 }
             })
         }
         catch (exception) {
-            setState(state => {
-                return {
-                    ...state,
-                    exception
-                }
-            })
-            return false
+            logException(exception)
         }
     }
 
-    // Initialization function. Can be called manually but generally won't be.
-
-    const initialize = (value: T) => setState(initialFormState(value))
-
-    useDeepCompareEffect(() => {
-        initialize(state.initialValue)
+    useEffect(doReinitialize, [doReinitialize])
+    useEffect(() => {
+        if (state.lastInitializeRequested === undefined) {
+            return
+        }
+        doReinitialize()
     }, [
-        state.initialValue
+        state.lastInitializeRequested
     ])
     useEffect(() => {
         if (state.lastValidateRequested === undefined) {
@@ -149,6 +159,15 @@ export function useForm<T>(options: FormOptions<T>): FormContext<T> {
 
     // Revert to the initial data.
 
+    const initialize = (initialValue: T) => setState(initialFormState(initialValue))
+    const reinitialize = () => {
+        setState(state => {
+            return {
+                ...state,
+                lastInitializeRequested: new Date(),
+            }
+        })
+    }
     const submit = (event?: FormEvent<unknown> | undefined) => {
         event?.preventDefault()
         setState(state => {
@@ -223,22 +242,31 @@ export function useForm<T>(options: FormOptions<T>): FormContext<T> {
     const context = {
         ...state,
         ...group,
+        initialValue,
         initialize,
-        submit,
+        reinitialize,
         validate,
+        submit,
         setErrors,
         handlers,
     }
 
-    const allActions = { ...defaults, ...options.on }
     FORM_HOOK_KEYS.forEach(item => {
-        useFormHook(context, item, () => {
-            const action = allActions[item]
-            if (action === undefined) {
-                return
-            }
-            execAction(context, action)
+        useFormAction(context, item, () => {
+            const actions = [options.on[item]].flat().filter(isNotNil)
+            actions.forEach(action => {
+                const exec = typeof action === "string" ? context[action] : action
+                exec()
+            })
         })
+    })
+    const validateOn = options.validateOn ?? "change"
+    const validateStart = options.validateStart ?? "afterFirstSubmission"
+    useFormAction(context, validateOn, () => {
+        if (validateStart === "afterFirstSubmission" && !state.hasBeenSubmitted) {
+            return
+        }
+        validate()
     })
 
     if (state.exception !== undefined) {

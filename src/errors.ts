@@ -20,22 +20,19 @@ export type FormErrorInput = undefined | void | string | FormError | readonly (u
  * @param input The input.
  * @returns Form errors.
  */
-export function buildErrors(input: FormErrorInput): FormErrors {
-    if (Array.isArray(input)) {
-        return input.flatMap(buildErrors)
-    }
-    else if (typeof input === "string") {
-        return [{
-            path: [],
-            message: input,
-        }]
-    }
-    else if (input === undefined) {
-        return []
-    }
-    else {
-        return [input as FormError]
-    }
+export function buildErrors(inputs: FormErrorInput): FormErrors {
+    return [inputs].flat().flatMap(input => {
+        if (input === undefined) {
+            return []
+        }
+        if (typeof input === "string") {
+            return [{
+                path: [],
+                message: input,
+            }]
+        }
+        return [input]
+    })
 }
 
 /**
