@@ -99,8 +99,6 @@ export function useFormState<T>(options: FormOptions<T>) {
 
     const hasBeenSubmitted = state.submitCount > 0
 
-    //TODO rename to clarify dif between initial vs initialized value?
-
     const value = {
         ...state,
         isValidating,
@@ -109,7 +107,6 @@ export function useFormState<T>(options: FormOptions<T>) {
         hasBeenSubmitted,
         isDirty,
         isDirtySinceSubmitted,
-        //  isFocused,
     }
 
     return [value, setState] as const
