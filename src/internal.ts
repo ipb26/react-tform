@@ -1,7 +1,5 @@
 import { ValueOrFactory } from "value-or-factory"
 import { FormErrorInput, FormErrors } from "./errors"
-import { FormContext } from "./form"
-import { FormAction } from "./options"
 
 export interface FieldBehaviors {
 
@@ -78,18 +76,4 @@ export interface FieldManagement<G, S = G> {
 }
 
 export interface FieldInput<G, S = G> extends FieldManagement<G, S>, PartialFieldBehaviors {
-}
-
-//TODO Move?
-
-export function execAction<T>(form: FormContext<T>, action: FormAction | readonly FormAction[]) {
-    const actions = [action].flat()
-    actions.forEach(action => {
-        if (typeof action === "string") {
-            form[action]()
-        }
-        else {
-            action?.()
-        }
-    })
 }

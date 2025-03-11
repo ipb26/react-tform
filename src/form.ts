@@ -110,7 +110,6 @@ export function useForm<T>(input: FormOptions<T>): FormContext<T> {
         if (!state.canSubmit || options.disabled) {
             return
         }
-        //TODO make it so all submit errors are temporary?
         try {
             const value = state.value
             const errors = buildErrors(await options.submit(state.value))
@@ -191,11 +190,14 @@ export function useForm<T>(input: FormOptions<T>): FormContext<T> {
         //for example, on a non-auto-validating form, if you change a value, a new validation is not triggered - however the form may no longer be valid (we dont know)
         //so we need a "lastValidation" but also a "isValid" - which might be unknown separate
         //this is because we dont want to reset form state, causing flickering, if we re-validate and a new error is generated
+        //solution for now - blank out isValid/isInvalid. not sure if this will work
         setState(state => {
             return {
                 ...state,
                 value: callOrGet(value, state.value),
                 lastChanged: new Date(),
+                isValid: undefined,
+                isInvalid: undefined,
             }
         })
     }
@@ -211,7 +213,6 @@ export function useForm<T>(input: FormOptions<T>): FormContext<T> {
     // The root form group.
 
     const group = FormFieldImpl.from({
-        //  path: [],
         value: state.value,
         setValue,
         errors: state.errors,
