@@ -93,6 +93,7 @@ export function useForm<T>(input: FormOptions<T>): FormContext<T> {
                 return {
                     ...state,
                     lastValidated: date,
+                    lastValidationResult: errors.length === 0,
                     isValid: errors.length === 0,
                     isInvalid: errors.length > 0,
                     errors
@@ -190,7 +191,6 @@ export function useForm<T>(input: FormOptions<T>): FormContext<T> {
         //for example, on a non-auto-validating form, if you change a value, a new validation is not triggered - however the form may no longer be valid (we dont know)
         //so we need a "lastValidation" but also a "isValid" - which might be unknown separate
         //this is because we dont want to reset form state, causing flickering, if we re-validate and a new error is generated
-        //solution for now - blank out isValid/isInvalid. not sure if this will work
         setState(state => {
             return {
                 ...state,
@@ -265,6 +265,7 @@ export function useForm<T>(input: FormOptions<T>): FormContext<T> {
     const validateStart = options.validateStart ?? "afterFirstSubmission"
     useFormAction(context, validateOn, () => {
         if (validateStart === "afterFirstSubmission" && !state.hasBeenSubmitted) {
+
             return
         }
         validate()

@@ -51,6 +51,7 @@ export interface FormInternalState<T> {
      */
     readonly lastValidateRequested?: Date | undefined
     readonly lastValidated?: Date | undefined
+    readonly lastValidationResult?: boolean | undefined
     //readonly lastValidateSuccess?: Date | undefined
     //readonly lastValidateFailure?: Date | undefined
     readonly isValid?: boolean | undefined

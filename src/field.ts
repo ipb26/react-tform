@@ -148,7 +148,6 @@ export class FormFieldImpl<T> implements FormField<T> {
         const newSetValue = (newValue: ValueOrFactory<N, [N]>) => {
             this.setValue(prev => {
                 const newPrev = view(operator.operator, prev)
-                //TODO change callOrGet to a functional style
                 return set(operator.operator, callOrGet(newValue, newPrev), prev)
             })
         }
