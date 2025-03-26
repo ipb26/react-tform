@@ -82,53 +82,59 @@ export function useForm<T>(input: FormOptions<T>): FormContext<T> {
 
     // Validate function.
 
-    const doValidate = async () => {
-        try {
-            if (options.validate === undefined) {
-                return
+    const doValidate = () => {
+        const validate = options.validate
+        if (validate === undefined) {
+            return
+        }
+        (async () => {
+            try {
+                const errors = buildErrors(await validate(state.value))
+                setState(state => {
+                    const date = new Date()
+                    return {
+                        ...state,
+                        lastValidated: date,
+                        lastValidationResult: errors.length === 0,
+                        isValid: errors.length === 0,
+                        isInvalid: errors.length > 0,
+                        errors
+                    }
+                })
             }
-            const errors = buildErrors(await options.validate(state.value))
-            setState(state => {
-                const date = new Date()
-                return {
-                    ...state,
-                    lastValidated: date,
-                    lastValidationResult: errors.length === 0,
-                    isValid: errors.length === 0,
-                    isInvalid: errors.length > 0,
-                    errors
-                }
-            })
-        }
-        catch (exception) {
-            logException(exception)
-        }
+            catch (exception) {
+                logException(exception)
+            }
+        })()
     }
 
     // Submit function.
 
-    const doSubmit = async () => {
+    const doSubmit = () => {
         if (!state.canSubmit || options.disabled) {
-            return
+            throw new Error("This form is disabled or can not be submitted.")
         }
-        try {
-            const value = state.value
-            const errors = buildErrors(await options.submit(state.value))
-            setState(state => {
-                const date = new Date()
-                return {
-                    ...state,
-                    lastSubmitted: date,
-                    lastSubmitValue: value,
-                    lastSubmitResult: errors.length === 0,
-                    submitCount: state.submitCount + 1,
-                    errors
-                }
-            })
-        }
-        catch (exception) {
-            logException(exception)
-        }
+        (async () => {
+            try {
+                const value = state.value
+                const results = await options.submit(state.value)
+                const errors = buildErrors(results)
+                setState(state => {
+                    const date = new Date()
+                    return {
+                        ...state,
+                        lastSubmitted: date,
+                        lastSubmitValue: value,
+                        lastSubmitResult: errors.length === 0,
+                        submitCount: state.submitCount + 1,
+                        errors
+                    }
+                })
+            }
+            catch (exception) {
+                logException(exception)
+            }
+        })()
     }
 
     useEffect(doReinitialize, [doReinitialize])
