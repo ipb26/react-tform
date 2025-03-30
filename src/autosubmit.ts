@@ -5,7 +5,7 @@ import { useFormAction } from "./hooks"
 /**
  * An autosave trigger. Immediate will fire on change, delayed will fire on blur and commit.
  */
-export type AutoSubmitTrigger = "immediate" | "delayed"
+export type AutoSubmitTrigger = "change" | "commit" | "blur"
 
 /**
  * The autosave options. Note that you, or the autosave will not take effect.
@@ -85,9 +85,13 @@ export function useAutoSubmit<T>(options: AutoSubmitOptions<T>): AutoSubmitStatu
         }
         setNext(Date.now() + delay)
     }
-    useFormAction(options.form, "change", () => trigger(options.on?.immediate))
-    useFormAction(options.form, "blur", () => trigger(options.on?.delayed))
-    useFormAction(options.form, "commit", () => trigger(options.on?.delayed))
+    [
+        "blur" as const,
+        "change" as const,
+        "commit" as const,
+    ].forEach(action => {
+        useFormAction(options.form, action, () => trigger(options.on?.[action]))
+    })
     useEffect(() => {
         if (next === undefined) {
             return
