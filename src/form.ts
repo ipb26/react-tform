@@ -192,18 +192,14 @@ export function useForm<T>(input: FormOptions<T>): FormContext<T> {
         })
     }
     const setValue = (value: SetStateAction<T>) => {
-        //TODO we need to separate out "validated" vs "unknown"
-        //the LAST validation might be different from the current validation
-        //for example, on a non-auto-validating form, if you change a value, a new validation is not triggered - however the form may no longer be valid (we dont know)
-        //so we need a "lastValidation" but also a "isValid" - which might be unknown separate
-        //this is because we dont want to reset form state, causing flickering, if we re-validate and a new error is generated
         setState(state => {
+            const validating = options.validate !== undefined
             return {
                 ...state,
                 value: callOrGet(value, state.value),
                 lastChanged: new Date(),
-                isValid: undefined,
-                isInvalid: undefined,
+                isValid: validating ? undefined : true,
+                isInvalid: validating ? undefined : false,
             }
         })
     }
@@ -270,8 +266,10 @@ export function useForm<T>(input: FormOptions<T>): FormContext<T> {
     const validateOn = options.validateOn ?? "change"
     const validateStart = options.validateStart ?? "afterFirstSubmission"
     useFormAction(context, validateOn, () => {
+        if (options.validate === undefined) {
+            return
+        }
         if (validateStart === "afterFirstSubmission" && !state.hasBeenSubmitted) {
-
             return
         }
         validate()
