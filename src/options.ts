@@ -1,6 +1,8 @@
 import { createContext, useContext } from "react"
+import { ValueOrFactory } from "value-or-factory"
 import { FormErrorInput } from "./errors"
 import { FormHook as FormEvent } from "./hooks"
+import { FormState } from "./state"
 
 export type FormValidationResult = FormErrorInput | void | PromiseLike<FormErrorInput | void>
 export type FormSubmissionResult = FormErrorInput | void | PromiseLike<FormErrorInput | void>
@@ -46,7 +48,7 @@ export interface FormOptions<T> extends UniversalFormOptions {
      * Whether or not the form should update if the initialValue property changes.
      * @defaultValue `false`
      */
-    //readonly autoReinitialize?: ValueOrFactory<boolean, [FormState<T>]> | undefined
+    readonly autoReinitialize?: ValueOrFactory<boolean, [FormState<T>]> | undefined
 
     /**
      * Submission function for the form. If this throws an exception, it will be thrown within React. If you want to handle errors, make sure to return a FormError[].

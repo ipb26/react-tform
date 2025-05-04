@@ -6,7 +6,7 @@ import { FormField, FormFieldImpl } from "./field"
 import { FORM_HOOK_KEYS, useFormAction } from "./hooks"
 import { FormOptions, useFormOptions } from "./options"
 import { FormState, initialFormState, useFormState } from "./state"
-import { useDeepCompareConstant } from "./util"
+import { useDeepCompareConstant, useIsFirstMount } from "./util"
 
 export interface FormHandlers {
 
@@ -137,7 +137,17 @@ export function useForm<T>(input: FormOptions<T>): FormContext<T> {
         })()
     }
 
-    useEffect(doReinitialize, [doReinitialize])
+    const isFirstMount = useIsFirstMount()
+    useEffect(() => {
+        if (isFirstMount) {
+            return
+        }
+        if (callOrGet(options.autoReinitialize, state)) {
+            doReinitialize()
+        }
+    }, [
+        doReinitialize
+    ])
     useEffect(() => {
         if (state.lastInitializeRequested === undefined) {
             return
