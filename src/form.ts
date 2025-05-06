@@ -117,7 +117,7 @@ export function useForm<T>(input: FormOptions<T>): FormContext<T> {
         (async () => {
             try {
                 const value = state.value
-                const results = await options.submit(state.value)
+                const results = await options.submit(value)
                 const errors = buildErrors(results)
                 setState(state => {
                     const date = new Date()
