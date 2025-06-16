@@ -1,17 +1,6 @@
-import { equals } from "ramda"
-import { useMemo, useState } from "react"
+import { useState } from "react"
 import { FormErrors } from "./errors"
 import { FormOptions } from "./options"
-
-/*
-export interface FormSubmitResult<T> {
-
-    readonly date: Date
-    readonly result: boolean
-    readonly value: T
-
-}
-*/
 
 /**
  * A form's internal state.
@@ -42,9 +31,12 @@ export interface FormInternalState<T> {
     readonly lastInitialized: Date
 
     readonly lastBlurred?: Date | undefined
-    readonly lastChanged?: Date | undefined
-    readonly lastCommitted?: Date | undefined
     readonly lastFocused?: Date | undefined
+    readonly lastTouched?: Date | undefined
+    readonly lastChanged?: Date | undefined
+    readonly lastChangedByApi?: Date | undefined
+    readonly lastChangedByUserAction?: Date | undefined
+    readonly lastCommitted?: Date | undefined
 
     /**
      * Validation history.
@@ -52,8 +44,6 @@ export interface FormInternalState<T> {
     readonly lastValidateRequested?: Date | undefined
     readonly lastValidated?: Date | undefined
     readonly lastValidationResult?: boolean | undefined
-    //readonly lastValidateSuccess?: Date | undefined
-    //readonly lastValidateFailure?: Date | undefined
     readonly isValid?: boolean | undefined
     readonly isInvalid?: boolean | undefined
 
@@ -65,8 +55,6 @@ export interface FormInternalState<T> {
     readonly lastSubmitValue?: T | undefined
     readonly lastSubmitResult?: boolean | undefined
     readonly submitCount: number
-    //readonly lastSubmitSuccess?: Date | undefined
-    //readonly lastSubmitFailure?: Date | undefined
 
 }
 
@@ -75,28 +63,28 @@ export interface FormInternalState<T> {
  * @param initialValue The form's value.
  * @returns An initial form state.
  */
-export function initialFormState<T>(initialValue: T) {
+export function initialFormState<T>(initialValue: T, initialErrors?: FormErrors | undefined) {
     return {
         lastInitialized: new Date(),
         initializedValue: initialValue,
         value: initialValue,
+        valueSource: "api" as const,
+        errors: initialErrors,
         submitCount: 0,
     }
 }
 
 export function useFormState<T>(options: FormOptions<T>) {
 
-    const [state, setState] = useState<FormInternalState<T>>(initialFormState(options.initialValue))
+    const [state, setState] = useState<FormInternalState<T>>(initialFormState(options.initial?.value ?? options.initialValue!, options.initialErrors))
 
     const isValidating = (state.lastValidateRequested?.getTime() ?? 0) > (state.lastValidated?.getTime() ?? 0)
     const isSubmitting = (state.lastSubmitRequested?.getTime() ?? 0) > (state.lastSubmitted?.getTime() ?? 0)
 
     const canSubmit = !(state.errors ?? []).some(_ => _.temporary !== true)
 
-    const isDirty = useMemo(() => (state.lastChanged?.getTime() ?? 0) > state.lastInitialized.getTime() && !equals(state.value, state.initializedValue), [state.value, state.initializedValue])
-    const isDirtySinceSubmitted = useMemo(() => (state.lastChanged?.getTime() ?? 0) > (state.lastSubmitted?.getTime() ?? 0) && !equals(state.value, state.lastSubmitValue ?? state.initializedValue), [state.value, state.lastSubmitValue ?? state.initializedValue])
-
-    //    const isFocused = (state.lastFocused?.getTime() ?? 0) > (state.lastBlurred?.getTime() ?? 0)
+    // const isDirty = useMemo(() => (state.lastChanged?.getTime() ?? 0) > state.lastInitialized.getTime() && !equals(state.value, state.initializedValue), [state.value, state.initializedValue])
+    //  const isDirtySinceSubmitted = useMemo(() => (state.lastChanged?.getTime() ?? 0) > (state.lastSubmitted?.getTime() ?? 0) && !equals(state.value, state.lastSubmitValue ?? state.initializedValue), [state.value, state.lastSubmitValue ?? state.initializedValue])
 
     const hasBeenSubmitted = state.submitCount > 0
 
@@ -106,8 +94,8 @@ export function useFormState<T>(options: FormOptions<T>) {
         isSubmitting,
         canSubmit,
         hasBeenSubmitted,
-        isDirty,
-        isDirtySinceSubmitted,
+        //    isDirty,
+        //   isDirtySinceSubmitted,
     }
 
     return [value, setState] as const

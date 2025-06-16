@@ -1,12 +1,15 @@
 import { isNotNil } from "ramda"
+import { FormContext } from "./form"
+import { FormAction } from "./options"
 import { FormState } from "./state"
 import { useDeepCompareEffect } from "./util"
 
 export const FORM_HOOKS = {
 
-    blur: <T>(context: FormState<T>) => context.lastBlurred,
     change: <T>(context: FormState<T>) => context.lastChanged,
+    touch: <T>(context: FormState<T>) => context.lastTouched,
     commit: <T>(context: FormState<T>) => context.lastCommitted,
+    blur: <T>(context: FormState<T>) => context.lastBlurred,
     focus: <T>(context: FormState<T>) => context.lastFocused,
     init: <T>(context: FormState<T>) => context.lastInitialized,
     beforeSubmit: <T>(context: FormState<T>) => context.lastSubmitRequested,
@@ -29,11 +32,11 @@ export type FormHook = keyof typeof FORM_HOOKS
  * @param hooks Which hook to trigger on.
  * @param callback The callback to run.
  */
-export function useFormAction<T>(form: FormState<T>, hooks: FormHook | undefined | readonly FormHook[], action: () => void) {
+export function useFormAction<T>(form: FormContext<T>, hooks: FormHook | undefined | readonly FormHook[], action: FormAction<T>) {
     const value = [hooks].flat().filter(isNotNil).map(hook => FORM_HOOKS[hook](form)).filter(isNotNil)
     useDeepCompareEffect(() => {
         if (value.length > 0) {
-            action()
+            typeof action === "string" ? form[action]() : action(form)
         }
     }, [
         hooks,

@@ -1,10 +1,9 @@
 
-import { Lens, defaultTo, identity, lens, lensIndex, lensProp, pick, set, view } from "ramda"
-import { Dispatch, SetStateAction, useState } from "react"
+import { Lens, defaultTo, identity, isNotNil, lens, lensIndex, lensProp, pick, set, view } from "ramda"
 import { ValueOrFactory, callOrGet } from "value-or-factory"
 import { FieldControl } from "./control"
 import { FormErrorInput, FormErrors, buildErrors, descendErrors } from "./errors"
-import { FieldInput, PartialFieldBehaviors } from "./internal"
+import { FieldInput } from "./internal"
 
 export interface FormField<T> extends FieldControl<T> {
 
@@ -39,13 +38,14 @@ export interface FormField<T> extends FieldControl<T> {
 
 export class FormFieldImpl<T> implements FormField<T> {
 
-    // readonly path
+    readonly path
     readonly disabled
     readonly value
     readonly setValue
     readonly setValueAndCommit
     readonly blur
     readonly commit
+    readonly touch
     readonly focus
     readonly toggle
     readonly errors
@@ -65,13 +65,14 @@ export class FormFieldImpl<T> implements FormField<T> {
     }
 
     private constructor(readonly from: FieldInput<T, T>) {
-        //  this.path = from.path
+        this.path = from.path
         this.disabled = from.disabled
         this.value = from.value
         this.setValue = from.setValue
         this.blur = () => from.blur?.()
         this.commit = () => from.commit?.()
         this.focus = () => from.focus?.()
+        this.touch = () => from.touch?.()
         this.toggle = (status: "focused" | "blurred") => {
             if (status === "focused") {
                 from.focus?.()
@@ -80,8 +81,8 @@ export class FormFieldImpl<T> implements FormField<T> {
                 from.blur?.()
             }
         }
-        this.setValueAndCommit = (value: T) => {
-            from.setValue(value)
+        this.setValueAndCommit = (value: T, suppressTouch?: boolean | undefined) => {
+            from.setValue(value, suppressTouch)
             from.commit?.()
         }
         this.errors = from.errors
@@ -145,11 +146,11 @@ export class FormFieldImpl<T> implements FormField<T> {
             return this.doPipe({ operator })
         }
         const newValue = view(operator.operator, this.value)
-        const newSetValue = (newValue: ValueOrFactory<N, [N]>) => {
+        const newSetValue = (newValue: ValueOrFactory<N, [N]>, suppressTouch?: boolean | undefined) => {
             this.setValue(prev => {
                 const newPrev = view(operator.operator, prev)
                 return set(operator.operator, callOrGet(newValue, newPrev), prev)
-            })
+            }, suppressTouch)
         }
         const errors = descendErrors(this.errors ?? [], operator.path ?? [])
         const setErrors = (errors: ValueOrFactory<FormErrorInput, [FormErrors]>) => {
@@ -163,13 +164,15 @@ export class FormFieldImpl<T> implements FormField<T> {
                 })
             })
         }
+        const path = [...this.path, ...[operator.path].flat().filter(isNotNil)]
         return FormFieldImpl.from({
-            //path: [...this.path, ...this.path !== undefined ? this.path : []],
+            path,
             value: newValue,
             setValue: newSetValue,
             blur: this.blur,
             commit: this.commit,
             focus: this.focus,
+            touch: this.touch,
             disabled: this.disabled,
             errors,
             setErrors,
@@ -222,6 +225,7 @@ export namespace FormField {
 
 }
 
+/*
 export function useField<T>(value: T, setValue: Dispatch<SetStateAction<T>>, options: PartialFieldBehaviors = {}) {
     const [errors, setRawErrors] = useState<FormErrors>([])
     const setErrors = (errors: ValueOrFactory<FormErrorInput, [FormErrors]>) => {
@@ -237,3 +241,4 @@ export function useField<T>(value: T, setValue: Dispatch<SetStateAction<T>>, opt
         setErrors,
     })
 }
+*/

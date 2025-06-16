@@ -1,8 +1,8 @@
 import { ValueOrFactory } from "value-or-factory"
 import { FormError, FormErrorInput } from "./errors"
-import { FieldBehaviors, FieldManagement } from "./internal"
+import { FieldInput } from "./internal"
 
-export interface FieldControl<G, S = G> extends FieldManagement<G, S>, FieldBehaviors {
+export interface FieldControl<G, S = G> extends FieldInput<G, S> {
 
     /**
      * Mark this field or form as blurred or focused.
@@ -12,7 +12,7 @@ export interface FieldControl<G, S = G> extends FieldManagement<G, S>, FieldBeha
     /**
      * Set a value and immediately mark the change as committed.
      */
-    setValueAndCommit(value: ValueOrFactory<S, [G]>): void
+    setValueAndCommit(value: ValueOrFactory<S, [G]>, suppressTouch?: boolean | undefined): void
 
     /**
      * A list of errors associated with this field or form.
@@ -35,3 +35,28 @@ export interface FieldControl<G, S = G> extends FieldManagement<G, S>, FieldBeha
     readonly attachErrors: (errors: FormErrorInput) => void
 
 }
+
+/*
+class MockField<T> implements FieldControl<T> {
+
+    toggle() {
+    }
+    setValueAndCommit() {
+    }
+    selfErrors?: readonly FormError[] | undefined
+    hasErrors: boolean
+    hasSelfErrors: boolean
+    attachErrors: (errors: FormErrorInput) => void
+    disabled?: boolean | undefined
+    blur: () => void
+    commit: () => void
+    focus: () => void
+    touch: () => void
+    path: FormErrorPath
+    value: T
+    setValue: (value: ValueOrFactory<T, [T]>, suppressTouch?: boolean | undefined) => void
+    errors?: FormErrors | undefined
+    setErrors: (errors: ValueOrFactory<FormErrorInput, [FormErrors]>) => void
+
+}
+*/
